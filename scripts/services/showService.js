@@ -1,3 +1,7 @@
-/**
- * Created by L2pakas on 13.04.2015.
- */
+var apiurl = 'http://localhost:56037';
+
+app.service('showService', function ($http) {
+   this.getData = function() {
+       return $http.get(apiurl + '/api/show');
+   }
+});

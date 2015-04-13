@@ -1,12 +1,57 @@
-<html>
+<html ng-app="simpleshow">
 
 <head>
+    <link rel="stylesheet" href="css/bootstrap/material/roboto.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap/material/material-fullpalette.min.css">
+    <link rel="stylesheet" href="css/bootstrap/material/ripples.min.css">
+
+
     <title> SimpleShow !</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div ng-app="simpleshow">
+<div class="header-panel shadow-z-2">
+    <div class="container-fluid">
+        <h2>SimpleShow</h2>
+        <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
+        <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
+    </div>
+
+
+</div>
+<div class="sample2">
+    <div class="text">Vibrate on touch</div>
+    <div class="checkbox checkbox-primary">
+        <label>
+            <input type="checkbox">
+        </label>
+    </div>
+</div>
+<div ng-controller="simpleShowController">
+    {{message}}
+    <div class="content" ng-view>
 
     </div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="scripts/bootstrap/bootstrap.min.js"></script>
+
+<script src="scripts/angular/angular.min.js"></script>
+<script src="scripts/angular/angular-route.min.js"></script>
+<script src="scripts/module/module.js"></script>
+<script src="scripts/routes/routes.js"></script>
+<script src="scripts/controllers/controller.js"></script>
+<script src="scripts/services/showService.js"></script>
+<script src="scripts/bootstrap/material/ripples.min.js"></script>
+<script src="scripts/bootstrap/material/arrive.min.js"></script>
+<script src="scripts/bootstrap/material/material.min.js"></script>
+
+<script>
+    $(function () {
+        $.material.init();
+    });
+</script>
 </body>
 </html>

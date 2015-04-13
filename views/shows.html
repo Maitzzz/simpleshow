@@ -1,0 +1,19 @@
+<div class="shows container tiles">
+
+    <div class="col-md-3 show well-material-grey-800 tile" ng-repeat="show in shows">
+        <div class="image-wrapper">
+            <img ng-src="files/image/shield.jpg"/>
+
+            <div class="content-wrapper">
+                <p class="name">{{ show.Name}}</p>
+                <p class="rating"> Rating: {{show.Rating}}</p>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox">
+                </label>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

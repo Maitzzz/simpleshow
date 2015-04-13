@@ -1,0 +1,8 @@
+body .header-panel {
+  color: #ffffff;
+  height: 120px;
+  background-color: #212121;
+}
+body .tiles .tile {
+  margin: 10px  0 0 10px;
+}
