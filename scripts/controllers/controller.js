@@ -65,6 +65,11 @@ app.controller('showController', function($scope, showService, $routeParams) {
 app.controller('seasonController', function ($scope, showService, $routeParams) {
     var episodePromise = showService.getShowEpisodes($routeParams.id);
     episodePromise.then(function (data) {
-        $scope.episodes = data.data;
+
+      var episodes = _.filter(data.data, function(array){
+          return array.SeasonNr == $routeParams.season;
+      });
+        $scope.episodes = episodes;
     });
 });
+

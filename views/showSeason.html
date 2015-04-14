@@ -1,0 +1,19 @@
+<div class="season-wrapper container tiles">
+    <div class="col-md-3 wrapper " ng-repeat="episode in episodes">
+        <div class="tile well show well-material-grey-800">
+            <div class="image-wrapper">
+                <img ng-src="files/image/shield.jpg"/>
+            </div>
+            <div class="content-wrapper">
+                <p class="name">{{ episode.Name }}</p>
+
+                <p class="rating"> Rating: {{episode.Rating }}</p>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
