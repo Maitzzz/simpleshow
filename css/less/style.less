@@ -1,4 +1,8 @@
 body {
+  .content {
+    margin-top: 20px;
+    color: #000000;
+  }
   .header-panel {
     color: #ffffff;
     height: 120px;
@@ -6,8 +10,67 @@ body {
   }
 
   .tiles {
-    .tile {
-      margin: 10px  0 0 10px;
+    p {
+      margin: 0;
+    }
+    color: #FFFFFF;
+    margin-top: 20px;
+  }
+
+  .tile {
+    .content-wrapper {
+      margin: 5px 0px;
+      width: 90%;
+      float: left;
+
+      .name {
+        font-size: 18px;
+      }
+
+      .rating {
+
+      }
+    }
+
+    .checkbox {
+      color: #757575;
+      margin-top: 17px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .all-shows {
+    img {
+      width: 100%;
+      height: auto;
+    }
+    .tiles {
+      .content {
+        color: #000000;
+        padding: 40px 70px;
+        .name {
+          font-size: 20px;
+        }
+      }
+      .tile {
+        &.show {
+          padding-bottom: 3px;
+          .content-wrapper {
+            width: 86%;
+            .rating {
+
+            }
+          }
+        }
+      }
+    }
+  }
+  .show-wrapper {
+    .shows {
+      img {
+        width: 100%;
+        height: auto;
+      }
     }
   }
 

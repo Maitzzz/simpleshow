@@ -1,0 +1,31 @@
+<div class="show-wrapper container">
+    <div class="show">
+        <p class="name">{{show.Name}} </p>
+
+        <p class="description">{{show.Description}} </p>
+    </div>
+
+    <div class="list-element tiles row shows" ng-repeat="episode in episodes">
+        <div class="tile well show well-material-grey-800 col-md-3">
+            <div class="image-wrapper">
+                <img ng-src="files/image/shield.jpg"/>
+            </div>
+            <div class="content-wrapper">
+
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox">
+                </label>
+            </div>
+        </div>
+
+        <div class="content col-md-9">
+            <p class="name">{{ episode.Name }}</p>
+            <p class="rating"> Rating: {{ episode.Rating }}</p>
+            <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{ episode.SeasonNr }} </a></p>
+            <p class="episode-nr">{{ episode.EpisodeNr }}</p>
+            <p class="rating"> {{ episode.Rating }}</p>
+        </div>
+    </div>
+</div>

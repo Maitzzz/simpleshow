@@ -1,8 +1,50 @@
+body .content {
+  margin-top: 20px;
+  color: #000000;
+}
 body .header-panel {
   color: #ffffff;
   height: 120px;
   background-color: #212121;
 }
-body .tiles .tile {
-  margin: 10px  0 0 10px;
+body .tiles {
+  color: #FFFFFF;
+  margin-top: 20px;
+}
+body .tiles p {
+  margin: 0;
+}
+body .tile .content-wrapper {
+  margin: 5px 0px;
+  width: 90%;
+  float: left;
+}
+body .tile .content-wrapper .name {
+  font-size: 18px;
+}
+body .tile .checkbox {
+  color: #757575;
+  margin-top: 17px;
+  margin-bottom: 3px;
+}
+body .all-shows img {
+  width: 100%;
+  height: auto;
+}
+body .all-shows .tiles .content {
+  color: #000000;
+  padding: 40px 70px;
+}
+body .all-shows .tiles .content .name {
+  font-size: 20px;
+}
+body .all-shows .tiles .tile.show {
+  padding-bottom: 3px;
+}
+body .all-shows .tiles .tile.show .content-wrapper {
+  width: 86%;
+}
+body .show-wrapper .shows img {
+  width: 100%;
+  height: auto;
 }
