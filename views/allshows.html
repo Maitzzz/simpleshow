@@ -14,11 +14,14 @@
                 </label>
             </div>
         </div>
+        <button class="btn btn-default btn-flat" ng-click="removeShow(show.ImdbID)"><i class="mdi-navigation-close"></i> Remove</button>
 
         <div class="content col-md-10">
             <p class="name"> {{ show.Name }}</p>
             <p class="description"> {{ show.Description }}</p>
-            <p>{{ show.$id }}</p>
         </div>
+    </div>
+    <div class="bottom-menu">
+        <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i class="mdi-content-add button-lg-icon"></i></button>
     </div>
 </div>

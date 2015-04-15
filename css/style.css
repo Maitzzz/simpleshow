@@ -48,3 +48,11 @@ body .show-wrapper .shows img {
   width: 100%;
   height: auto;
 }
+body .bottom-menu {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+body .button-lg-icon {
+  top: 0!important;
+}

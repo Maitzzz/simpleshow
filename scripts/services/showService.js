@@ -13,4 +13,17 @@ app.service('showService', function ($http) {
       return $http.get(apiurl + '/api/episode/' + id);
     };
 
+    this.addShow =  function (show) {
+      return $http.post(apiurl + '/api/show', show);
+    };
+
+    this.removeShow = function(imdbid) {
+      return $http.delete(apiurl + '/api/show/'+ imdbid);
+    };
+
+    this.updateShow = function(data ,id) {
+        return $http.put(apiurl + '/api/show/' + id, data)
+    }
+
+
 });
