@@ -1,35 +1,51 @@
 <div class="show-wrapper container">
-    <div class="show">
-        <p class="name">{{show.Name}} </p>
-
-        <p class="description">{{show.Description}} </p>
-    </div>
-
-    <div class="list-element tiles row shows" ng-repeat="episode in episodes">
-        <div class="tile well show well-material-grey-800 col-md-3">
-            <div class="image-wrapper">
-                <img ng-src="files/image/shield.jpg"/>
-            </div>
-            <div class="content-wrapper">
-
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox">
-                </label>
-            </div>
+    <div class="show row">
+        <div class="img-wrapper col-md-3">
+            <img src="files/image/shield.jpg"/>
         </div>
+        <div class="show-content col-md-8 well-lg">
+            <p class="name">{{show.Name}} </p>
 
-        <div class="content col-md-9">
-            <p class="name">{{ episode.Name }}</p>
-            <p class="rating"> Rating: {{ episode.Rating }}</p>
-            <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{ episode.SeasonNr }} </a></p>
-            <p class="episode-nr">{{ episode.EpisodeNr }}</p>
-            <p class="rating"> {{ episode.Rating }}</p>
+            <p class="description">{{show.Description}} </p>
+        </div>
+    </div>
+    <h1>Episodes</h1>
+
+    <div class="episodes-wrapper">
+        <div class="list-element tiles row shows" ng-repeat="episode in episodes">
+            <div class="tile well show well-material-grey-800 col-md-2">
+                <div class="image-wrapper">
+                    <img ng-src="files/image/shield.jpg"/>
+                </div>
+                <div class="content-wrapper">
+
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                    </label>
+                </div>
+            </div>
+            <div class="content col-md-9">
+                <p class="name">{{ episode.Name }}</p>
+
+                <p class="rating"> Rating: {{ episode.Rating }}</p>
+
+                <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{
+                    episode.SeasonNr }} </a></p>
+
+                <p class="episode-nr">{{ episode.EpisodeNr }}</p>
+
+                <p class="rating"> {{ episode.Rating }}</p>
+                <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i class="mdi-navigation-close"></i> Remove</button>
+
+            </div>
         </div>
     </div>
     <div class="bottom-menu">
-        <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success" ng-click="addShowModal()"><i class="mdi-content-add-circle-outline"></i></button>
-        <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i class="mdi-content-add button-lg-icon"></i></button>
+        <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon" ng-click="addShowModal()"><i
+                class="mdi-content-add-circle-outline"></i></button>
+        <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i
+                class="mdi-content-add button-lg-icon"></i></button>
     </div>
 </div>

@@ -44,6 +44,12 @@ body .all-shows .tiles .tile.show {
 body .all-shows .tiles .tile.show .content-wrapper {
   width: 86%;
 }
+body .show-wrapper .sm-btn-icon i {
+  left: -5px;
+}
+body .show-wrapper .show-content .name {
+  font-size: 20px;
+}
 body .show-wrapper .shows img {
   width: 100%;
   height: auto;

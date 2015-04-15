@@ -16,7 +16,30 @@
         <div class="form-group row">
             <label for="episodeImdbId" class="col-md-3 control-label">Episode Imdb id</label>
             <div class="col-md-8">
-                <input type="text" class="form-control" data-ng-model="episode.ImdbID" id="episodeImdbId" placeholder="Episode imdb id">
+                <input type="text" class="form-control" data-ng-model="episode.EpImdbID" id="episodeImdbId" placeholder="Episode imdb id">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="season" class="col-md-3 control-label">Season Nr</label>
+            <div class="col-md-8">
+                <input type="number" class="form-control" data-ng-model="episode.SeasonNr" id="season" placeholder="Season">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="episode" class="col-md-3 control-label">Episode Nr</label>
+            <div class="col-md-8">
+                <input type="number" class="form-control" data-ng-model="episode.EpisodeNr" id="episode" placeholder="Episode">
+            </div>
+        </div>
+        <div class="row form-group">
+            <label for="season" class="col-md-3 control-label">Aired</label>
+            <div class="col-md-8">
+                <p class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="mdi-action-today"></i></button>
+              </span>
+                </p>
             </div>
         </div>
         <div class="form-group row">
@@ -31,6 +54,6 @@
                 <button class="btn btn-primary" ng-click="addEpisode(episode)">Submit</button>
             </div>
         </div>
-        <input type="hidden" data-ng-model="show.ShowID" id="ShowID">
+        <input type="hidden" data-ng-model="show.ShowImdbId" value="{{}}" id="ShowID">
     </div>
 </form>

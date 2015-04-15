@@ -9,10 +9,6 @@ app.service('showService', function ($http) {
         return $http.get(apiurl + '/api/show/' + id);
     };
 
-    this.getShowEpisodes = function (id) {
-      return $http.get(apiurl + '/api/episode/' + id);
-    };
-
     this.addShow =  function (show) {
       return $http.post(apiurl + '/api/show', show);
     };

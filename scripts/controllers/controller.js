@@ -67,9 +67,16 @@ app.controller('homeController', function ($scope, showService) {
     $scope.message = 'Angular message!';
 });
 
-app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory) {
+app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
     var showId = $routeParams.id;
     $scope.showId = showId;
+    getEpisodes();
+    function getEpisodes() {
+        var episodePromise = episodeService.getShowEpisodes(showId);
+        episodePromise.then(function (data) {
+            dataFactory.setEpisodes(data.data);
+        });
+    }
 
     getShowData();
     function getShowData() {
@@ -88,10 +95,14 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         }
     });
 
-    var episodePromise = showService.getShowEpisodes(showId);
-    episodePromise.then(function (data) {
-        $scope.episodes = data.data;
+    $scope.$watch(function () {
+        return dataFactory.getEpisodes();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.episodes = data;
+        }
     });
+
 
     $scope.open = function (size) {
         var editShowModalInstance = $modal.open({
@@ -110,7 +121,12 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         var addShowModalInstance = $modal.open({
             templateUrl: 'views/forms/episode.html',
             controller: 'episodeAddFormCtrl',
-            size: size
+            size: size,
+            resolve: {
+                showId: function () {
+                    return $scope.showId;
+                }
+            }
         });
     };
 
@@ -124,10 +140,20 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             $scope.episodes = data;
         }
     });
+
+    $scope.removeEpisode = function (imdbId) {
+        var deletePromise = episodeService.removeEpisode(imdbId);
+        deletePromise.then(function (data) {
+            console.log(data)
+            if(data.status = 204) {
+                getEpisodes();
+            }
+        })
+    }
 });
 
-app.controller('seasonController', function ($scope, showService, $routeParams) {
-    var episodePromise = showService.getShowEpisodes($routeParams.id);
+app.controller('seasonController', function ($scope, showService, $routeParams, episodeService) {
+    var episodePromise = episodeService.getShowEpisodes($routeParams.id);
     episodePromise.then(function (data) {
 
         var episodes = _.filter(data.data, function (array) {
