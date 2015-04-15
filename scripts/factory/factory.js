@@ -1,6 +1,7 @@
 app.factory('dataFactory', function () {
     var shows = {};
     var show = {};
+    var episodes = {};
     return {
         getShows: function () {
             return shows;
@@ -13,6 +14,12 @@ app.factory('dataFactory', function () {
         },
         setShow: function(data) {
             show = data;
+        },
+        setEpisodes: function (data) {
+            episodes = data;
+        },
+        getEpisodes: function () {
+            return episodes;
         }
 
     };

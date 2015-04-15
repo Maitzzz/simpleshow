@@ -1,12 +1,4 @@
 app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService, dataFactory, formData) {
-    function getShowData() {
-        var showPromise = showService.getShow(showId);
-        showPromise.then(function (data) {
-            dataFactory.setShow(data.data);
-            $scope.formData = data.data;
-        });
-    }
-
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -17,8 +9,8 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
         var updatePromise = showService.updateShow(data, id);
 
         updatePromise.then(function (data) {
-            if(data.status == 201) {
-                getShowData();
+            console.log(data);
+            if(data.status == 204) {
                 $modalInstance.dismiss('cancel');
             }
         });
@@ -47,7 +39,6 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
             if (data.status == 201) {
                 loadData();
                 $modalInstance.dismiss('cancel');
-
             }
         }), function (error) {
             console.error(error);
@@ -55,3 +46,29 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
     };
 });
 
+app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+    function loadEpisodes() {
+        var promise = episodeService.getEpisodes();
+        promise.then(function (data) {
+            dataFactory.setEpisodes(data.data);
+        }), function (error) {
+            $log.error('Error', error)
+        };
+    }
+
+    var addShowPromise = episodeService.addShow(show);
+
+    addShowPromise.then(function(data) {
+        if(data.status == 201) {
+            loadEpisodes();
+           $modalInstance.dismiss('cancel');
+        }
+    });
+
+
+
+});

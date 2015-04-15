@@ -88,15 +88,13 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         }
     });
 
-
     var episodePromise = showService.getShowEpisodes(showId);
     episodePromise.then(function (data) {
         $scope.episodes = data.data;
-
     });
 
     $scope.open = function (size) {
-        var modalInstance = $modal.open({
+        var editShowModalInstance = $modal.open({
             templateUrl: 'views/forms/editshow.html',
             controller: 'showEditFormCtrl',
             size: size,
@@ -106,8 +104,26 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 }
             }
         });
-
     };
+
+    $scope.addShowModal = function (size) {
+        var addShowModalInstance = $modal.open({
+            templateUrl: 'views/forms/episode.html',
+            controller: 'episodeAddFormCtrl',
+            size: size
+        });
+    };
+
+
+    //Episodes stuff
+
+    $scope.$watch(function () {
+        return dataFactory.getEpisodes();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.episodes = data;
+        }
+    });
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams) {

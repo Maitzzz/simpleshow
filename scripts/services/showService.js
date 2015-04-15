@@ -24,6 +24,4 @@ app.service('showService', function ($http) {
     this.updateShow = function(data ,id) {
         return $http.put(apiurl + '/api/show/' + id, data)
     }
-
-
 });
