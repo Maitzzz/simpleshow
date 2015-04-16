@@ -9,8 +9,6 @@ app.controller('simpleShowController', function ($scope, showService) {
         }), function (error) {
             $log.error('Error', error)
         };
-
-
     }
 });
 
@@ -63,25 +61,38 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         });
     };
 
-    $scope.notify = function() {
-        console.log('notify')
-        $.notify({
-            // options
-            message: 'Hello World'
-        },{
-            // settings
-            type: 'danger'
-        });
-    }
+    $scope.showCheck = function (showId) {
+      var userShow = {
+          'UserID': localStorage.getItem('loggedIn'),
+          'ShowID': showId
+      }
+        var showCheck = showService.addUserShow(userShow);
+        showCheck.then(function (data) {
+            var show = data.data.Show;
+
+            if(data.data.Show != null) {
+                notify('success', 'Show ' + show.Name + ' added to My Shows');
+            } else {
+                notify('danger', 'Show removed from My shows');
+            }
+        })
+    };
 });
 
-app.controller('homeController', function ($scope, showService) {
+app.controller('homeController', function ($scope, showService, $location) {
+    if(localStorage.getItem('loggedIn')) {
+        $location.path('user');
+    } else {
+        $location.path('welcome');
+    }
+
     $scope.message = 'Angular message!';
 });
 
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
     var showId = $routeParams.id;
     $scope.showId = showId;
+
     getEpisodes();
     function getEpisodes() {
         var episodePromise = episodeService.getShowEpisodes(showId);
@@ -115,7 +126,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         }
     });
 
-
     $scope.open = function (size) {
         var editShowModalInstance = $modal.open({
             templateUrl: 'views/forms/editshow.html',
@@ -142,7 +152,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         });
     };
 
-
     //Episodes stuff
 
     $scope.$watch(function () {
@@ -162,9 +171,28 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 notify('success', 'Episode Removed');
             }
         })
-    }
+    };
 
+    $scope.episodeCheck = function (showId) {
+        var userEp = {
+            "UserID": localStorage.getItem('loggedIn'),
+            "EpisodeID": showId
+        };
 
+        console.log(userEp);
+      var episodeCheck = showService.addUserEpisode(userEp);
+
+        episodeCheck.then(function (data) {
+            var episode = data.data.Episode;
+           if(data.data.Episode != null) {
+               notify('success', 'Watched episode ' + episode.Name)
+           } else {
+               notify('danger', 'Removed from watchlist')
+           }
+        }), function(error) {
+
+        };
+    };
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService) {
@@ -210,10 +238,72 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
+app.controller('headerController', function($scope, $location, $route) {
+    $scope.logOut = function () {
+        localStorage.removeItem('loggedIn');
+        $location.path('home');
+        //$route.reload();
+        // Todo Find better way to refresh data in headers, try not to use $watch
+        console.log('refresh')
+        location.reload();
+    };
+
+    $scope.logged = true;
+
+    if(localStorage.getItem('loggedIn')) {
+        $scope.logged = false;
+    }
+});
+
+app.controller('loginController', function ($scope, $location, $route, dataFactory) {
+    var user = localStorage.getItem('loggedIn');
+
+    if(isNumber(user) == true) {
+        $location.path('home');
+    }
+
+    var errors = false;
+   $scope.logIn = function (user) {
+       if(!_.has(user,'email')) {
+           notify('warning', 'Email ei ole korrektne või puudub');
+           errors = true;
+       }
+
+       if(!_.has(user,'password')) {
+           notify('warning', 'Parool ei ole korrektne või puudub');
+           errors = true;
+       }
+
+       if(!errors) {
+           console.log(user);
+           localStorage.setItem('loggedIn',1);
+           $location.path('home');
+           // Todo Find better way to refresh data in headers, try not to use $watch
+           //$route.reload();
+           location.reload();
+       }
+   }
+
+    $scope.$watch(function () {
+        return dataFactory.getEpisode();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.episode = data;
+        }
+    });
+});
+
+app.controller('welcomeController', function($scope) {
+
+});
+
 function notify(type, message) {
     $.notify({
         message: message
     },{
         type: type
     });
+}
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
 }

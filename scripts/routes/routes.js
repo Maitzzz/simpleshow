@@ -33,6 +33,20 @@ app.config(function ($routeProvider) {
            controller: 'episodeController'
        })
 
+       .when('/log-in', {
+           templateUrl: 'views/log-in.html',
+           controller: 'loginController'
+       })
+
+       .when('/welcome', {
+           templateUrl: 'views/welcome.html',
+           controller: 'welcomeController'
+       })
+
+       .when('/user', {
+           templateUrl: 'views/logged-in.html',
+           controller: 'welcomeController'
+       })
 
        .otherwise({redirectTo: '/home'})
 });

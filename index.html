@@ -12,11 +12,15 @@
 </head>
 <body>
 <div class="header-panel shadow-z-2">
-    <div class="container-fluid">
-        <h2>SimpleShow</h2>
-        <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
-        <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
-        <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
+    <div class="container-fluid" ng-controller="headerController">
+        <h2><a href="#home">SimpleShow</a></h2>
+        <div class="logged-out" ng-show="logged">
+            <a href="#sign-up" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
+            <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
+        </div>
+        <div class="logged-out" ng-show="!logged">
+            <a href="#log-in" class="pull-right navbar-btn log-in" ng-click="logOut()">Log Out</a>
+        </div>
     </div>
 </div>
 <div ng-controller="simpleShowController">
@@ -24,7 +28,6 @@
     <div class="content" ng-view>
 
     </div>
-
 
 </div>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>

@@ -19,5 +19,18 @@ app.service('showService', function ($http) {
 
     this.updateShow = function(data ,id) {
         return $http.put(apiurl + '/api/show/' + id, data)
-    }
+    };
+
+
+    //user Show service
+
+    this.addUserShow = function(data) {
+        return $http.post(apiurl + '/api/usershow', data)
+    };
+
+    //user Episode Stuff
+
+    this.addUserEpisode = function (data) {
+        return $http.post(apiurl + '/api/userep' ,data);
+    };
 });
