@@ -28,5 +28,11 @@ app.config(function ($routeProvider) {
            controller: 'seasonController'
        })
 
+       .when('/show/:id/:season/:episode', {
+           templateUrl: 'views/episode.html',
+           controller: 'episodeController'
+       })
+
+
        .otherwise({redirectTo: '/home'})
 });

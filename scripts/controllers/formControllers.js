@@ -15,10 +15,10 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
             }
         });
     };
-
 });
 
 //todo separate controller file
+//todo
 app.controller('showFormCtrl', function ($scope, $modalInstance, showService, dataFactory) {
     function loadData() {
         var promise = showService.getData();
@@ -39,6 +39,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
             if (data.status == 201) {
                 loadData();
                 $modalInstance.dismiss('cancel');
+                notify('success','Show '+ data.data.Name +' Added')
             }
         }), function (error) {
             console.error(error);
@@ -64,8 +65,11 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
         var addEpisodePromise = episodeService.addShow(episode);
         addEpisodePromise.then(function(data) {
             if(data.status == 201) {
+                data
                 getEpisodes();
                 $modalInstance.dismiss('cancel');
+
+                notify('success','Episode '+ data.data.Name +' Added')
             }
         });
     };
@@ -77,3 +81,35 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
         $scope.opened = true;
     };
 });
+
+app.controller('editEpisodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, episode) {
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+    //todo peaks nime muutma? siis ei muutu andmemudel.
+    $scope.episode = episode;
+
+    $scope.updateEpisode = function (data, id) {
+       /* var updatePromise = episodeService.updateEpisode(data, id);
+
+        updatePromise.then(function (data) {
+            console.log(data);
+            if(data.status == 204) {
+                $modalInstance.dismiss('cancel');
+            }
+        });*/
+        console.log(data)
+        console.log(id);
+    };
+
+
+});
+
+function notify(type, message) {
+    $.notify({
+        message: message
+    },{
+        type: type
+    });
+}
+

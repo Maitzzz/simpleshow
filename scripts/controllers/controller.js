@@ -54,13 +54,25 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
             size: size
         });
     };
-
+//todo check data.status
     $scope.removeShow = function (imdbid) {
         var deletePromise = showService.removeShow(imdbid);
         deletePromise.then(function (data) {
             loadData();
+            notify('success', 'Show Removes');
         });
     };
+
+    $scope.notify = function() {
+        console.log('notify')
+        $.notify({
+            // options
+            message: 'Hello World'
+        },{
+            // settings
+            type: 'danger'
+        });
+    }
 });
 
 app.controller('homeController', function ($scope, showService) {
@@ -147,9 +159,12 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             console.log(data)
             if(data.status = 204) {
                 getEpisodes();
+                notify('success', 'Episode Removed');
             }
         })
     }
+
+
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService) {
@@ -164,3 +179,41 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
 });
 
+app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
+    var episodePromise = episodeService.getShowEpisodes($routeParams.id);
+    episodePromise.then(function (data) {
+        var episode = _.filter(data.data, function (array) {
+            return array.EpImdbId == $routeParams.episode;
+        });
+        dataFactory.setEpisode(episode[0]);
+    });
+
+    $scope.$watch(function () {
+        return dataFactory.getEpisode();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.episode = data;
+        }
+    });
+
+    $scope.editShow = function (size) {
+        var addShowModalInstance = $modal.open({
+            templateUrl: 'views/forms/editEpisode.html',
+            controller: 'editEpisodeAddFormCtrl',
+            size: size,
+            resolve: {
+                episode: function () {
+                    return $scope.episode;
+                }
+            }
+        });
+    };
+});
+
+function notify(type, message) {
+    $.notify({
+        message: message
+    },{
+        type: type
+    });
+}

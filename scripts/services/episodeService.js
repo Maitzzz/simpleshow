@@ -4,7 +4,7 @@ app.service('episodeService', function ($http) {
     this.getShows = function () {
         return $http.get(apiurl + '/api/episode');
     };
-
+//todo wtf on see siin ?
     this.addShow = function(episode) {
         return $http.post(apiurl + '/api/episode', episode);
     };
@@ -16,5 +16,13 @@ app.service('episodeService', function ($http) {
     this.removeEpisode = function (id) {
         return $http.delete(apiurl + '/api/episode/' + id)
     };
+
+    this.getEpisodeById = function (id) {
+        return $http.get(apiurl + '/api/episode/' + id);
+    }
+
+    this.updateEpisode = function (data, id ) {
+        return $http.put(apiurl + '/api/episode/' + id, data);
+    }
 
 });
