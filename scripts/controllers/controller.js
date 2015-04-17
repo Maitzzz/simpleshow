@@ -37,6 +37,17 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         };
     }
 
+    var ushows = function loadUserShows() {
+        var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
+        userShows.then(function (data) {
+            return data.data;
+        })
+    };
+
+    var ushows = ushows();
+
+    console.log(ushows);
+
     $scope.$watch(function () {
         return dataFactory.getShows();
     }, function (data, oldValue) {
