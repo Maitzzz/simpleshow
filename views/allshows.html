@@ -2,7 +2,7 @@
     <div class="list-element tiles row" ng-repeat="show in shows">
         <div class="tile well show well-material-grey-800 col-md-2">
             <div class="image-wrapper">
-                <img ng-src="files/image/shield.jpg"/>
+                <img ng-src="{{ show.ShowImage }}"/>
             </div>
             <div class="content-wrapper">
                 <p class="name"><a href="#show/{{ show.ImdbID }}">{{ show.Name }}</a></p>

@@ -1,3 +1,4 @@
+var NO_IMAGE = 'files/image/noimage.png';
 app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService, dataFactory, formData) {
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -18,8 +19,7 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
 });
 
 //todo separate controller file
-//todo
-app.controller('showFormCtrl', function ($scope, $modalInstance, showService, dataFactory) {
+app.controller('showFormCtrl', function ($scope, $modalInstance, showService, dataFactory, traktTcService) {
     function loadData() {
         var promise = showService.getData();
         promise.then(function (data) {
@@ -33,8 +33,42 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
         $modalInstance.dismiss('cancel');
     };
 
+    //todo add controll if data is set
     $scope.addShow = function (show) {
-        var postShow = showService.addShow(show);
+        console.log(show);
+        if(_.has(user, 'ShowImage')) {
+            var postShow = showService.addShow(show);
+            postShow.then(function (data) {
+                if (data.status == 201) {
+                    loadData();
+                    $modalInstance.dismiss('cancel');
+                    notify('success','Show '+ data.data.Name +' Added')
+                }
+            }), function (error) {
+                console.error(error);
+            };
+        } else {
+            var ImdbID = traktTcService.getImages(show.ImdbID);
+            ImdbID.then(function (data) {
+                if(data.data.message != false) {
+                    show.ShowImage = data.data.images.poster.full;
+                } else {
+                    show.ShowImage = NO_IMAGE;
+                }
+
+                var postShow = showService.addShow(show);
+                postShow.then(function (data) {
+                    if (data.status == 201) {
+                        loadData();
+                        $modalInstance.dismiss('cancel');
+                        notify('success','Show '+ data.data.Name +' Added')
+                    }
+                }), function (error) {
+                    console.error(error);
+                };
+            })
+        }
+        /*var postShow = showService.addShow(show);
         postShow.then(function (data) {
             if (data.status == 201) {
                 loadData();
@@ -43,7 +77,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
             }
         }), function (error) {
             console.error(error);
-        };
+        };*/
     };
 });
 
@@ -110,4 +144,3 @@ function notify(type, message) {
         type: type
     });
 }
-
