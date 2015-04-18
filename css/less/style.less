@@ -18,6 +18,10 @@ body {
   }
 
   .tiles {
+    img {
+      width: 100%;
+      height: auto;
+    }
     p {
       margin: 0;
     }
@@ -26,7 +30,6 @@ body {
   }
 
   .tile {
-    margin-right: 20px;
     padding: 0;
     background: #424242;
     .content-wrapper {
@@ -106,6 +109,24 @@ body {
         height: auto;
       }
     }
+
+
+    .episodes-wrapper {
+      padding: 0px 16px;
+      .tile {
+        .content-wrapper {
+          width: 100%;
+          margin: 0;
+          margin-bottom: 5px;
+          .checkbox {
+            float: right;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            margin-right: 5px;
+          }
+        }
+      }
+    }
   }
 
   .bottom-menu {
@@ -127,6 +148,28 @@ body {
     img {
       width: 100%;
       height: auto;
+      @media (min-width: 940px) {
+        height: 335px;
+      }
+    }
+    .tile{
+      margin-right: 20px;
+    }
+  }
+
+  .season-wrapper {
+    .tile {
+      background: none;
+      .tile-wrapper {
+        margin: 0 10px;
+        background: #424242;
+      }
+    }
+    .content-wrapper{
+      float: none;
+    }
+    .checkbox {
+      float: right;
     }
   }
 }

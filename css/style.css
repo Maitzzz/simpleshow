@@ -19,11 +19,14 @@ body .tiles {
   color: #FFFFFF;
   margin-top: 20px;
 }
+body .tiles img {
+  width: 100%;
+  height: auto;
+}
 body .tiles p {
   margin: 0;
 }
 body .tile {
-  margin-right: 20px;
   padding: 0;
   background: #424242;
 }
@@ -77,6 +80,20 @@ body .show-wrapper .shows img {
   width: 100%;
   height: auto;
 }
+body .show-wrapper .episodes-wrapper {
+  padding: 0px 16px;
+}
+body .show-wrapper .episodes-wrapper .tile .content-wrapper {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 5px;
+}
+body .show-wrapper .episodes-wrapper .tile .content-wrapper .checkbox {
+  float: right;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  margin-right: 5px;
+}
 body .bottom-menu {
   position: fixed;
   bottom: 30px;
@@ -91,4 +108,25 @@ body .login-wrapper {
 body .my-shows img {
   width: 100%;
   height: auto;
+}
+@media (min-width: 940px) {
+  body .my-shows img {
+    height: 335px;
+  }
+}
+body .my-shows .tile {
+  margin-right: 20px;
+}
+body .season-wrapper .tile {
+  background: none;
+}
+body .season-wrapper .tile .tile-wrapper {
+  margin: 0 10px;
+  background: #424242;
+}
+body .season-wrapper .content-wrapper {
+  float: none;
+}
+body .season-wrapper .checkbox {
+  float: right;
 }

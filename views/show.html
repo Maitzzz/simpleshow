@@ -18,22 +18,22 @@
             <a href="#show/{{ show.ImdbID}}/{{ key }}"><h1>Season {{ key }}</h1></a>
 
             <div class="list-element tiles row shows" ng-repeat="episode in season">
-                {{episode}}
-                <div class="tile well show well-material-grey-800 col-md-2">
+                <div class="tile show col-md-3">
                     <div class="image-wrapper">
                         <img ng-src="{{episode.EpisodeImage}}"/>
                     </div>
                     <div class="content-wrapper">
 
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
+                                       ng-checked="isThisUserEpisode(episode.EpisodeId)">
+                            </label>
+                        </div>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
-                                   ng-checked="isThisUserEpisode(episode.EpisodeId)">
-                        </label>
-                    </div>
+
                 </div>
-                <div class="content col-md-9">
+                <div class="content col-md-8">
                     <p class="name"><a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}} ">{{episode.Name
                         }}</a></p>
 

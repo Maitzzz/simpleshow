@@ -236,7 +236,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
                 var rer = _.groupBy(data, function (a) {
                     return a.SeasonNr;
-                });
+                }   );
                 $scope.data = rer;
             });
         }
@@ -327,13 +327,16 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
   var showId = $routeParams.id;
-    var episodePromise = episodeService.getShowEpisodes(showId);
-    episodePromise.then(function (data) {
-        var episode = _.filter(data.data, function (array) {
-            return array.EpImdbId == $routeParams.episode;
-        });
-        dataFactory.setEpisode(episode[0]);
-    });
+    loadData();
+   function loadData() {
+       var episodePromise = episodeService.getShowEpisodes(showId);
+       episodePromise.then(function (data) {
+           var episode = _.filter(data.data, function (array) {
+               return array.EpImdbId == $routeParams.episode;
+           });
+           dataFactory.setEpisode(episode[0]);
+       });
+   }
 
     $scope.$watch(function () {
         return dataFactory.getEpisode();
@@ -343,10 +346,13 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         }
     });
 
-    var showPromise = showService.getShow($routeParams.id);
-    showPromise.then(function (data) {
-        $scope.show = data.data;
-    });
+    loadShow();
+    function loadShow() {
+         var showPromise = showService.getShow($routeParams.id);
+         showPromise.then(function (data) {
+             $scope.show = data.data;
+         });
+    }
 
     $scope.editShow = function (size) {
         var addShowModalInstance = $modal.open({

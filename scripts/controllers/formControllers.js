@@ -4,7 +4,7 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
         $modalInstance.dismiss('cancel');
     };
 
-    $scope.show = formData;
+    $scope.show2 = formData;
 
     $scope.updateShow = function (data, id) {
         var updatePromise = showService.updateShow(data, id);
@@ -49,7 +49,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
             var ImdbID = traktTcService.getImages(show.ImdbID);
             ImdbID.then(function (data) {
                 if(data.data.message != false) {
-                    show.ShowImage = data.data.images.poster.full;
+                    show.ShowImage = data.data.images.poster.medium;
                 } else {
                     show.ShowImage = NO_IMAGE;
                 }
@@ -131,7 +131,9 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
 app.controller('editEpisodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, episode) {
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+        console.log(dataFactory.getShow());
     };
+
     //todo peaks nime muutma? siis ei muutu andmemudel.
     $scope.episode = episode;
 
@@ -144,7 +146,6 @@ app.controller('editEpisodeAddFormCtrl', function ($scope, $modalInstance, episo
             }
         });
     };
-
 
 });
 

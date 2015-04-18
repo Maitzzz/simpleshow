@@ -5,7 +5,7 @@
                 <img ng-src="{{show.ShowImage}}"/>
             </div>
             <div class="content-wrapper">
-                <p class="name">{{ show.Name }}</p>
+                <a href="#show/{{ show.ImdbID }}"> <p class="name">{{ show.Name }}</p></a>
                 <p class="rating"> Rating: {{show.rating }}</p>
             </div>
             <div class="checkbox">
