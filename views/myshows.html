@@ -1,10 +1,8 @@
-<div class="shows container tiles">
+<div class="shows container tiles my-shows">
 
-    <div class="col-md-3 wrapper " ng-repeat="show in shows">
-        {{show}}
-        <div class="tile well show well-material-grey-800">
+    <div class="col-md-3 wrapper tile" ng-repeat="show in shows">
             <div class="image-wrapper">
-                <img ng-src="files/image/shield.jpg"/>
+                <img ng-src="{{show.ShowImage}}"/>
             </div>
             <div class="content-wrapper">
                 <p class="name">{{ show.Name }}</p>
@@ -12,9 +10,8 @@
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" ng-click="showCheck(show.ShowID)" ng-checked="true">
+                    <input type="checkbox" ng-click="showCheck(show.ShowId)" ng-checked="true">
                 </label>
             </div>
-        </div>
     </div>
 </div>

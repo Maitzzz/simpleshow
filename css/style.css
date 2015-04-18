@@ -1,3 +1,7 @@
+body .container {
+  width: 940px;
+  margin-bottom: 30px;
+}
 body .content {
   margin-top: 20px;
   color: #000000;
@@ -18,9 +22,15 @@ body .tiles {
 body .tiles p {
   margin: 0;
 }
+body .tile {
+  margin-right: 20px;
+  padding: 0;
+  background: #424242;
+}
 body .tile .content-wrapper {
   margin: 5px 0px;
-  width: 90%;
+  padding: 0 10px;
+  width: 86%;
   float: left;
 }
 body .tile .content-wrapper .name {
@@ -42,11 +52,20 @@ body .all-shows .tiles .content {
 body .all-shows .tiles .content .name {
   font-size: 20px;
 }
+body .all-shows .tiles .tile {
+  margin: 0;
+}
 body .all-shows .tiles .tile.show {
+  background: #424242;
+  padding: 0;
   padding-bottom: 3px;
 }
 body .all-shows .tiles .tile.show .content-wrapper {
+  padding: 0 10px;
   width: 86%;
+}
+body .show-wrapper .show .img-wrapper img {
+  width: 200px;
 }
 body .show-wrapper .sm-btn-icon i {
   left: -5px;
@@ -68,4 +87,8 @@ body .button-lg-icon {
 }
 body .login-wrapper {
   text-align: center;
+}
+body .my-shows img {
+  width: 100%;
+  height: auto;
 }

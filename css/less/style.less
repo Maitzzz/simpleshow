@@ -1,4 +1,8 @@
 body {
+  .container {
+    width: 940px;
+    margin-bottom: 30px;
+  }
   .content {
     margin-top: 20px;
     color: #000000;
@@ -22,9 +26,13 @@ body {
   }
 
   .tile {
+    margin-right: 20px;
+    padding: 0;
+    background: #424242;
     .content-wrapper {
       margin: 5px 0px;
-      width: 90%;
+      padding: 0 10px;
+      width: 86%;
       float: left;
 
       .name {
@@ -57,9 +65,13 @@ body {
         }
       }
       .tile {
+        margin: 0;
         &.show {
+          background: #424242;
+          padding: 0;
           padding-bottom: 3px;
           .content-wrapper {
+            padding: 0 10px;
             width: 86%;
             .rating {
 
@@ -70,6 +82,14 @@ body {
     }
   }
   .show-wrapper {
+
+    .show {
+      .img-wrapper {
+        img {
+          width: 200px;
+        }
+      }
+    }
     .sm-btn-icon{
       i{
         left: -5px;
@@ -100,6 +120,13 @@ body {
   .login-wrapper {
     text-align: center;
     input {
+    }
+  }
+
+  .my-shows{
+    img {
+      width: 100%;
+      height: auto;
     }
   }
 }

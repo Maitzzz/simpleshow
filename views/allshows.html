@@ -1,6 +1,6 @@
-<div class="all-shows container list">
+<div class="all-shows container">
     <div class="list-element tiles row" ng-repeat="show in shows">
-        <div class="tile well show well-material-grey-800 col-md-2">
+        <div class="tile show col-md-3">
             <div class="image-wrapper">
                 <img ng-src="{{ show.ShowImage }}"/>
             </div>
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="content col-md-10">
+        <div class="content col-md-9">
             <p class="name"> {{ show.Name }}</p>
             <p class="description"> {{ show.Description }}</p>
             <button class="btn btn-default btn-flat" ng-click="removeShow(show.ImdbID)"><i class="mdi-navigation-close"></i> Remove</button>

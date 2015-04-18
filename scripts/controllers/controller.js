@@ -15,13 +15,21 @@ app.controller('simpleShowController', function ($scope, showService) {
 
 app.controller('myShowController', function ($scope, showService, dataFactory) {
     loadData();
-//    var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
-
-    function loadData() {
+    function loadData(){
+    var  myshows = [];
         var promise = showService.getUserShows(user);
         promise.then(function (data) {
-
-            dataFactory.setMyShows(data.data);
+            var showPromise = showService.getData();
+            showPromise.then(function (allShows) {
+                $.each(data.data, function (key, value) {
+                    $.each(allShows.data, function(sKey, show){
+                       if(value.ShowID == show.ShowId) {
+                           myshows.push(show);
+                       }
+                    });
+                });
+                dataFactory.setMyShows(myshows);
+            });
         }), function (error) {
             $log.error('Error', error)
         };
@@ -40,12 +48,15 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
             'UserID': localStorage.getItem('loggedIn'),
             'ShowID': showId
         };
+
         var showCheck = showService.addUserShow(userShow);
         showCheck.then(function (data) {
             var show = data.data.Show;
 
             if (data.data.Show != null) {
                 notify('success', 'Show ' + show.Name + ' added to My Shows');
+                loadData();
+
             } else {
                 notify('danger', 'Show removed from My shows');
                 loadData();
@@ -142,8 +153,6 @@ app.controller('homeController', function ($scope, showService, $location) {
     }
 
     $scope.message = 'Angular message!';
-
-
 });
 
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
@@ -177,7 +186,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             $scope.show = data;
         }
     });
-
 
     $scope.open = function (size) {
         var editShowModalInstance = $modal.open({
@@ -223,10 +231,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                             epData.push(episodeData.EpisodeId);
                         }
                     });
-//                    console.log(episodeData)
-                    console.log(value.SeasonNr)
-
-                    //  episodes[value.SeasonNr].push(value);
                 });
                 $scope.episodes = data;
 
@@ -335,7 +339,6 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
         if (data) {
-            console.log(data)
             $scope.episode = data;
         }
     });
@@ -365,7 +368,6 @@ app.controller('headerController', function ($scope, $location, $route) {
         $location.path('home');
         //$route.reload();
         // Todo Find better way to refresh data in headers, try not to use $watch
-        console.log('refresh')
         location.reload();
     };
 
@@ -396,7 +398,6 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
         }
 
         if (!errors) {
-            console.log(user);
             localStorage.setItem('loggedIn', 1);
             $location.path('home');
             // Todo Find better way to refresh data in headers, try not to use $watch
@@ -417,7 +418,6 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
 app.controller('welcomeController', function ($scope, traktTcService) {
     var promise = traktTcService.getImages('tt2364582');
     promise.then(function (data) {
-        console.log(data);
         $scope.data = data.data;
     });
 });

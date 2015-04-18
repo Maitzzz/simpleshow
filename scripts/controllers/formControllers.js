@@ -10,7 +10,6 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
         var updatePromise = showService.updateShow(data, id);
 
         updatePromise.then(function (data) {
-            console.log(data);
             if(data.status == 204) {
                 $modalInstance.dismiss('cancel');
             }
@@ -35,8 +34,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
 
     //todo add controll if data is set
     $scope.addShow = function (show) {
-        console.log(show);
-        if(_.has(user, 'ShowImage')) {
+        if(_.has(show, 'ShowImage')) {
             var postShow = showService.addShow(show);
             postShow.then(function (data) {
                 if (data.status == 201) {
@@ -81,7 +79,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
     };
 });
 
-app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, ep) {
+app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, traktTcService, ep) {
     $scope.episode = ep;
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -95,15 +93,31 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
     }
 
     $scope.addEpisode = function (episode) {
-        var addEpisodePromise = episodeService.addShow(episode);
-        addEpisodePromise.then(function(data) {
-            if(data.status == 201) {
-                getEpisodes();
-                $modalInstance.dismiss('cancel');
+        if(_.has(episode, 'EpisodeImage')) {
+            var addEpisodePromise = episodeService.addShow(episode);
+            addEpisodePromise.then(function(data) {
+                if(data.status == 201) {
+                    getEpisodes();
+                    $modalInstance.dismiss('cancel');
+                    notify('success','Episode '+ data.data.Name +' Added')
+                }
+            });
+        } else {
+            var episodeImage = traktTcService.getEpisodeImages(episode.ShowImdbId, episode.SeasonNr, episode.EpisodeNr);
+            episodeImage.then(function(imageData){
+                episode.EpisodeImage = imageData.data.images.screenshot.medium;
+                var addEpisodePromise = episodeService.addShow(episode);
+                addEpisodePromise.then(function(data) {
+                    if(data.status == 201) {
+                        getEpisodes();
+                        $modalInstance.dismiss('cancel');
 
-                notify('success','Episode '+ data.data.Name +' Added')
-            }
-        });
+                        notify('success','Episode '+ data.data.Name +' Added')
+                    }
+
+                });
+            });
+        }
     };
 
     $scope.open = function($event) {
@@ -122,16 +136,13 @@ app.controller('editEpisodeAddFormCtrl', function ($scope, $modalInstance, episo
     $scope.episode = episode;
 
     $scope.updateEpisode = function (data, id) {
-       /* var updatePromise = episodeService.updateEpisode(data, id);
+        var updatePromise = episodeService.updateEpisode(data, id);
 
         updatePromise.then(function (data) {
-            console.log(data);
             if(data.status == 204) {
                 $modalInstance.dismiss('cancel');
             }
-        });*/
-        console.log(data)
-        console.log(id);
+        });
     };
 
 

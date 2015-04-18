@@ -1,7 +1,7 @@
 <div class="container">
     {{episode}}
    <h1>{{ episode.Name }}</h1>
-    <img ng-src="{{function(show.ImdbID)}}"/>
+    <img ng-src="{{ episode.EpisodeImage }}"/>
     <p>Show: <a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
     <a href="#show/{{ episode.ShowImdbId }}"></a>
     <p> Description: {{episode.Description}}</p>

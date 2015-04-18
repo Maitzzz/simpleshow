@@ -4,4 +4,9 @@ app.service('traktTcService', function ($http) {
     this.getImages = function(imdbid) {
         return $http.get(imageapp + '/show/'+ imdbid);
     };
+
+
+    this.getEpisodeImages = function(imdbid, season, episode) {
+        return $http.get( imageapp + '/episode/' + imdbid + '/' + season  + '/' + episode);
+    };
 });
