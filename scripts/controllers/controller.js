@@ -1,3 +1,4 @@
+var user = localStorage.getItem('loggedIn');
 app.controller('simpleShowController', function ($scope, showService) {
     loadData();
 
@@ -12,18 +13,47 @@ app.controller('simpleShowController', function ($scope, showService) {
     }
 });
 
-app.controller('myShowController', function ($scope, showService) {
+app.controller('myShowController', function ($scope, showService, dataFactory) {
     loadData();
+//    var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
 
     function loadData() {
-        var promise = showService.getData();
-
+        var promise = showService.getUserShows(user);
         promise.then(function (data) {
-            $scope.shows = data.data;
+
+            dataFactory.setMyShows(data.data);
         }), function (error) {
             $log.error('Error', error)
         };
     }
+
+    $scope.$watch(function () {
+        return dataFactory.getMyShows();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.shows = data;
+        }
+    });
+
+    $scope.showCheck = function (showId) {
+        var userShow = {
+            'UserID': localStorage.getItem('loggedIn'),
+            'ShowID': showId
+        };
+        var showCheck = showService.addUserShow(userShow);
+        showCheck.then(function (data) {
+            var show = data.data.Show;
+
+            if (data.data.Show != null) {
+                notify('success', 'Show ' + show.Name + ' added to My Shows');
+            } else {
+                notify('danger', 'Show removed from My shows');
+                loadData();
+            }
+        });
+    };
+
+
 });
 
 app.controller('showsController', function ($scope, showService, $modal, dataFactory) {
@@ -37,22 +67,25 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         };
     }
 
-    var ushows = function loadUserShows() {
-        var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
-        userShows.then(function (data) {
-            return data.data;
-        })
-    };
-
-    var ushows = ushows();
-
-    console.log(ushows);
+    var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
+    var ushowData = [];
 
     $scope.$watch(function () {
         return dataFactory.getShows();
     }, function (data, oldValue) {
+
+        //selle porri peaks ära lahendama ?!?!?!??!?!
         if (data) {
-            $scope.shows = data;
+            userShows.then(function (userShowdata) {
+                $.each(data, function (key, value) {
+                    $.each(userShowdata.data, function (ukey, showData) {
+                        if (value.ShowId == showData.ShowID) {
+                            ushowData.push(showData.ShowID);
+                        }
+                    })
+                });
+                $scope.shows = data;
+            });
         }
     });
 
@@ -63,6 +96,16 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
             size: size
         });
     };
+
+    $scope.isThisUserShow = function (show) {
+        var ret = _.indexOf(ushowData, show);
+
+        if (ret != -1) {
+            return true;
+        }
+        return false;
+    };
+
 //todo check data.status
     $scope.removeShow = function (imdbid) {
         var deletePromise = showService.removeShow(imdbid);
@@ -73,15 +116,16 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     };
 
     $scope.showCheck = function (showId) {
-      var userShow = {
-          'UserID': localStorage.getItem('loggedIn'),
-          'ShowID': showId
-      }
+        var userShow = {
+            'UserID': localStorage.getItem('loggedIn'),
+            'ShowID': showId
+        };
+
         var showCheck = showService.addUserShow(userShow);
         showCheck.then(function (data) {
             var show = data.data.Show;
 
-            if(data.data.Show != null) {
+            if (data.data.Show != null) {
                 notify('success', 'Show ' + show.Name + ' added to My Shows');
             } else {
                 notify('danger', 'Show removed from My shows');
@@ -91,18 +135,23 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 });
 
 app.controller('homeController', function ($scope, showService, $location) {
-    if(localStorage.getItem('loggedIn')) {
+    if (localStorage.getItem('loggedIn')) {
         $location.path('user');
     } else {
         $location.path('welcome');
     }
 
     $scope.message = 'Angular message!';
+
+
 });
 
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
     var showId = $routeParams.id;
-    $scope.showId = showId;
+    var episode = {
+        "ShowImdbId": showId
+    };
+    $scope.episode = episode;
 
     getEpisodes();
     function getEpisodes() {
@@ -129,13 +178,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         }
     });
 
-    $scope.$watch(function () {
-        return dataFactory.getEpisodes();
-    }, function (data, oldValue) {
-        if (data) {
-            $scope.episodes = data;
-        }
-    });
 
     $scope.open = function (size) {
         var editShowModalInstance = $modal.open({
@@ -156,8 +198,8 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             controller: 'episodeAddFormCtrl',
             size: size,
             resolve: {
-                showId: function () {
-                    return $scope.showId;
+                ep: function () {
+                    return $scope.episode;
                 }
             }
         });
@@ -165,23 +207,54 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     //Episodes stuff
 
+    var episodePromise = showService.getUserEpisodes(localStorage.getItem('loggedIn'), showId);
+    var epData = [];
+    var episodes = [];
+
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
         if (data) {
-            $scope.episodes = data;
+
+            episodePromise.then(function (episodeData) {
+                $.each(data, function (key, value) {
+                    $.each(episodeData.data, function (ekey, episodeData) {
+                        if (value.EpisodeId == episodeData.EpisodeId) {
+                            epData.push(episodeData.EpisodeId);
+                        }
+                    });
+//                    console.log(episodeData)
+                    console.log(value.SeasonNr)
+
+                    //  episodes[value.SeasonNr].push(value);
+                });
+                $scope.episodes = data;
+
+                var rer = _.groupBy(data, function (a) {
+                    return a.SeasonNr;
+                });
+                $scope.data = rer;
+            });
         }
     });
 
     $scope.removeEpisode = function (imdbId) {
         var deletePromise = episodeService.removeEpisode(imdbId);
         deletePromise.then(function (data) {
-            console.log(data)
-            if(data.status = 204) {
+            if (data.status = 204) {
                 getEpisodes();
                 notify('success', 'Episode Removed');
             }
         })
+    };
+
+    $scope.isThisUserEpisode = function (episode) {
+        var ret = _.indexOf(epData, episode);
+
+        if (ret != -1) {
+            return true;
+        }
+        return false;
     };
 
     $scope.episodeCheck = function (showId) {
@@ -190,36 +263,67 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             "EpisodeID": showId
         };
 
-        console.log(userEp);
-      var episodeCheck = showService.addUserEpisode(userEp);
+        var episodeCheck = showService.addUserEpisode(userEp);
 
         episodeCheck.then(function (data) {
             var episode = data.data.Episode;
-           if(data.data.Episode != null) {
-               notify('success', 'Watched episode ' + episode.Name)
-           } else {
-               notify('danger', 'Removed from watchlist')
-           }
-        }), function(error) {
+            if (data.data.Episode != null) {
+                notify('success', 'Watched episode ' + episode.Name)
+            } else {
+                notify('danger', 'Removed from watchlist')
+            }
+        }), function (error) {
 
         };
     };
 });
 
-app.controller('seasonController', function ($scope, showService, $routeParams, episodeService) {
-    var episodePromise = episodeService.getShowEpisodes($routeParams.id);
-    episodePromise.then(function (data) {
+app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
+    var showId = $routeParams.id;
 
-        var episodes = _.filter(data.data, function (array) {
-            return array.SeasonNr == $routeParams.season;
+    var ep = {
+        'SeasonNr': parseInt($routeParams.season),
+        'ShowImdbId': showId
+    };
+
+    getEpisodes();
+    function getEpisodes() {
+        var episodePromise = episodeService.getShowEpisodes(showId);
+        episodePromise.then(function (data) {
+            dataFactory.setEpisodes(data.data);
         });
-        $scope.episodes = episodes;
+    }
+    // todo lisada episoodide lisamise funktsioon
+    $scope.$watch(function () {
+        return dataFactory.getEpisodes();
+    }, function (data, oldValue) {
+        if (data) {
+            var episodes = _.filter(data, function (array) {
+                return array.SeasonNr == $routeParams.season;
+            });
+            $scope.episodes = episodes;
+        }
     });
+
+    $scope.addEpisodeModal = function (size) {
+        $modal.open({
+            templateUrl: 'views/forms/episode.html',
+            controller: 'episodeAddFormCtrl',
+            size: size,
+            resolve: {
+                ep: function () {
+                    return ep;
+                }
+            }
+        });
+    }
+
 
 });
 
-app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
-    var episodePromise = episodeService.getShowEpisodes($routeParams.id);
+app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
+  var showId = $routeParams.id;
+    var episodePromise = episodeService.getShowEpisodes(showId);
     episodePromise.then(function (data) {
         var episode = _.filter(data.data, function (array) {
             return array.EpImdbId == $routeParams.episode;
@@ -231,8 +335,14 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
         if (data) {
+            console.log(data)
             $scope.episode = data;
         }
+    });
+
+    var showPromise = showService.getShow($routeParams.id);
+    showPromise.then(function (data) {
+        $scope.show = data.data;
     });
 
     $scope.editShow = function (size) {
@@ -249,7 +359,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
-app.controller('headerController', function($scope, $location, $route) {
+app.controller('headerController', function ($scope, $location, $route) {
     $scope.logOut = function () {
         localStorage.removeItem('loggedIn');
         $location.path('home');
@@ -261,7 +371,7 @@ app.controller('headerController', function($scope, $location, $route) {
 
     $scope.logged = true;
 
-    if(localStorage.getItem('loggedIn')) {
+    if (localStorage.getItem('loggedIn')) {
         $scope.logged = false;
     }
 });
@@ -269,31 +379,31 @@ app.controller('headerController', function($scope, $location, $route) {
 app.controller('loginController', function ($scope, $location, $route, dataFactory) {
     var user = localStorage.getItem('loggedIn');
 
-    if(isNumber(user) == true) {
+    if (isNumber(user) == true) {
         $location.path('home');
     }
 
     var errors = false;
-   $scope.logIn = function (user) {
-       if(!_.has(user,'email')) {
-           notify('warning', 'Email ei ole korrektne või puudub');
-           errors = true;
-       }
+    $scope.logIn = function (user) {
+        if (!_.has(user, 'email')) {
+            notify('warning', 'Email ei ole korrektne või puudub');
+            errors = true;
+        }
 
-       if(!_.has(user,'password')) {
-           notify('warning', 'Parool ei ole korrektne või puudub');
-           errors = true;
-       }
+        if (!_.has(user, 'password')) {
+            notify('warning', 'Parool ei ole korrektne või puudub');
+            errors = true;
+        }
 
-       if(!errors) {
-           console.log(user);
-           localStorage.setItem('loggedIn',1);
-           $location.path('home');
-           // Todo Find better way to refresh data in headers, try not to use $watch
-           //$route.reload();
-           location.reload();
-       }
-   }
+        if (!errors) {
+            console.log(user);
+            localStorage.setItem('loggedIn', 1);
+            $location.path('home');
+            // Todo Find better way to refresh data in headers, try not to use $watch
+            //$route.reload();
+            location.reload();
+        }
+    }
 
     $scope.$watch(function () {
         return dataFactory.getEpisode();
@@ -304,14 +414,18 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
     });
 });
 
-app.controller('welcomeController', function($scope) {
-
+app.controller('welcomeController', function ($scope, traktTcService) {
+    var promise = traktTcService.getImages('tt2364582');
+    promise.then(function (data) {
+        console.log(data);
+        $scope.data = data.data;
+    });
 });
 
 function notify(type, message) {
     $.notify({
         message: message
-    },{
+    }, {
         type: type
     });
 }

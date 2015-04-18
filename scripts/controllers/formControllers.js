@@ -47,25 +47,23 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
     };
 });
 
-app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, showId) {
+app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, ep) {
+    $scope.episode = ep;
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
 
     function getEpisodes() {
-        var episodePromise = episodeService.getShowEpisodes(showId);
+        var episodePromise = episodeService.getShowEpisodes(ep.ShowImdbId);
         episodePromise.then(function (data) {
             dataFactory.setEpisodes(data.data);
         });
     }
 
     $scope.addEpisode = function (episode) {
-        episode.ShowImdbId = showId;
-        console.log(episode);
         var addEpisodePromise = episodeService.addShow(episode);
         addEpisodePromise.then(function(data) {
             if(data.status == 201) {
-                data
                 getEpisodes();
                 $modalInstance.dismiss('cancel');
 

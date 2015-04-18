@@ -20,11 +20,15 @@
         </div>
         <div class="logged-out" ng-show="!logged">
             <a href="#log-in" class="pull-right navbar-btn log-in" ng-click="logOut()">Log Out</a>
+            <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
+            <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
+            <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
         </div>
     </div>
 </div>
 <div ng-controller="simpleShowController">
     {{message}}
+    {{data}}
     <div class="content" ng-view>
 
     </div>
@@ -43,6 +47,7 @@
 <script type="text/javascript" src="scripts/controllers/formControllers.js"></script>
 <script src="scripts/services/showService.js"></script>
 <script src="scripts/services/episodeService.js"></script>
+<script src="scripts/services/traktTvService.js"></script>
 <script src="scripts/bootstrap-notify.min.js"></script>
 
 <script src="scripts/bootstrap/material/ripples.min.js"></script>

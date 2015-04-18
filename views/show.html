@@ -6,46 +6,57 @@
         <div class="show-content col-md-8 well-lg">
             <p class="name">{{show.Name}} </p>
 
+            <p> IMDBID : {{show.ImdbID}}</p>
+
             <p class="description">{{show.Description}} </p>
         </div>
     </div>
     <h1>Episodes</h1>
 
     <div class="episodes-wrapper">
-        <div class="list-element tiles row shows" ng-repeat="episode in episodes">
-            <div class="tile well show well-material-grey-800 col-md-2">
-                <div class="image-wrapper">
-                    <img ng-src="files/image/shield.jpg"/>
+        <div class="season row" ng-repeat="(key, season) in data">
+            <a href="#show/{{ show.ImdbID}}/{{ key }}"><h1>Season {{ key }}</h1></a>
+
+            <div class="list-element tiles row shows" ng-repeat="episode in season">
+                <div class="tile well show well-material-grey-800 col-md-2">
+                    <div class="image-wrapper">
+                        <img ng-src="files/image/shield.jpg"/>
+                    </div>
+                    <div class="content-wrapper">
+
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
+                                   ng-checked="isThisUserEpisode(episode.EpisodeId)">
+                        </label>
+                    </div>
                 </div>
-                <div class="content-wrapper">
+                <div class="content col-md-9">
+                    <p class="name"><a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}} ">{{episode.Name
+                        }}</a></p>
+
+                    <p class="rating"> Rating: {{ episode.Rating }}</p>
+
+                    <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{
+                        episode.SeasonNr }} </a></p>
+
+                    <p class="episode-nr">{{ episode.EpisodeNr }}</p>
+
+                    <p class="rating"> {{ episode.Rating }}</p>
+                    <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i
+                            class="mdi-navigation-close"></i> Remove
+                    </button>
 
                 </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"  ng-click="episodeCheck(episode.EpisodeId)">
-                    </label>
-                </div>
-            </div>
-            <div class="content col-md-9">
-                <p class="name"><a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}} ">{{episode.Name }}</a></p>
-
-                <p class="rating"> Rating: {{ episode.Rating }}</p>
-
-                <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{
-                    episode.SeasonNr }} </a></p>
-
-                <p class="episode-nr">{{ episode.EpisodeNr }}</p>
-
-                <p class="rating"> {{ episode.Rating }}</p>
-                <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i class="mdi-navigation-close"></i> Remove</button>
-
             </div>
         </div>
-    </div>
-    <div class="bottom-menu">
-        <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon" ng-click="addShowModal()"><i
-                class="mdi-content-add-circle-outline"></i></button>
-        <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i
-                class="mdi-image-edit button-lg-icon"></i></button>
+        <div class="bottom-menu">
+            <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
+                    ng-click="addShowModal()"><i
+                    class="mdi-content-add-circle-outline"></i></button>
+            <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i
+                    class="mdi-image-edit button-lg-icon"></i></button>
+        </div>
     </div>
 </div>

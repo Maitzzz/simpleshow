@@ -1,7 +1,14 @@
 <div class="container">
-    <h1>Episode</h1>
-
     {{episode}}
+   <h1>{{ episode.Name }}</h1>
+    <img ng-src="{{function(show.ImdbID)}}"/>
+    <p>Show: <a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
+    <a href="#show/{{ episode.ShowImdbId }}"></a>
+    <p> Description: {{episode.Description}}</p>
+    <p> Season: {{episode.SeasonNr}}</p>
+    <p> Episode: {{episode.EpisodeNr}}</p>
+    <p>Rating{{episode.Rating}}</p>
+    <p>IMDB : {{episode.ShowImdbId}}</p>
 
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="editShow()"><i
