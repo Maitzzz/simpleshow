@@ -297,17 +297,44 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             dataFactory.setEpisodes(data.data);
         });
     }
-    // todo lisada episoodide lisamise funktsioon
+    var epdata = [];
+
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
         if (data) {
+            epdata = [];
+            var userEpisodePromise = showService.getUserEpisodes(localStorage.getItem('loggedIn'), showId);
+            userEpisodePromise.then(function (episodeData) {
+                $.each(data, function (key, value) {
+                    $.each(episodeData.data, function (ekey, episodeData) {
+                        if (value.EpisodeId == episodeData.EpisodeId) {
+                            epdata.push(episodeData.EpisodeId);
+                        }
+                    });
+                });
+                $scope.episodes = data;
+
+                var rer = _.groupBy(data, function (a) {
+                    return a.SeasonNr;
+                }   );
+                $scope.data = rer;
+            });
             var episodes = _.filter(data, function (array) {
                 return array.SeasonNr == $routeParams.season;
             });
             $scope.episodes = episodes;
         }
     });
+
+    $scope.isThisUserEpisode = function (show) {
+        var ret = _.indexOf(epdata, show);
+
+        if (ret != -1) {
+            return true;
+        }
+        return false;
+    };
 
     $scope.addEpisodeModal = function (size) {
         $modal.open({
@@ -321,7 +348,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             }
         });
     }
-
 
 });
 
@@ -372,7 +398,6 @@ app.controller('headerController', function ($scope, $location, $route) {
     $scope.logOut = function () {
         localStorage.removeItem('loggedIn');
         $location.path('home');
-        //$route.reload();
         // Todo Find better way to refresh data in headers, try not to use $watch
         location.reload();
     };

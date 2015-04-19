@@ -31,7 +31,7 @@ body .tile {
   background: #424242;
 }
 body .tile .content-wrapper {
-  margin: 5px 0px;
+  margin: 5px 0;
   padding: 0 10px;
   width: 86%;
   float: left;

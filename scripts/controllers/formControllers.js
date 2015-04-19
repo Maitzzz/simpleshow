@@ -42,6 +42,11 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
                     $modalInstance.dismiss('cancel');
                     notify('success','Show '+ data.data.Name +' Added')
                 }
+
+                if(data.statusText == 'Conflict') {
+                    $modalInstance.dismiss('cancel');
+                    notify('danger', data.data)
+                }
             }), function (error) {
                 console.error(error);
             };
@@ -56,26 +61,20 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
 
                 var postShow = showService.addShow(show);
                 postShow.then(function (data) {
-                    if (data.status == 201) {
+                    if (data.status == 201 ) {
                         loadData();
                         $modalInstance.dismiss('cancel');
                         notify('success','Show '+ data.data.Name +' Added')
+                    }
+                    if(data.statusText == 'Conflict') {
+                        $modalInstance.dismiss('cancel');
+                        notify('danger', data.data)
                     }
                 }), function (error) {
                     console.error(error);
                 };
             })
         }
-        /*var postShow = showService.addShow(show);
-        postShow.then(function (data) {
-            if (data.status == 201) {
-                loadData();
-                $modalInstance.dismiss('cancel');
-                notify('success','Show '+ data.data.Name +' Added')
-            }
-        }), function (error) {
-            console.error(error);
-        };*/
     };
 });
 
@@ -93,13 +92,20 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
     }
 
     $scope.addEpisode = function (episode) {
-        if(_.has(episode, 'EpisodeImage')) {
+        //01/08/2008
+        console.log(episode);
+  /*      if(_.has(episode, 'EpisodeImage')) {
             var addEpisodePromise = episodeService.addShow(episode);
             addEpisodePromise.then(function(data) {
                 if(data.status == 201) {
                     getEpisodes();
                     $modalInstance.dismiss('cancel');
                     notify('success','Episode '+ data.data.Name +' Added')
+                }
+
+                if(data.statusText == 'Conflict') {
+                    $modalInstance.dismiss('cancel');
+                    notify('danger', data.data)
                 }
             });
         } else {
@@ -109,15 +115,21 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
                 var addEpisodePromise = episodeService.addShow(episode);
                 addEpisodePromise.then(function(data) {
                     if(data.status == 201) {
+                        console.log(data);
                         getEpisodes();
                         $modalInstance.dismiss('cancel');
 
                         notify('success','Episode '+ data.data.Name +' Added')
                     }
 
+                    if(data.statusText == 'Conflict') {
+                        $modalInstance.dismiss('cancel');
+                        notify('danger', data.data)
+                    }
+
                 });
             });
-        }
+        }*/
     };
 
     $scope.open = function($event) {
