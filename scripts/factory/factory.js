@@ -24,6 +24,7 @@ app.factory('dataFactory', function () {
             return episodes;
         },
         setEpisode: function (data) {
+
             episode = data;
         },
         getEpisode: function () {

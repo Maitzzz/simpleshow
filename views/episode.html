@@ -8,6 +8,7 @@
     <p> Episode: {{episode.EpisodeNr}}</p>
     <p>Rating{{episode.Rating}}</p>
     <p>IMDB : {{episode.ShowImdbId}}</p>
+    <p>Date : {{episode.Date | date:'yyyy-MM-dd'}}</p>
 
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="editShow()"><i

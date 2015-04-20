@@ -45,7 +45,7 @@ app.config(function ($routeProvider) {
 
        .when('/user', {
            templateUrl: 'views/logged-in.html',
-           controller: 'welcomeController'
+           controller: 'userController'
        })
 
        .otherwise({redirectTo: '/home'})

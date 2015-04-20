@@ -15,17 +15,17 @@ app.controller('simpleShowController', function ($scope, showService) {
 
 app.controller('myShowController', function ($scope, showService, dataFactory) {
     loadData();
-    function loadData(){
-    var  myshows = [];
+    function loadData() {
+        var myshows = [];
         var promise = showService.getUserShows(user);
         promise.then(function (data) {
             var showPromise = showService.getData();
             showPromise.then(function (allShows) {
                 $.each(data.data, function (key, value) {
-                    $.each(allShows.data, function(sKey, show){
-                       if(value.ShowID == show.ShowId) {
-                           myshows.push(show);
-                       }
+                    $.each(allShows.data, function (sKey, show) {
+                        if (value.ShowID == show.ShowId) {
+                            myshows.push(show);
+                        }
                     });
                 });
                 dataFactory.setMyShows(myshows);
@@ -175,7 +175,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         var showPromise = showService.getShow(showId);
         showPromise.then(function (data) {
             dataFactory.setShow(data.data);
-            $scope.formData = data.data;
+            $scope.formData = _.cloneDeep(data.data);
         });
     }
 
@@ -236,7 +236,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
                 var rer = _.groupBy(data, function (a) {
                     return a.SeasonNr;
-                }   );
+                });
                 $scope.data = rer;
             });
         }
@@ -297,6 +297,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             dataFactory.setEpisodes(data.data);
         });
     }
+
     var epdata = [];
 
     $scope.$watch(function () {
@@ -317,7 +318,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
                 var rer = _.groupBy(data, function (a) {
                     return a.SeasonNr;
-                }   );
+                });
                 $scope.data = rer;
             });
             var episodes = _.filter(data, function (array) {
@@ -347,47 +348,75 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                 }
             }
         });
-    }
+    };
+
+    $scope.episodeCheck = function (showId) {
+        var userEp = {
+            "UserID": localStorage.getItem('loggedIn'),
+            "EpisodeID": showId
+        };
+
+        var episodeCheck = showService.addUserEpisode(userEp);
+
+        episodeCheck.then(function (data) {
+            var episode = data.data.Episode;
+            if (data.data.Episode != null) {
+                notify('success', 'Watched episode ' + episode.Name)
+            } else {
+                notify('danger', 'Removed from watchlist')
+            }
+        }), function (error) {
+
+        };
+    };
 
 });
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
-  var showId = $routeParams.id;
+    var showId = $routeParams.id;
     loadData();
-   function loadData() {
-       var episodePromise = episodeService.getShowEpisodes(showId);
-       episodePromise.then(function (data) {
-           var episode = _.filter(data.data, function (array) {
-               return array.EpImdbId == $routeParams.episode;
-           });
-           dataFactory.setEpisode(episode[0]);
-       });
-   }
+    function loadData() {
+        var episode = episodeService.getEpisodeByImdbId($routeParams.episode);
+        episode.then(function (data) {
+            dataFactory.setEpisode(data.data)
+        });
+    }
+
+    loadShow();
+    function loadShow() {
+        var showPromise = showService.getShow($routeParams.id);
+        showPromise.then(function (data) {
+            dataFactory.setShow(data.data);
+        });
+    }
+
+    $scope.$watch(function () {
+        return dataFactory.getShow();
+    }, function (data, oldValue) {
+        if (data) {
+            $scope.show = data;
+        }
+    });
 
     $scope.$watch(function () {
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
         if (data) {
+
+            //$scope.episode.Date = Date.parse($scope.episode.Date);
+            data.Date = Date.parse(data.Date);
             $scope.episode = data;
         }
     });
 
-    loadShow();
-    function loadShow() {
-         var showPromise = showService.getShow($routeParams.id);
-         showPromise.then(function (data) {
-             $scope.show = data.data;
-         });
-    }
-
     $scope.editShow = function (size) {
-        var addShowModalInstance = $modal.open({
+        $modal.open({
             templateUrl: 'views/forms/editEpisode.html',
-            controller: 'editEpisodeAddFormCtrl',
+            controller: 'editEpisodeFormCtrl',
             size: size,
             resolve: {
                 episode: function () {
-                    return $scope.episode;
+                    return _.cloneDeep($scope.episode);
                 }
             }
         });
@@ -435,7 +464,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
             //$route.reload();
             location.reload();
         }
-    }
+    };
 
     $scope.$watch(function () {
         return dataFactory.getEpisode();
@@ -446,11 +475,16 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
     });
 });
 
-app.controller('welcomeController', function ($scope, traktTcService) {
-    var promise = traktTcService.getImages('tt2364582');
-    promise.then(function (data) {
-        $scope.data = data.data;
+app.controller('userController', function ($scope, traktTcService, episodeService, showService) {
+    var myshows = showService.getUserShows(user);
+    myshows.then(function (data) {
+        console.log(data.data)
+        var shows = showService.getData();
+        shows.then(function (shows) {
+           console.log(shows.data)
+        });
     });
+
 });
 
 function notify(type, message) {

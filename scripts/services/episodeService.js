@@ -19,10 +19,14 @@ app.service('episodeService', function ($http) {
 
     this.getEpisodeById = function (id) {
         return $http.get(apiurl + '/api/episode/' + id);
-    }
+    };
 
     this.updateEpisode = function (data, id ) {
         return $http.put(apiurl + '/api/episode/' + id, data);
-    }
+    };
+
+    this.getEpisodeByImdbId = function(id) {
+      return $http.get(apiurl + '/api/episode/imdbid/' +id);
+    };
 
 });
