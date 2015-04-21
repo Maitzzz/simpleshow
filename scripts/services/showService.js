@@ -45,6 +45,6 @@ app.service('showService', function ($http) {
     };
 
     this.getShowEpisodesById = function (id) {
-      return $http.get(apiurl + '/api/episode/id' + id);
+      return $http.get(apiurl + '/api/episode/id/' + id);
     };
 });
