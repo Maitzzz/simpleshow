@@ -402,7 +402,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
         if (data) {
-
+            console.log(data)
             //$scope.episode.Date = Date.parse($scope.episode.Date);
             data.Date = Date.parse(data.Date);
             $scope.episode = data;
@@ -478,13 +478,35 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
 app.controller('userController', function ($scope, traktTcService, episodeService, showService) {
     var myshows = showService.getUserShows(user);
     myshows.then(function (data) {
-        console.log(data.data)
-        var shows = showService.getData();
-        shows.then(function (shows) {
-           console.log(shows.data)
+        /*       var shows = showService.getData();
+         shows.then(function (shows) {
+         console.log(shows.data)
+         });*/
+        /*
+         console.log(data.data)
+         $.each(data.data, function (key, show) {
+         console.log(show)
+         var episodePromise = episodeService.getUserEpisodes(user, show.ImdbID);
+         episodePromise.then(function (data) {
+         console.log(data.data);
+         })
+
+         });
+         });*/
+        var prom = [];
+        var data = [];
+        data.data.forEach(function (obj, i) {
+           prom.push(episodeService.getShowEpisodesById(obj.ShowID));
+
         });
+
     });
 
+    $scope.albumsList.forEach(function (obj, i) {
+        prom.push($scope.getAlbum(user, obj.id, function(value){
+            $scope.albums.push(value);
+        }));
+    });
 });
 
 function notify(type, message) {

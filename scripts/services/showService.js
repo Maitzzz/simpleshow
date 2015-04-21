@@ -42,5 +42,9 @@ app.service('showService', function ($http) {
 
     this.getUserEpisodes = function(uid, show) {
         return $http.get(apiurl + '/api/userep/' + uid + '/' + show);
-    }
+    };
+
+    this.getShowEpisodesById = function (id) {
+      return $http.get(apiurl + '/api/episode/id' + id);
+    };
 });
