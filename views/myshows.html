@@ -1,17 +1,18 @@
 <div class="shows container tiles my-shows">
 
     <div class="col-md-3 wrapper tile" ng-repeat="show in shows">
-            <div class="image-wrapper">
-                <img ng-src="{{show.ShowImage}}"/>
-            </div>
-            <div class="content-wrapper">
-                <a href="#show/{{ show.ImdbID }}"> <p class="name">{{ show.Name }}</p></a>
-                <p class="rating"> Rating: {{show.rating }}</p>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" ng-click="showCheck(show.ShowId)" ng-checked="true">
-                </label>
-            </div>
+        <div class="image-wrapper">
+            <img ng-src="{{show.ShowImage}}"/>
+        </div>
+        <div class="content-wrapper">
+            <a href="#show/{{ show.ImdbID }}"><p class="name">{{ show.Name }}</p></a>
+
+            <p class="rating"> Rating: {{show.Rating}}</p>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-click="showCheck(show.ShowId)" ng-checked="true">
+            </label>
+        </div>
     </div>
 </div>

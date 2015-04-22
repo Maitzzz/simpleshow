@@ -48,5 +48,10 @@ app.config(function ($routeProvider) {
            controller: 'userController'
        })
 
+       .when('/import', {
+           templateUrl: 'views/import.html',
+           controller: 'import'
+       })
+
        .otherwise({redirectTo: '/home'})
 });

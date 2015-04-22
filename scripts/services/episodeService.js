@@ -5,7 +5,7 @@ app.service('episodeService', function ($http) {
         return $http.get(apiurl + '/api/episode');
     };
 //todo wtf on see siin ?
-    this.addShow = function(episode) {
+    this.addEpisode = function(episode) {
         return $http.post(apiurl + '/api/episode', episode);
     };
 

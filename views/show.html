@@ -23,12 +23,13 @@
                         <img ng-src="{{episode.EpisodeImage}}"/>
                     </div>
                     <div class="content-wrapper">
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
-                                       ng-checked="isThisUserEpisode(episode.EpisodeId)">
-                            </label>
+                        <div class="checkbox-wrapper">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
+                                           ng-checked="isThisUserEpisode(episode.EpisodeId)">
+                                </label>
+                            </div>
                         </div>
                     </div>
 

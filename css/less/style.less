@@ -93,8 +93,8 @@ body {
         }
       }
     }
-    .sm-btn-icon{
-      i{
+    .sm-btn-icon {
+      i {
         left: -5px;
       }
     }
@@ -110,7 +110,6 @@ body {
       }
     }
 
-
     .episodes-wrapper {
       padding: 0px 16px;
       .tile {
@@ -118,11 +117,13 @@ body {
           width: 100%;
           margin: 0;
           margin-bottom: 5px;
-          .checkbox {
-            float: right;
+          .checkbox-wrapper {
             margin-top: 4px;
-            margin-bottom: 6px;
-            margin-right: 5px;
+            margin-bottom: 30px;
+            .checkbox {
+              float: right;
+              margin: 0;
+            }
           }
         }
       }
@@ -136,7 +137,7 @@ body {
   }
 
   .button-lg-icon {
-    top: 0!important;
+    top: 0 !important;
   }
   .login-wrapper {
     text-align: center;
@@ -144,7 +145,7 @@ body {
     }
   }
 
-  .my-shows{
+  .my-shows {
     img {
       width: 100%;
       height: auto;
@@ -152,7 +153,7 @@ body {
         height: 335px;
       }
     }
-    .tile{
+    .tile {
       margin-right: 20px;
     }
   }
@@ -165,7 +166,7 @@ body {
         background: #424242;
       }
     }
-    .content-wrapper{
+    .content-wrapper {
       float: none;
     }
     .checkbox {
@@ -177,6 +178,14 @@ body {
     img {
       width: 100%;
       height: auto;
+      @media (min-width: 940px) {
+        height: 400px;
+      }
+    }
+
+    .progress {
+      height: 20px;
+      margin-bottom: 5px;
     }
   }
 }

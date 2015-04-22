@@ -21,7 +21,6 @@ app.service('showService', function ($http) {
         return $http.put(apiurl + '/api/show/' + id, data)
     };
 
-
     //user Show service
 
     this.addUserShow = function (data) {
@@ -54,5 +53,7 @@ app.service('showService', function ($http) {
 
     this.getShowById = function (id) {
         return $http.get(apiurl + '/api/show/id/' + id);
-    }
+    };
+
+
 });

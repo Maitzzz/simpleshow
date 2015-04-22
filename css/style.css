@@ -88,11 +88,13 @@ body .show-wrapper .episodes-wrapper .tile .content-wrapper {
   margin: 0;
   margin-bottom: 5px;
 }
-body .show-wrapper .episodes-wrapper .tile .content-wrapper .checkbox {
-  float: right;
+body .show-wrapper .episodes-wrapper .tile .content-wrapper .checkbox-wrapper {
   margin-top: 4px;
-  margin-bottom: 6px;
-  margin-right: 5px;
+  margin-bottom: 30px;
+}
+body .show-wrapper .episodes-wrapper .tile .content-wrapper .checkbox-wrapper .checkbox {
+  float: right;
+  margin: 0;
 }
 body .bottom-menu {
   position: fixed;
@@ -100,7 +102,7 @@ body .bottom-menu {
   right: 30px;
 }
 body .button-lg-icon {
-  top: 0!important;
+  top: 0 !important;
 }
 body .login-wrapper {
   text-align: center;
@@ -133,4 +135,13 @@ body .season-wrapper .checkbox {
 body .shows-data img {
   width: 100%;
   height: auto;
+}
+@media (min-width: 940px) {
+  body .shows-data img {
+    height: 400px;
+  }
+}
+body .shows-data .progress {
+  height: 20px;
+  margin-bottom: 5px;
 }

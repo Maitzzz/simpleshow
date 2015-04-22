@@ -59,7 +59,7 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
                 console.error(error);
             };
         } else {
-            var ImdbID = traktTcService.getImages(show.ImdbID);
+            var ImdbID = traktTcService.traktGetShow(show.ImdbID);
             ImdbID.then(function (data) {
                 if (data.data.message != false) {
                     show.ShowImage = data.data.images.poster.medium;
@@ -100,8 +100,8 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
     }
 
     $scope.addEpisode = function (episode) {
-        console.log(episode)
-        var episodeImage = traktTcService.getEpisodeImages(episode.ShowImdbId, episode.SeasonNr, episode.EpisodeNr);
+        episode.ShowImdbId = ep.ShowImdbId;
+        var episodeImage = traktTcService.getEpisodeImages(ep.ShowImdbId, episode.SeasonNr, episode.EpisodeNr);
         episodeImage.then(function (imageData) {
             if (!_.has(episode, 'EpisodeImage')) {
                 if(_.has(imageData.data, 'images')) {
@@ -112,7 +112,9 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
             }
 
             episode.EpImdbID = imageData.data.ids.imdb;
-            var addEpisodePromise = episodeService.addShow(episode);
+            console.log(episode);
+            var addEpisodePromise = episodeService.addEpisode(episode);
+
             addEpisodePromise.then(function (data) {
                 if (data.status == 201) {
                     getEpisodes();
@@ -142,7 +144,6 @@ app.controller('editEpisodeFormCtrl', function ($scope, $modalInstance, episodeS
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-
     function loadData() {
         var ep = episodeService.getEpisodeByImdbId(episode.EpImdbId);
         ep.then(function (data) {
