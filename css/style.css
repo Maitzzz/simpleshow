@@ -130,3 +130,7 @@ body .season-wrapper .content-wrapper {
 body .season-wrapper .checkbox {
   float: right;
 }
+body .shows-data img {
+  width: 100%;
+  height: auto;
+}

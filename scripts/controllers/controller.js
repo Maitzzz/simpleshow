@@ -475,20 +475,23 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
 });
 
 app.controller('userController', function ($scope, traktTcService, episodeService, showService, $q) {
-    var myshows = showService.getUserShows(user);
+    var myshows = showService.getUserData(user);
     myshows.then(function (data) {
-        var prom = [];
+        $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
-            console.log(obj)
-           prom.push(showService.getShowEpisodesById(obj.ShowID));
-        });
-        $q.all(prom).then(function (result) {
-           console.log(result)
+            obj.Value = Math.floor(obj.Value)
         });
     });
 
 
+});
 
+app.filter('parseint', function ($filter) {
+    return function (input, places) {
+        if (isNaN(input)) return input;
+        var intvalue = Math.floor( input );
+        return intvalue;
+    };
 });
 
 function notify(type, message) {
