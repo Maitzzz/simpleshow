@@ -483,7 +483,6 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
             $scope.episode = data;
         }
     });
-
 });
 
 app.controller('userController', function ($scope, traktTcService, episodeService, showService, $q) {
@@ -491,21 +490,31 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     myshows.then(function (data) {
         $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
-            obj.Value = Math.floor(obj.Value)
+            if(obj.Value == 'NaN'){
+                obj.Value = 0;
+            } else {
+                obj.Value = Math.floor(obj.Value)
+            }
         });
     });
-
-
 });
 
-app.filter('parseint', function ($filter) {
-    return function (input, places) {
-        if (isNaN(input)) return input;
-        var intvalue = Math.floor( input );
-        return intvalue;
+app.controller('registerController', function ($scope,showService ) {
+
+    $scope.register = function (user) {
+        showService.userRegister(user).then(function(data) {
+            if(data.status == 200) {
+                showService.getToken(user.Password, user.Email).then(function(tokenData) {
+                    localStorage.setItem('access_token', tokenData.data.access_token);
+                });
+            } else {
+                notify('danger', 'register Incorrect')
+            }
+
+        });
+
     };
 });
-
 function notify(type, message) {
     $.notify({
         message: message

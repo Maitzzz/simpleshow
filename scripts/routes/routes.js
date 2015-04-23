@@ -53,5 +53,10 @@ app.config(function ($routeProvider) {
            controller: 'import'
        })
 
+       .when('/register', {
+           templateUrl: 'views/register.html',
+           controller: 'registerController'
+       })
+
        .otherwise({redirectTo: '/home'})
 });

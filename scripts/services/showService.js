@@ -55,5 +55,25 @@ app.service('showService', function ($http) {
         return $http.get(apiurl + '/api/show/id/' + id);
     };
 
+    this.userRegister = function(user) {
+        return $http.post(apiurl + '/api/account/register', user);
+    };
+    
+    this.getToken = function (password, username) {
+        // grant_type=password&username=mait@fenomen.ee&password=Kala.Maja1
+      return $http({
+            method: 'POST',
+            url: apiurl + '/Token',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            transformRequest: function(obj) {
+                var str = [];
+                for(var p in obj)
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            },
+            data: {username: username, password: password}
+        });
+    }
+
 
 });
