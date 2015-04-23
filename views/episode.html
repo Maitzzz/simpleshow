@@ -1,11 +1,12 @@
 <div class="container">
+    <p>{{episode}}</p>
    <h1>{{ episode.Name }}</h1>
     <img ng-src="{{ episode.EpisodeImage }}"/>
     <p>Show: <a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
     <a href="#show/{{ episode.ShowImdbId }}"></a>
     <p> Description: {{episode.Description}}</p>
     <p> Season: {{episode.SeasonNr}}</p>
-    <p> Episode: {{episode.EpisodeNr}}</p>
+    <p> Episode: {{episode.EpisodeNr }}</p>
     <p>Rating{{episode.Rating}}</p>
     <p>IMDB : {{episode.ShowImdbId}}</p>
     <p>Date : {{episode.Date | date:'yyyy-MM-dd'}}</p>

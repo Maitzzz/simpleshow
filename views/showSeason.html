@@ -1,5 +1,5 @@
 <div class="season-wrapper container tiles">
-    <div class="col-md-3 wrapper tile" ng-repeat="episode in episodes">
+    <div class="col-md-4 wrapper tile" ng-repeat="episode in episodes">
         <div class="tile-wrapper">
             <div class="image-wrapper">
                 <img ng-src="{{episode.EpisodeImage}}"/>
@@ -13,6 +13,7 @@
                 <p class="name">{{ episode.Name }}</p>
 
                 <p class="rating"> Rating: {{episode.Rating }}</p>
+                <p>{{episode.EpisodeNr}}</p>
 
             </div>
 
