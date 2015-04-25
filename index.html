@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/bootstrap/material/material-fullpalette.min.css">
     <link rel="stylesheet" href="css/bootstrap/material/ripples.min.css">
     <link rel="stylesheet" href="scripts/bootstrap-datepicker/css/datetimepicker.css">
+    <link rel="stylesheet" href="css/loaders.min.css">
 
     <title> SimpleShow !</title>
     <link rel="stylesheet" href="css/style.css">
@@ -15,8 +16,9 @@
 <div class="header-panel shadow-z-2">
     <div class="container-fluid" ng-controller="headerController">
         <h2><a href="#home">SimpleShow</a></h2>
+
         <div class="logged-out" ng-show="logged">
-            <a href="#sign-up" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
+            <a href="#register" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
             <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
         </div>
         <div class="logged-out" ng-show="!logged">
@@ -25,10 +27,24 @@
             <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
             <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
         </div>
+
+        <div class="overlay" ng-show="loader">
+            <div class="loader-wrapper">
+                <div class="loader-inner pacman">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 <div ng-controller="simpleShowController">
     {{message}}
+
     <div class="content" ng-view>
 
     </div>
@@ -39,7 +55,8 @@
 <script src="scripts/angular/angular.min.js"></script>
 <script src="scripts/angular/angular-route.min.js"></script>
 <script src="scripts/lodash.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
 <script src="scripts/module/module.js"></script>
 <script src="scripts/routes/routes.js"></script>
 <script type="text/javascript" src="scripts/factory/factory.js"></script>

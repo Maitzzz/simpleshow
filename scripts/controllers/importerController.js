@@ -1,10 +1,11 @@
-app.controller('import', function ($scope, traktTcService, showService, episodeService, $q) {
+var NO_IMAGE = 'files/image/noimage.png';
+
+app.controller('import', function ($scope, traktTcService, showService, episodeService, $q, dataFactory,$location) {
 
     $scope.import = function (id) {
+        dataFactory.setLoader(true);
         traktTcService.traktGetShow(id).then(function (data) {
             var showdata = data.data;
-            console.log('=======  trakt ======');
-            console.log(data.data);
             $scope.show = data.data.Name;
 
             var show = {
@@ -13,40 +14,47 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                 imdbId: showdata.ids.imdb,
                 ShowImage: showdata.images.poster.medium
             };
-
+            var promiseArray = [];
             showService.addShow(show).then(function (newShow) {
                 traktTcService.traktGetEpisodes(id).then(function (data) {
                     var seasons = data.data;
-                    console.log(newShow);
                     seasons.forEach(function (season) {
                         var episodes = season.episodes;
-                        var promiseArray = [];
                         episodes.forEach(function (episode) {
-                            if (episode.season == 1) {
-                                var episode = {
-                                    ShowId: newShow.data.ShowID,
-                                    Name: episode.title,
-                                    Description: episode.overview,
-                                    Rating: episode.rating,
-                                    EpImdbId: episode.ids.imdb,
-                                    SeasonNr: episode.season,
-                                    EpisodeNr: episode.number,
-                                    ShowImdbId: newShow.data.ImdbID,
-                                    EpisodeImage: episode.images.screenshot.medium
-                                };
-                                if(_.has(episode, 'ShowImdbId')) {
-                                    promiseArray.push(episodeService.addEpisode(episode));
-                                }
+                            console.log(episode)
+                            if(episode.images.screenshot.medium == null) {
+                                console.log('noimage');
+                                episode.image = NO_IMAGE;
+                            } else {
+                               episode.image = episode.images.screenshot.medium;
+                            }
+
+                            var episode = {
+                                ShowId: newShow.data.ShowID,
+                                Name: episode.title,
+                                Description: episode.overview,
+                                Rating: episode.rating,
+                                EpImdbId: episode.ids.imdb,
+                                SeasonNr: episode.season,
+                                EpisodeNr: episode.number,
+                                ShowImdbId: newShow.data.ImdbID,
+                                EpisodeImage: episode.image
+                            };
+                            console.log(episode);
+                            if (_.has(episode, 'ShowImdbId')) {
+                                promiseArray.push(episodeService.addEpisode(episode));
                             }
                         });
+                    });
 
-                        $q.all(promiseArray).then(function (data) {
-                            console.log(data);
-                        });
+                    $q.all(promiseArray).then(function (data) {
+                        dataFactory.setLoader(false);
+                        $location.path('show/' + newShow.data.ShowID);
+                        console.log(data);
                     });
                 });
             });
         })
     }
-    
+
 });

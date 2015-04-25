@@ -1,5 +1,5 @@
 var apiurl = 'http://localhost:56037';
-
+var userApi = 'https://localhost:44302';
 app.service('showService', function ($http) {
     this.getData = function () {
         return $http.get(apiurl + '/api/show');
@@ -55,15 +55,17 @@ app.service('showService', function ($http) {
         return $http.get(apiurl + '/api/show/id/' + id);
     };
 
+    //userloginstuff
+
     this.userRegister = function(user) {
-        return $http.post(apiurl + '/api/account/register', user);
+        return $http.post(userApi + '/api/account/register', user);
     };
     
     this.getToken = function (password, username) {
         // grant_type=password&username=mait@fenomen.ee&password=Kala.Maja1
       return $http({
             method: 'POST',
-            url: apiurl + '/Token',
+            url: userApi + '/Token',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             transformRequest: function(obj) {
                 var str = [];
@@ -74,6 +76,4 @@ app.service('showService', function ($http) {
             data: {username: username, password: password}
         });
     }
-
-
 });

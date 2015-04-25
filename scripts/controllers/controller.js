@@ -14,6 +14,10 @@ app.controller('simpleShowController', function ($scope, showService) {
 });
 
 app.controller('myShowController', function ($scope, showService, dataFactory) {
+    if(!user) {
+        $location.path('home');
+    }
+
     loadData();
     function loadData() {
         var myshows = [];
@@ -67,7 +71,11 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
 
 });
 
-app.controller('showsController', function ($scope, showService, $modal, dataFactory) {
+app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location) {
+    if(!user) {
+        $location.path('home');
+    }
+
     loadData();
     function loadData() {
         var promise = showService.getData();
@@ -156,6 +164,9 @@ app.controller('homeController', function ($scope, showService, $location) {
 });
 
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
+    if(!user) {
+        $location.path('home');
+    }
     var showId = $routeParams.id;
     var episode = {
         "ShowImdbId": showId
@@ -237,6 +248,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 var rer = _.groupBy(data, function (a) {
                     return a.SeasonNr;
                 });
+
+                $.each(rer, function (key, seasons) {
+                    seasons.sort(sort_by('EpisodeNr', false, parseInt()));
+                });
                 $scope.data = rer;
             });
         }
@@ -283,6 +298,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
+    if(!user) {
+        $location.path('home');
+    }
     var showId = $routeParams.id;
 
     var ep = {
@@ -317,13 +335,18 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                 });
                 $scope.episodes = data;
 
-                var rer = _.groupBy(data, function (a) {
+                var ret = _.groupBy(data, function (a) {
                     return a.SeasonNr;
                 });
-                $scope.data = rer;
+                $scope.data = ret;
             });
+
             var episodes = _.filter(data, function (array) {
                 return array.SeasonNr == $routeParams.season;
+            });
+
+            episodes.forEach(function (key, val) {
+                console.log(val);
             });
             $scope.episodes = episodes;
         }
@@ -370,21 +393,14 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
         };
     };
-    var sort_by = function(field, reverse, primer){
 
-        var key = primer ?
-            function(x) {return primer(x[field])} :
-            function(x) {return x[field]};
-
-        reverse = !reverse ? 1 : -1;
-
-        return function (a, b) {
-            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-        }
-    }
 });
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
+    if(!user) {
+        $location.path('home');
+    }
+
     var showId = $routeParams.id;
     loadData();
     function loadData() {
@@ -433,7 +449,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
-app.controller('headerController', function ($scope, $location, $route) {
+app.controller('headerController', function ($scope, $location, $route, dataFactory) {
     $scope.logOut = function () {
         localStorage.removeItem('loggedIn');
         $location.path('home');
@@ -446,6 +462,12 @@ app.controller('headerController', function ($scope, $location, $route) {
     if (localStorage.getItem('loggedIn')) {
         $scope.logged = false;
     }
+
+    $scope.$watch(function () {
+        return dataFactory.getLoader();
+    }, function (data, oldValue) {
+        $scope.loader = data;
+    });
 });
 
 app.controller('loginController', function ($scope, $location, $route, dataFactory) {
@@ -490,7 +512,7 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     myshows.then(function (data) {
         $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
-            if(obj.Value == 'NaN'){
+            if (obj.Value == 'NaN') {
                 obj.Value = 0;
             } else {
                 obj.Value = Math.floor(obj.Value)
@@ -499,22 +521,38 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     });
 });
 
-app.controller('registerController', function ($scope,showService ) {
+app.controller('registerController', function ($scope, showService) {
 
     $scope.register = function (user) {
-        showService.userRegister(user).then(function(data) {
-            if(data.status == 200) {
-                showService.getToken(user.Password, user.Email).then(function(tokenData) {
-                    localStorage.setItem('access_token', tokenData.data.access_token);
-                });
-            } else {
-                notify('danger', 'register Incorrect')
-            }
+        var error = false;
 
-        });
+        if (!_.has('Email', user) && !_.has('Password', user) && !_.has('ConfirmPassword', user) && user.Password != user.ConfirmPassword) {
+            error = true;
+            notify('danger', 'Wrong input !');
+        }
 
+        if (!error) {
+            showService.userRegister(user).then(function (data) {
+                console.log(data);
+                if (data.status == 200) {
+                    showService.getToken(user.Password, user.Email).then(function (tokenData) {
+                        console.log(tokenData);
+                        localStorage.setItem('access_token', tokenData.data.access_token);
+                    });
+                } else {
+                    notify('danger', 'register Incorrect')
+                }
+            }).catch(function(response) {
+                console.error('Gists error', response.status, response.data);
+            });
+        }
     };
 });
+
+app.controller('welcomeController', function ($scope) {
+   $scope.message = 'data'
+});
+
 function notify(type, message) {
     $.notify({
         message: message
@@ -524,4 +562,21 @@ function notify(type, message) {
 }
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+var sort_by = function (field, reverse, primer) {
+
+    var key = primer ?
+        function (x) {
+            return primer(x[field])
+        } :
+        function (x) {
+            return x[field]
+        };
+
+    reverse = !reverse ? 1 : -1;
+
+    return function (a, b) {
+        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+    }
 }

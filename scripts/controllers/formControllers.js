@@ -1,5 +1,6 @@
 var NO_IMAGE = 'files/image/noimage.png';
 app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService, dataFactory, formData) {
+    console.log(formData)
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -11,7 +12,7 @@ app.controller('showEditFormCtrl', function ($scope, $modalInstance, showService
         });
     }
 
-    $scope.show2 = formData;
+    $scope.show = formData;
 
     $scope.updateShow = function (data, id) {
         var updatePromise = showService.updateShow(data, id);
