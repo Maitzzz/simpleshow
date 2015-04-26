@@ -454,6 +454,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 });
 
 app.controller('headerController', function ($scope, $location, $route, dataFactory) {
+    console.log(userName)
     $scope.user = userName;
     $scope.logOut = function () {
         localStorage.removeItem('uid');
@@ -479,7 +480,7 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     });
 });
 
-app.controller('loginController', function ($scope, $location, $route, dataFactory, showService) {
+app.controller('loginController', function ($scope, $location, $route, dataFactory, showService, $route) {
     if (isNumber(user) == true) {
         $location.path('home');
     }
@@ -495,6 +496,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
             notify('warning', 'Parool ei ole korrektne või puudub');
             errors = true;
         }
+
         if (!errors) {
             showService.getToken(user.password, user.email).then(function (data) {
                 console.log(data.data);
@@ -505,6 +507,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
                     // Todo Find better way to refresh data in headers, try not to use $watch
                     //$route.reload();
                     $location.path('home');
+                    $route.reload();
                     location.reload();
                 }
             });
@@ -549,7 +552,8 @@ app.controller('registerController', function ($scope, showService, $location) {
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
                         console.log(tokenData.data.access_token);
-                        localStorage.setItem('uid', data.data.Id);
+                        localStorage.setItem('uid', data.data.Id)
+                        localStorage.setItem('userName', data.data.userName);
                         localStorage.setItem('access_token', tokenData.data.access_token);
                         $location.path('home');
                         location.reload();
@@ -560,7 +564,6 @@ app.controller('registerController', function ($scope, showService, $location) {
             }).catch(function(response) {
                 console.error('Gists error', response.status, response.data);
                 console.log(response.data.ModelState);
-              //  notify('danger', response.data.ModelState)
             });
         }
     };

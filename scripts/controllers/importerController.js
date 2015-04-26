@@ -21,9 +21,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                     seasons.forEach(function (season) {
                         var episodes = season.episodes;
                         episodes.forEach(function (episode) {
-                            console.log(episode)
                             if(episode.images.screenshot.medium == null) {
-                                console.log('noimage');
                                 episode.image = NO_IMAGE;
                             } else {
                                episode.image = episode.images.screenshot.medium;
@@ -40,7 +38,6 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                 ShowImdbId: newShow.data.ImdbID,
                                 EpisodeImage: episode.image
                             };
-                            console.log(episode);
                             if (_.has(episode, 'ShowImdbId') && _.has(episode, 'EpImdbId') && episode.season != 0 && episode.Name != null) {
                                 promiseArray.push(episodeService.addEpisode(episode));
                             }
@@ -49,7 +46,6 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
 
                     $q.all(promiseArray).then(function (data) {
                         dataFactory.setLoader(false);
-                        console.log(data);
                         $location.path('show/' + newShow.data.ImdbID);
                     });
                 });

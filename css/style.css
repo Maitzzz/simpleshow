@@ -161,3 +161,10 @@ body .overlay {
   z-index: 9999;
   color: white;
 }
+body .user-name {
+  float: left;
+}
+body .episode-wrapper .image-wrapper img {
+  width: 100%;
+  height: auto;
+}
