@@ -62,7 +62,9 @@ app.service('showService', function ($http) {
     };
 
     this.getToken = function (password, username) {
+
         var data = "grant_type=password&username=" + username + "&password=" + password;
+        console.log(data);
         return $http.post(userApi + '/token', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     };
 });

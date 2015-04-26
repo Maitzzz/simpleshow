@@ -41,7 +41,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                 EpisodeImage: episode.image
                             };
                             console.log(episode);
-                            if (_.has(episode, 'ShowImdbId')) {
+                            if (_.has(episode, 'ShowImdbId') && _.has(episode, 'EpImdbId') && episode.season != 0 && episode.Name != null) {
                                 promiseArray.push(episodeService.addEpisode(episode));
                             }
                         });
@@ -49,8 +49,8 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
 
                     $q.all(promiseArray).then(function (data) {
                         dataFactory.setLoader(false);
-                        $location.path('show/' + newShow.data.ShowID);
                         console.log(data);
+                        $location.path('show/' + newShow.data.ImdbID);
                     });
                 });
             });

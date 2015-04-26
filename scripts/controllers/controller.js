@@ -1,5 +1,8 @@
 //var user = localStorage.getItem('loggedIn');
 var user = localStorage.getItem('uid');
+var userName = localStorage.getItem('userName');
+var access_token = localStorage.getItem('access_token');
+
 app.controller('simpleShowController', function ($scope, showService) {
     loadData();
 
@@ -451,8 +454,13 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 });
 
 app.controller('headerController', function ($scope, $location, $route, dataFactory) {
+    $scope.user = userName;
     $scope.logOut = function () {
         localStorage.removeItem('uid');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('userName');
+
+
         $location.path('home');
         // Todo Find better way to refresh data in headers, try not to use $watch
         location.reload();
@@ -487,14 +495,16 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
             notify('warning', 'Parool ei ole korrektne või puudub');
             errors = true;
         }
-
         if (!errors) {
-            showService.getToken(user.email, user.password).then(function (data) {
+            showService.getToken(user.password, user.email).then(function (data) {
+                console.log(data.data);
                 if(_.has(data.data,'access_token')) {
-                    localStorage.setItem('uid', data.data.access_token);
-                    $location.path('home');
+                    localStorage.setItem('uid', data.data.userId);
+                    localStorage.setItem('userName', data.data.userName);
+                    localStorage.setItem('access_token', data.data.access_token);
                     // Todo Find better way to refresh data in headers, try not to use $watch
                     //$route.reload();
+                    $location.path('home');
                     location.reload();
                 }
             });
