@@ -1,4 +1,5 @@
-var user = localStorage.getItem('loggedIn');
+//var user = localStorage.getItem('loggedIn');
+var user = localStorage.getItem('uid');
 app.controller('simpleShowController', function ($scope, showService) {
     loadData();
 
@@ -49,7 +50,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
 
     $scope.showCheck = function (showId) {
         var userShow = {
-            'UserID': localStorage.getItem('loggedIn'),
+            'UserID': user,
             'ShowID': showId
         };
 
@@ -86,7 +87,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         };
     }
 
-    var userShows = showService.getUserShows(localStorage.getItem('loggedIn'));
+    var userShows = showService.getUserShows(user);
     var ushowData = [];
 
     $scope.$watch(function () {
@@ -136,7 +137,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 
     $scope.showCheck = function (showId) {
         var userShow = {
-            'UserID': localStorage.getItem('loggedIn'),
+            'UserID': user,
             'ShowID': showId
         };
 
@@ -154,7 +155,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 });
 
 app.controller('homeController', function ($scope, showService, $location) {
-    if (localStorage.getItem('loggedIn')) {
+    if (user) {
         $location.path('user');
     } else {
         $location.path('welcome');
@@ -226,7 +227,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     //Episodes stuff
 
-    var episodePromise = showService.getUserEpisodes(localStorage.getItem('loggedIn'), showId);
+    var episodePromise = showService.getUserEpisodes(user, showId);
     var epData = [];
     var episodes = [];
 
@@ -278,7 +279,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     $scope.episodeCheck = function (showId) {
         var userEp = {
-            "UserID": localStorage.getItem('loggedIn'),
+            "UserID": user,
             "EpisodeID": showId
         };
 
@@ -324,7 +325,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     }, function (data, oldValue) {
         if (data) {
             epdata = [];
-            var userEpisodePromise = showService.getUserEpisodes(localStorage.getItem('loggedIn'), showId);
+            var userEpisodePromise = showService.getUserEpisodes(user, showId);
             userEpisodePromise.then(function (episodeData) {
                 $.each(data, function (key, value) {
                     $.each(episodeData.data, function (ekey, episodeData) {
@@ -376,7 +377,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
     $scope.episodeCheck = function (showId) {
         var userEp = {
-            "UserID": localStorage.getItem('loggedIn'),
+            "UserID": user,
             "EpisodeID": showId
         };
 
@@ -451,7 +452,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 
 app.controller('headerController', function ($scope, $location, $route, dataFactory) {
     $scope.logOut = function () {
-        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('uid');
         $location.path('home');
         // Todo Find better way to refresh data in headers, try not to use $watch
         location.reload();
@@ -459,7 +460,7 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
 
     $scope.logged = true;
 
-    if (localStorage.getItem('loggedIn')) {
+    if (user) {
         $scope.logged = false;
     }
 
@@ -470,9 +471,7 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     });
 });
 
-app.controller('loginController', function ($scope, $location, $route, dataFactory) {
-    var user = localStorage.getItem('loggedIn');
-
+app.controller('loginController', function ($scope, $location, $route, dataFactory, showService) {
     if (isNumber(user) == true) {
         $location.path('home');
     }
@@ -490,11 +489,15 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
         }
 
         if (!errors) {
-            localStorage.setItem('loggedIn', 1);
-            $location.path('home');
-            // Todo Find better way to refresh data in headers, try not to use $watch
-            //$route.reload();
-            location.reload();
+            showService.getToken(user.email, user.password).then(function (data) {
+                if(_.has(data.data,'access_token')) {
+                    localStorage.setItem('uid', data.data.access_token);
+                    $location.path('home');
+                    // Todo Find better way to refresh data in headers, try not to use $watch
+                    //$route.reload();
+                    location.reload();
+                }
+            });
         }
     };
 
@@ -521,7 +524,7 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     });
 });
 
-app.controller('registerController', function ($scope, showService) {
+app.controller('registerController', function ($scope, showService, $location) {
 
     $scope.register = function (user) {
         var error = false;
@@ -533,17 +536,21 @@ app.controller('registerController', function ($scope, showService) {
 
         if (!error) {
             showService.userRegister(user).then(function (data) {
-                console.log(data);
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
-                        console.log(tokenData);
+                        console.log(tokenData.data.access_token);
+                        localStorage.setItem('uid', data.data.Id);
                         localStorage.setItem('access_token', tokenData.data.access_token);
+                        $location.path('home');
+                        location.reload();
                     });
                 } else {
                     notify('danger', 'register Incorrect')
                 }
             }).catch(function(response) {
                 console.error('Gists error', response.status, response.data);
+                console.log(response.data.ModelState);
+              //  notify('danger', response.data.ModelState)
             });
         }
     };
