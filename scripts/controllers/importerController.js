@@ -38,6 +38,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                 ShowImdbId: newShow.data.ImdbID,
                                 EpisodeImage: episode.image
                             };
+
                             if (_.has(episode, 'ShowImdbId') && _.has(episode, 'EpImdbId') && episode.season != 0 && episode.Name != null) {
                                 promiseArray.push(episodeService.addEpisode(episode));
                             }
@@ -52,5 +53,4 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
             });
         })
     }
-
 });

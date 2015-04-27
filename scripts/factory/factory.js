@@ -45,6 +45,5 @@ app.factory('dataFactory', function () {
         getLoader: function() {
             return loader;
         }
-
     };
 });

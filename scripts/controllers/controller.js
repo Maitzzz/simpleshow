@@ -528,7 +528,8 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     myshows.then(function (data) {
         $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
-            if (obj.Value == 'NaN') {
+
+              if (obj.Value == 'NaN') {
                 obj.Value = 0;
             } else {
                 obj.Value = Math.floor(obj.Value)
@@ -562,7 +563,7 @@ app.controller('registerController', function ($scope, showService, $location) {
                     notify('danger', 'register Incorrect')
                 }
             }).catch(function(response) {
-                console.error('Gists error', response.status, response.data);
+                console.error('Error', response.status, response.data);
                 console.log(response.data.ModelState);
             });
         }
@@ -599,4 +600,4 @@ var sort_by = function (field, reverse, primer) {
     return function (a, b) {
         return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
     }
-}
+};
