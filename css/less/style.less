@@ -134,6 +134,10 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
+    width: 50px;
+    .small{
+      margin: 5px;
+    }
   }
 
   .button-lg-icon {
@@ -154,12 +158,31 @@ body {
       }
     }
     .tile {
+      .image-wrapper {
+        position: relative;
+        .name {
+          position: absolute;
+          bottom: 0;
+          padding: 5px 10px;
+          font-size: 15px;
+        }
+      }
+      .content-wrapper {
+
+      }
+
+      .checkbox {
+        margin-top: 5px;
+        margin-bottom: 12px;
+      }
       margin-right: 20px;
     }
   }
 
   .season-wrapper {
     .tile {
+      -webkit-animation: fadeinblock 2s;
+      -moz-animation: fadeinblock 2s;
       .checkbox {
         margin: 7px;
         margin-bottom: 12px;
@@ -236,3 +259,20 @@ body {
 }
 
 
+@-webkit-keyframes labels {
+  0% {
+    margin-top: 0px;
+  }
+  100% {
+    margin-top: -15px;
+  }
+}
+@-webkit-keyframes fadeinblock {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

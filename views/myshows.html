@@ -2,11 +2,10 @@
 
     <div class="col-md-3 wrapper tile" ng-repeat="show in shows">
         <div class="image-wrapper">
+            <a href="#show/{{ show.ImdbID }}"><p class="name">{{ show.Name }}</p></a>
             <img ng-src="{{show.ShowImage}}"/>
         </div>
         <div class="content-wrapper">
-            <a href="#show/{{ show.ImdbID }}"><p class="name">{{ show.Name }}</p></a>
-
             <p class="rating"> Rating: {{show.Rating}}</p>
         </div>
         <div class="checkbox">

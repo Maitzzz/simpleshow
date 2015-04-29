@@ -111,8 +111,10 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
                     episode.EpisodeImage = NO_IMAGE;
                 }
             }
+            if(imageData.data.message != false && !_.has(episode, 'EpImdbID') ) {
+                episode.EpImdbID = imageData.data.ids.imdb;
+            }
 
-            episode.EpImdbID = imageData.data.ids.imdb;
             console.log(episode);
             var addEpisodePromise = episodeService.addEpisode(episode);
 
@@ -128,7 +130,6 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
                     $modalInstance.dismiss('cancel');
                     notify('danger', data.data)
                 }
-
             });
         });
     };
@@ -136,7 +137,6 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
     $scope.open = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
-
         $scope.opened = true;
     };
 });

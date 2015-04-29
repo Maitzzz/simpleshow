@@ -100,6 +100,10 @@ body .bottom-menu {
   position: fixed;
   bottom: 30px;
   right: 30px;
+  width: 50px;
+}
+body .bottom-menu .small {
+  margin: 5px;
 }
 body .button-lg-icon {
   top: 0 !important;
@@ -119,7 +123,22 @@ body .my-shows img {
 body .my-shows .tile {
   margin-right: 20px;
 }
+body .my-shows .tile .image-wrapper {
+  position: relative;
+}
+body .my-shows .tile .image-wrapper .name {
+  position: absolute;
+  bottom: 0;
+  padding: 5px 10px;
+  font-size: 15px;
+}
+body .my-shows .tile .checkbox {
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
 body .season-wrapper .tile {
+  -webkit-animation: fadeinblock 2s;
+  -moz-animation: fadeinblock 2s;
   background: none;
 }
 body .season-wrapper .tile .checkbox {
@@ -180,4 +199,21 @@ body .season-wrapper .tile .tile-wrapper .checkbox {
 .episode-wrapper .image-wrapper img {
   width: 100%;
   height: auto;
+}
+@-webkit-keyframes labels {
+  0% {
+    margin-top: 0px;
+  }
+  100% {
+    margin-top: -15px;
+  }
+}
+@-webkit-keyframes fadeinblock {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

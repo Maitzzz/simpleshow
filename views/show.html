@@ -9,6 +9,13 @@
             <p> IMDBID : {{show.ImdbID}}</p>
 
             <p class="description">{{show.Description}} </p>
+
+            <p class="seasons">
+            Seasons:
+            <span class="season" ng-repeat="(snr, sData) in data">
+               <a href="#show/{{ show.ImdbID}}/{{ snr }}">{{snr}}</a>
+            </span>
+            </p>
         </div>
     </div>
     <h1>Episodes</h1>
@@ -54,7 +61,7 @@
             </div>
         </div>
         <div class="bottom-menu">
-            <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
+            <button class="small btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
                     ng-click="addShowModal()"><i
                     class="mdi-content-add-circle-outline"></i></button>
             <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i
