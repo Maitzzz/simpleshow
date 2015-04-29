@@ -160,63 +160,79 @@ body {
 
   .season-wrapper {
     .tile {
+      .checkbox {
+        margin: 7px;
+        margin-bottom: 12px;
+      }
+
       background: none;
       .tile-wrapper {
         margin: 0 10px;
         background: #424242;
-      }
-    }
-    .content-wrapper {
-      float: none;
-    }
-    .checkbox {
-      float: right;
-    }
-  }
-
-  .shows-data {
-    img {
-      width: 100%;
-      height: auto;
-      @media (min-width: 940px) {
-        height: 400px;
-      }
-    }
-
-    .progress {
-      height: 20px;
-      margin-bottom: 5px;
-    }
-  }
-
-  .loader-wrapper {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
-  }
-
-  .overlay {
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background-color:rgba(0,150,136, 0.85);
-    z-index:9999;
-    color:white;
-  }
-
-  .user-name {
-    float: left;
-  }
-
-  .episode-wrapper {
-    .image-wrapper {
-      img {
-        width: 100%;
-        height: auto;
+        .image-wrapper {
+          position: relative;
+          .name {
+            position: absolute;
+            bottom: 0;
+            padding: 5px 10px;
+            font-size: 15px;
+          }
+        }
+        .content-wrapper {
+          float: none;
+        }
+        .checkbox {
+          float: right;
+        }
       }
     }
   }
 }
+
+.shows-data {
+  img {
+    width: 100%;
+    height: auto;
+    @media (min-width: 940px) {
+      height: 400px;
+    }
+  }
+
+  .progress {
+    height: 20px;
+    margin-bottom: 5px;
+  }
+}
+
+.loader-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 150, 136, 0.85);
+  z-index: 9999;
+  color: white;
+}
+
+.user-name {
+  float: left;
+}
+
+.episode-wrapper {
+  .image-wrapper {
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+

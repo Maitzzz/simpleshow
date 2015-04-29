@@ -2,6 +2,7 @@
     <div class="col-md-4 wrapper tile" ng-repeat="episode in episodes">
         <div class="tile-wrapper">
             <div class="image-wrapper">
+                <p class="name">{{episode.EpisodeNr}}x{{episode.SeasonNr}} {{ episode.Name }}</p>
                 <img ng-src="{{episode.EpisodeImage}}"/>
             </div>
             <div class="checkbox">
@@ -9,11 +10,8 @@
                     <input type="checkbox"  ng-checked="isThisUserEpisode(episode.EpisodeId)" ng-click="episodeCheck(episode.EpisodeId)">
                 </label>
             </div>
-            <div class="content-wrapper">
-                <p class="name">{{ episode.Name }}</p>
-
+            <div class="content-wrapper clearfix">
                 <p class="rating"> Rating: {{episode.Rating }}</p>
-                <p>{{episode.EpisodeNr}}</p>
 
             </div>
 

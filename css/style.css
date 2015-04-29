@@ -122,36 +122,49 @@ body .my-shows .tile {
 body .season-wrapper .tile {
   background: none;
 }
+body .season-wrapper .tile .checkbox {
+  margin: 7px;
+  margin-bottom: 12px;
+}
 body .season-wrapper .tile .tile-wrapper {
   margin: 0 10px;
   background: #424242;
 }
-body .season-wrapper .content-wrapper {
+body .season-wrapper .tile .tile-wrapper .image-wrapper {
+  position: relative;
+}
+body .season-wrapper .tile .tile-wrapper .image-wrapper .name {
+  position: absolute;
+  bottom: 0;
+  padding: 5px 10px;
+  font-size: 15px;
+}
+body .season-wrapper .tile .tile-wrapper .content-wrapper {
   float: none;
 }
-body .season-wrapper .checkbox {
+body .season-wrapper .tile .tile-wrapper .checkbox {
   float: right;
 }
-body .shows-data img {
+.shows-data img {
   width: 100%;
   height: auto;
 }
 @media (min-width: 940px) {
-  body .shows-data img {
+  .shows-data img {
     height: 400px;
   }
 }
-body .shows-data .progress {
+.shows-data .progress {
   height: 20px;
   margin-bottom: 5px;
 }
-body .loader-wrapper {
+.loader-wrapper {
   position: fixed;
   top: 50%;
   left: 50%;
   z-index: 2;
 }
-body .overlay {
+.overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -161,10 +174,10 @@ body .overlay {
   z-index: 9999;
   color: white;
 }
-body .user-name {
+.user-name {
   float: left;
 }
-body .episode-wrapper .image-wrapper img {
+.episode-wrapper .image-wrapper img {
   width: 100%;
   height: auto;
 }

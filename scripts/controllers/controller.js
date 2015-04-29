@@ -18,7 +18,7 @@ app.controller('simpleShowController', function ($scope, showService) {
 });
 
 app.controller('myShowController', function ($scope, showService, dataFactory) {
-    if(!user) {
+    if (!user) {
         $location.path('home');
     }
 
@@ -76,7 +76,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
 });
 
 app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location) {
-    if(!user) {
+    if (!user) {
         $location.path('home');
     }
 
@@ -168,7 +168,7 @@ app.controller('homeController', function ($scope, showService, $location) {
 });
 
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService) {
-    if(!user) {
+    if (!user) {
         $location.path('home');
     }
     var showId = $routeParams.id;
@@ -302,7 +302,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
-    if(!user) {
+    if (!user) {
         $location.path('home');
     }
     var showId = $routeParams.id;
@@ -337,7 +337,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                         }
                     });
                 });
-                $scope.episodes = data;
 
                 var ret = _.groupBy(data, function (a) {
                     return a.SeasonNr;
@@ -347,10 +346,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
             var episodes = _.filter(data, function (array) {
                 return array.SeasonNr == $routeParams.season;
-            });
-
-            episodes.forEach(function (key, val) {
-                console.log(val);
             });
             $scope.episodes = episodes;
         }
@@ -401,7 +396,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 });
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
-    if(!user) {
+    if (!user) {
         $location.path('home');
     }
 
@@ -454,7 +449,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 });
 
 app.controller('headerController', function ($scope, $location, $route, dataFactory) {
-    console.log(userName)
+    console.log(userName);
     $scope.user = userName;
     $scope.logOut = function () {
         localStorage.removeItem('uid');
@@ -500,7 +495,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
         if (!errors) {
             showService.getToken(user.password, user.email).then(function (data) {
                 console.log(data.data);
-                if(_.has(data.data,'access_token')) {
+                if (_.has(data.data, 'access_token')) {
                     localStorage.setItem('uid', data.data.userId);
                     localStorage.setItem('userName', data.data.userName);
                     localStorage.setItem('access_token', data.data.access_token);
@@ -529,7 +524,7 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
         $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
 
-              if (obj.Value == 'NaN') {
+            if (obj.Value == 'NaN') {
                 obj.Value = 0;
             } else {
                 obj.Value = Math.floor(obj.Value)
@@ -562,7 +557,7 @@ app.controller('registerController', function ($scope, showService, $location) {
                 } else {
                     notify('danger', 'register Incorrect')
                 }
-            }).catch(function(response) {
+            }).catch(function (response) {
                 console.error('Error', response.status, response.data);
                 console.log(response.data.ModelState);
             });
@@ -571,7 +566,7 @@ app.controller('registerController', function ($scope, showService, $location) {
 });
 
 app.controller('welcomeController', function ($scope) {
-   $scope.message = 'data'
+    $scope.message = 'data'
 });
 
 function notify(type, message) {
