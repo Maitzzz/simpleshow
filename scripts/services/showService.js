@@ -1,4 +1,5 @@
 app.service('showService', function ($http) {
+
     this.getData = function () {
         return $http.get(apiurl + '/api/show');
     };
@@ -65,4 +66,8 @@ app.service('showService', function ($http) {
         console.log(data);
         return $http.post(apiurl + '/token', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     };
+
+    this.logOut = function() {
+        return $http.post(apiurl + '/api/Account/Logout');
+    }
 });

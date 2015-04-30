@@ -448,18 +448,21 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
-app.controller('headerController', function ($scope, $location, $route, dataFactory) {
+app.controller('headerController', function ($scope, $location, $route, dataFactory, showService) {
     console.log(userName);
     $scope.user = userName;
     $scope.logOut = function () {
         localStorage.removeItem('uid');
-        localStorage.removeItem('access_token');
         localStorage.removeItem('userName');
+        localStorage.removeItem('access_token');
+        showService.logOut().then(function(data){
+            if(data.status == 200) {
+                $location.path('home');
+                // Todo Find better way to refresh data in headers, try not to use $watch
+                location.reload();
+            }
+        });
 
-
-        $location.path('home');
-        // Todo Find better way to refresh data in headers, try not to use $watch
-        location.reload();
     };
 
     $scope.logged = true;
@@ -495,7 +498,8 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
         if (!errors) {
             showService.getToken(user.password, user.email).then(function (data) {
                 console.log(data.data);
-                if (_.has(data.data, 'access_token')) {
+                if (_.has(data.data, 'access_token') && data.status == 200) {
+                    console.log(data.data);
                     localStorage.setItem('uid', data.data.userId);
                     localStorage.setItem('userName', data.data.userName);
                     localStorage.setItem('access_token', data.data.access_token);
@@ -547,7 +551,7 @@ app.controller('registerController', function ($scope, showService, $location) {
             showService.userRegister(user).then(function (data) {
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
-                        console.log(tokenData.data.access_token);
+                        console.log(tokenData.data);
                         localStorage.setItem('uid', data.data.Id)
                         localStorage.setItem('userName', data.data.userName);
                         localStorage.setItem('access_token', tokenData.data.access_token);
