@@ -1,4 +1,15 @@
 <div class="season-wrapper container tiles">
+    <div class="show-wrapper">
+        <p class="name"><a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
+        <p class="season">Season {{show.season}}</p>
+        <div class="checkbox">
+            <p>Season Watched:</p>
+            <label>
+                <input type="checkbox" ng-checked="isThisUserEpisode(episode.EpisodeId)"
+                       ng-click="seasonWatched()">
+            </label>
+        </div>
+    </div>
     <div class="col-md-4 wrapper tile" ng-repeat="episode in episodes">
         <div class="tile-wrapper">
             <div class="image-wrapper">
@@ -7,7 +18,8 @@
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox"  ng-checked="isThisUserEpisode(episode.EpisodeId)" ng-click="episodeCheck(episode.EpisodeId)">
+                    <input type="checkbox" ng-checked="isThisUserEpisode(episode.EpisodeId)"
+                           ng-click="episodeCheck(episode.EpisodeId)">
                 </label>
             </div>
             <div class="content-wrapper clearfix">
@@ -18,7 +30,7 @@
         </div>
     </div>
 
-        <div class="bottom-menu">
+    <div class="bottom-menu">
         <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
                 ng-click="addEpisodeModal()"><i
                 class="mdi-content-add-circle-outline"></i></button>

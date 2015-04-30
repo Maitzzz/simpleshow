@@ -5,5 +5,6 @@ app.run(function ($rootScope) {
 });
 
 app.run(function($http) {
+    console.log('access token');
     $http.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('access_token') ;
 });

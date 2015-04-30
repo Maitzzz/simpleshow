@@ -1,5 +1,4 @@
 app.service('showService', function ($http) {
-
     this.getData = function () {
         return $http.get(apiurl + '/api/show');
     };

@@ -3,8 +3,10 @@ var user = localStorage.getItem('uid');
 var userName = localStorage.getItem('userName');
 var access_token = localStorage.getItem('access_token');
 
+console.log(access_token);
+
 app.controller('simpleShowController', function ($scope, showService) {
-    loadData();
+    //loadData();
 
     function loadData() {
         var promise = showService.getData();
@@ -18,6 +20,7 @@ app.controller('simpleShowController', function ($scope, showService) {
 });
 
 app.controller('myShowController', function ($scope, showService, dataFactory) {
+
     if (!user) {
         $location.path('home');
     }
@@ -38,9 +41,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
                 });
                 dataFactory.setMyShows(myshows);
             });
-        }), function (error) {
-            $log.error('Error', error)
-        };
+        });
     }
 
     $scope.$watch(function () {
@@ -295,53 +296,92 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             } else {
                 notify('danger', 'Removed from watchlist')
             }
-        }), function (error) {
-
-        };
+        });
     };
 });
 
-app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal) {
+app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, showService, $q) {
+    epdata = [];
+    dataFactory.setEpisodes({});
+
+    $scope.season = $routeParams.season;
     if (!user) {
         $location.path('home');
     }
     var showId = $routeParams.id;
+
 
     var ep = {
         'SeasonNr': parseInt($routeParams.season),
         'ShowImdbId': showId
     };
 
-    getEpisodes();
+ /*   getEpisodes();
     function getEpisodes() {
         var episodePromise = episodeService.getShowEpisodes(showId);
         episodePromise.then(function (data) {
             var episodes = data.data;
             dataFactory.setEpisodes(episodes.sort(sort_by('EpisodeNr', false, parseInt())));
         });
+    }*/
+
+
+    getUserEpisodes();
+    function getUserEpisodes() {
+        var userEpisodePromise = showService.getUserEpisodes(user, showId);
+        userEpisodePromise.then(function (data) {
+            dataFactory.setEpisodes(data.data);
+            //var episodes = data.data;
+        });
     }
 
-    var epdata = [];
 
+    //eraldi factory ?
+    var epdata = [];
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
         if (data) {
-            epdata = [];
-            var userEpisodePromise = showService.getUserEpisodes(user, showId);
-            userEpisodePromise.then(function (episodeData) {
-                $.each(data, function (key, value) {
-                    $.each(episodeData.data, function (ekey, episodeData) {
-                        if (value.EpisodeId == episodeData.EpisodeId) {
-                            epdata.push(episodeData.EpisodeId);
+           // console.log(data)
+            //console.log('======================================')
+            episodeService.getShowEpisodes(showId).then(function (episodeData) {
+                //console.log(episodeData.data);
+                $.each(episodeData.data, function (key, value) {
+                    $.each(data, function (ekey, epData) {
+                        //&& value.SeasonNr == $routeParams.season
+
+                        if (value.EpisodeId == epData.EpisodeId && value.SeasonNr == $routeParams.season)  {
+                            epdata.push(epData.EpisodeId);
+                            console.log('push');
                         }
                     });
                 });
 
-                var ret = _.groupBy(data, function (a) {
-                    return a.SeasonNr;
+                var episodes = _.filter(episodeData.data, function (array) {
+                    return array.SeasonNr == $routeParams.season;
                 });
-                $scope.data = ret;
+
+                $scope.episodes = episodes.sort(sort_by('EpisodeNr', false, parseInt()));;
+            });
+
+        }
+    });
+
+ /*   $scope.$watch(function () {
+        return dataFactory.getEpisodes();
+    }, function (data, oldValue) {
+        if (data) {
+            var userEpisodePromise = showService.getUserEpisodes(user, showId);
+            console.log('======================================')
+            userEpisodePromise.then(function (episodeData) {
+                $.each(data, function (key, value) {
+                    $.each(episodeData.data, function (ekey, epData) {
+                        if (value.EpisodeId == epData.EpisodeId && value.SeasonNr == $routeParams.season)  {
+                            epdata.push(epData.EpisodeId);
+                        }
+                    });
+                });
+
             });
 
             var episodes = _.filter(data, function (array) {
@@ -349,9 +389,14 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             });
             $scope.episodes = episodes;
         }
-    });
+    });*/
+
+
+
+
 
     $scope.isThisUserEpisode = function (show) {
+        console.log(epdata)
         var ret = _.indexOf(epdata, show);
 
         if (ret != -1) {
@@ -386,13 +431,54 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             if (data.data.Episode != null) {
                 notify('success', 'Watched episode ' + episode.Name)
             } else {
-                notify('danger', 'Removed from watchlist')
+                notify('danger', 'Removed from watchlist');
             }
-        }), function (error) {
-
-        };
+        });
     };
 
+    showService.getShow($routeParams.id).then(function (showData) {
+        $scope.show = showData.data;
+    });
+
+    $scope.seasonWatched = function () {
+        var promiseArray = [];
+        $.each($scope.episodes, function (epKey, thisEpisode) {
+            var da = _.indexOf(epdata, thisEpisode.EpisodeId);
+            // läbi peab minema siis, kui episoodide arv on sama suur, kui vaadata
+            if (_.indexOf(epdata, thisEpisode.EpisodeId) == -1 || epdata.length == $scope.episodes.length) {
+            console.log('läks siia')
+                var userEp = {
+                    "UserID": user,
+                    "EpisodeID": thisEpisode.EpisodeId
+                };
+                if (userEp.EpisodeID != null) {
+                    promiseArray.push(showService.addUserEpisode(userEp));
+                }
+
+            }
+        });
+        epdata = [];
+
+        $q.all(promiseArray).then(function (qdata) {
+            console.log(qdata)
+            var error = [];
+            $.each(qdata, function(key, promise) {
+                if(promise.status != 201) {
+                    error.push(promise);
+                }
+            });
+
+            if(error.length > 0) {
+                notify('danger', 'Probleem !');
+                console.error(error);
+                epdata = [];
+            } else {
+                getUserEpisodes();
+            }
+
+
+        });
+    }
 });
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
@@ -448,15 +534,14 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
-app.controller('headerController', function ($scope, $location, $route, dataFactory, showService) {
-    console.log(userName);
+app.controller('headerController', function ($scope, $location, $route, dataFactory, showService, $window) {
     $scope.user = userName;
     $scope.logOut = function () {
         localStorage.removeItem('uid');
         localStorage.removeItem('userName');
         localStorage.removeItem('access_token');
-        showService.logOut().then(function(data){
-            if(data.status == 200) {
+        showService.logOut().then(function (data) {
+            if (data.status == 200) {
                 $location.path('home');
                 // Todo Find better way to refresh data in headers, try not to use $watch
                 location.reload();
@@ -478,8 +563,8 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     });
 });
 
-app.controller('loginController', function ($scope, $location, $route, dataFactory, showService, $route) {
-    if (isNumber(user) == true) {
+app.controller('loginController', function ($scope, $location, $route, dataFactory, showService, $window) {
+    if (user != null) {
         $location.path('home');
     }
 
@@ -504,25 +589,27 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
                     localStorage.setItem('userName', data.data.userName);
                     localStorage.setItem('access_token', data.data.access_token);
                     // Todo Find better way to refresh data in headers, try not to use $watch
-                    //$route.reload();
-                    $location.path('home');
-                    $route.reload();
-                    location.reload();
+                    $window.location.reload();
+
                 }
             });
         }
     };
 
-    $scope.$watch(function () {
-        return dataFactory.getEpisode();
-    }, function (data, oldValue) {
-        if (data) {
-            $scope.episode = data;
-        }
-    });
+    /* $scope.$watch(function () {
+     return dataFactory.getEpisode();
+     }, function (data, oldValue) {
+     if (data) {
+     $scope.episode = data;
+     }
+     });*/
 });
 
-app.controller('userController', function ($scope, traktTcService, episodeService, showService, $q) {
+app.controller('userController', function ($scope, traktTcService, episodeService, showService, $location) {
+    if (user == null) {
+        $location.path('home');
+    }
+
     var myshows = showService.getUserData(user);
     myshows.then(function (data) {
         $scope.shows = data.data;
@@ -556,7 +643,7 @@ app.controller('registerController', function ($scope, showService, $location) {
                         localStorage.setItem('userName', data.data.userName);
                         localStorage.setItem('access_token', tokenData.data.access_token);
                         $location.path('home');
-                        location.reload();
+                        $window.location.reload();
                     });
                 } else {
                     notify('danger', 'register Incorrect')
@@ -565,9 +652,9 @@ app.controller('registerController', function ($scope, showService, $location) {
                 console.error('Error', response.status, response.data);
 
 
-                $.each(response.data.ModelState, function(key, data) {
-                    if(!isNumber(data)) {
-                        notify('danger',data[0]);
+                $.each(response.data.ModelState, function (key, data) {
+                    if (!isNumber(data)) {
+                        notify('danger', data[0]);
                     }
 
                 });

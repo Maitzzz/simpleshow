@@ -136,9 +136,17 @@ body .my-shows .tile .checkbox {
   margin-top: 5px;
   margin-bottom: 12px;
 }
+body .season-wrapper .show-wrapper {
+  margin: 10px 20px;
+  color: #000000;
+}
+body .season-wrapper .show-wrapper .name a {
+  font-size: 35px;
+}
+body .season-wrapper .show-wrapper .season {
+  font-size: 25px;
+}
 body .season-wrapper .tile {
-  -webkit-animation: fadeinblock 2s;
-  -moz-animation: fadeinblock 2s;
   background: none;
 }
 body .season-wrapper .tile .checkbox {
