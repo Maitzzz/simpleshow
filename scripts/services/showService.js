@@ -1,5 +1,3 @@
-var apiurl = 'http://localhost:56037';
-var userApi = 'https://localhost:44302';
 app.service('showService', function ($http) {
     this.getData = function () {
         return $http.get(apiurl + '/api/show');
@@ -58,13 +56,13 @@ app.service('showService', function ($http) {
     //userloginstuff
 
     this.userRegister = function (user) {
-        return $http.post(userApi + '/api/account/register', user);
+        return $http.post(apiurl + '/api/account/register', user);
     };
 
     this.getToken = function (password, username) {
 
         var data = "grant_type=password&username=" + username + "&password=" + password;
         console.log(data);
-        return $http.post(userApi + '/token', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+        return $http.post(apiurl + '/token', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     };
 });

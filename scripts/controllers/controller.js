@@ -559,7 +559,15 @@ app.controller('registerController', function ($scope, showService, $location) {
                 }
             }).catch(function (response) {
                 console.error('Error', response.status, response.data);
-                console.log(response.data.ModelState);
+
+
+                $.each(response.data.ModelState, function(key, data) {
+                    if(!isNumber(data)) {
+                        notify('danger',data[0]);
+                    }
+
+                });
+
             });
         }
     };
