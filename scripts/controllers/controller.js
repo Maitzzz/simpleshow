@@ -5,10 +5,16 @@ var access_token = localStorage.getItem('access_token');
 
 console.log(access_token);
 
-app.controller('simpleShowController', function ($scope, showService) {
-    //loadData();
+app.controller('mainController', function($scope, $route) {
+    $scope.$on('$routeChangeSuccess', function(newVal, oldVal) {
+        if (oldVal !== newVal) {
+            $scope.routeClassName = $route.current.className;
+        }
+    });
+});
 
-    function loadData() {
+app.controller('simpleShowController', function ($scope, showService,dataFactory) {
+     function loadData() {
         var promise = showService.getData();
 
         promise.then(function (data) {
@@ -316,14 +322,14 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         'ShowImdbId': showId
     };
 
- /*   getEpisodes();
-    function getEpisodes() {
-        var episodePromise = episodeService.getShowEpisodes(showId);
-        episodePromise.then(function (data) {
-            var episodes = data.data;
-            dataFactory.setEpisodes(episodes.sort(sort_by('EpisodeNr', false, parseInt())));
-        });
-    }*/
+    /*   getEpisodes();
+     function getEpisodes() {
+     var episodePromise = episodeService.getShowEpisodes(showId);
+     episodePromise.then(function (data) {
+     var episodes = data.data;
+     dataFactory.setEpisodes(episodes.sort(sort_by('EpisodeNr', false, parseInt())));
+     });
+     }*/
 
 
     getUserEpisodes();
@@ -342,17 +348,11 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
         if (data) {
-           // console.log(data)
-            //console.log('======================================')
             episodeService.getShowEpisodes(showId).then(function (episodeData) {
-                //console.log(episodeData.data);
                 $.each(episodeData.data, function (key, value) {
                     $.each(data, function (ekey, epData) {
-                        //&& value.SeasonNr == $routeParams.season
-
-                        if (value.EpisodeId == epData.EpisodeId && value.SeasonNr == $routeParams.season)  {
+                        if (value.EpisodeId == epData.EpisodeId && value.SeasonNr == $routeParams.season) {
                             epdata.push(epData.EpisodeId);
-                            console.log('push');
                         }
                     });
                 });
@@ -361,42 +361,13 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                     return array.SeasonNr == $routeParams.season;
                 });
 
-                $scope.episodes = episodes.sort(sort_by('EpisodeNr', false, parseInt()));;
+                $scope.episodes = episodes.sort(sort_by('EpisodeNr', false, parseInt()));
             });
 
         }
     });
 
- /*   $scope.$watch(function () {
-        return dataFactory.getEpisodes();
-    }, function (data, oldValue) {
-        if (data) {
-            var userEpisodePromise = showService.getUserEpisodes(user, showId);
-            console.log('======================================')
-            userEpisodePromise.then(function (episodeData) {
-                $.each(data, function (key, value) {
-                    $.each(episodeData.data, function (ekey, epData) {
-                        if (value.EpisodeId == epData.EpisodeId && value.SeasonNr == $routeParams.season)  {
-                            epdata.push(epData.EpisodeId);
-                        }
-                    });
-                });
-
-            });
-
-            var episodes = _.filter(data, function (array) {
-                return array.SeasonNr == $routeParams.season;
-            });
-            $scope.episodes = episodes;
-        }
-    });*/
-
-
-
-
-
     $scope.isThisUserEpisode = function (show) {
-        console.log(epdata)
         var ret = _.indexOf(epdata, show);
 
         if (ret != -1) {
@@ -446,7 +417,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
             var da = _.indexOf(epdata, thisEpisode.EpisodeId);
             // läbi peab minema siis, kui episoodide arv on sama suur, kui vaadata
             if (_.indexOf(epdata, thisEpisode.EpisodeId) == -1 || epdata.length == $scope.episodes.length) {
-            console.log('läks siia')
                 var userEp = {
                     "UserID": user,
                     "EpisodeID": thisEpisode.EpisodeId
@@ -462,23 +432,28 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         $q.all(promiseArray).then(function (qdata) {
             console.log(qdata)
             var error = [];
-            $.each(qdata, function(key, promise) {
-                if(promise.status != 201) {
+            $.each(qdata, function (key, promise) {
+                if (promise.status != 201) {
                     error.push(promise);
                 }
             });
 
-            if(error.length > 0) {
+            if (error.length > 0) {
                 notify('danger', 'Probleem !');
                 console.error(error);
                 epdata = [];
             } else {
                 getUserEpisodes();
             }
-
-
         });
-    }
+    };
+
+    $scope.isSeasonWatched = function () {
+        if ( $scope.episodes != null && epdata.length == $scope.episodes.length) {
+            return true;
+        }
+        return false;
+    };
 });
 
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
@@ -564,6 +539,7 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
 });
 
 app.controller('loginController', function ($scope, $location, $route, dataFactory, showService, $window) {
+    dataFactory.setView('login');
     if (user != null) {
         $location.path('home');
     }

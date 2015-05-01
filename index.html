@@ -8,27 +8,31 @@
     <link rel="stylesheet" href="css/bootstrap/material/ripples.min.css">
     <link rel="stylesheet" href="scripts/bootstrap-datepicker/css/datetimepicker.css">
     <link rel="stylesheet" href="css/loaders.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
 
     <title> SimpleShow !</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body ng-controller="mainController" ng-class="routeClassName">
 <div class="header-panel shadow-z-2">
     <div class="container-fluid" ng-controller="headerController">
         <h2><a href="#home">SimpleShow</a></h2>
-          <p class="user-name">  {{user}}</p>
-        <div class="logged-out" ng-show="logged">
-            <a href="#register" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
-            <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
 
-        </div>
-        <div class="logged-out" ng-show="!logged">
-            <a href="#log-in" class="pull-right navbar-btn log-in" ng-click="logOut()">Log Out</a>
-            <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
-            <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
-            <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
-        </div>
+        <div class="button-wrapper">
+            <p class="user-name"> {{user}}</p>
 
+            <div class="logged-out" ng-show="logged">
+                <a href="#register" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
+                <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
+
+            </div>
+            <div class="logged-out" ng-show="!logged">
+                <a href="#log-in" class="pull-right navbar-btn log-in" ng-click="logOut()">Log Out</a>
+                <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
+                <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
+                <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
+            </div>
+        </div>
         <div class="overlay" ng-show="loader">
             <div class="loader-wrapper">
                 <div class="loader-inner pacman">
@@ -43,11 +47,11 @@
         </div>
     </div>
 </div>
-<div ng-controller="simpleShowController">
+<div ng-controller="simpleShowController" class="wrapper">
     {{message}}
-
-    <div class="content" ng-view>
-
+    <div class="bg-wrapper">
+        <div class="content content-body" ng-view>
+        </div>
     </div>
 
 </div>

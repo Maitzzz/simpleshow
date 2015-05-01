@@ -1,9 +1,12 @@
+body {
+  overflow-x: hidden;
+  font-family: 'Roboto', sans-serif;
+}
 body .container {
   width: 940px;
   margin-bottom: 30px;
 }
 body .content {
-  margin-top: 20px;
   color: #000000;
 }
 body .header-panel {
@@ -11,7 +14,13 @@ body .header-panel {
   height: 120px;
   background-color: #212121;
 }
-body .header-panel .log-in {
+body .header-panel h2 {
+  float: left;
+}
+body .header-panel .button-wrapper {
+  margin: 12px;
+}
+body .header-panel .button-wrapper .log-in {
   font-size: 18px;
   margin: 15px;
 }
@@ -108,8 +117,18 @@ body .bottom-menu .small {
 body .button-lg-icon {
   top: 0 !important;
 }
-body .login-wrapper {
+body .login {
   text-align: center;
+}
+body .login .login-wrapper {
+  background: #FFFFFF;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #000000;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 body .my-shows img {
   width: 100%;
@@ -172,6 +191,45 @@ body .season-wrapper .tile .tile-wrapper .content-wrapper {
 body .season-wrapper .tile .tile-wrapper .checkbox {
   float: right;
 }
+body .welcome {
+  text-align: center;
+}
+body .welcome .welcome-wrapper {
+  margin: 0;
+  position: absolute;
+  top: 38%;
+  color: #FFFFFF;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+body .welcome .welcome-wrapper h1 {
+  font-size: 55px;
+}
+body .welcome .welcome-wrapper p {
+  font-size: 30px;
+  text-align: left;
+}
+body .welcome .welcome-wrapper .log-in {
+  padding: 3px 10px;
+  font-size: 23px;
+}
+body .background {
+  width: 100%;
+}
+body .background .background-wrapper .upper {
+  background: url("../files/image/hoc.jpg");
+  background-size: 100%;
+  width: 100%;
+}
+body .background .background-wrapper .lower {
+  background: url("../files/image/background-collage.jpg");
+  background-size: 97%;
+  -webkit-filter: blur(8px) brightness(0.8);
+  height: 100%;
+  background-repeat: no-repeat;
+  margin: -32px 0px 0px -14px;
+  width: 105%;
+}
 .shows-data img {
   width: 100%;
   height: auto;
@@ -225,3 +283,26 @@ body .season-wrapper .tile .tile-wrapper .checkbox {
     opacity: 1;
   }
 }
+.container-full {
+  margin: 0 auto;
+  width: 100%;
+}
+/*
+
+body{
+  .bg-wrapper {
+    height: 100%;
+    background-repeat: no-repeat;
+  }
+  &.register {
+    .bg-wrapper {
+      background: url("../files/image/background-collage.jpg");
+    }
+  }
+
+  &.log-in {
+    .bg-wrapper {
+      background: url("../files/image/bb.jpg");
+    }
+  }
+}*/

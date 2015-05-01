@@ -5,6 +5,7 @@ app.factory('dataFactory', function () {
     var episode = {};
     var myshows = {};
     var loader;
+    var view = false;
     return {
         getShows: function () {
             return shows;
@@ -38,12 +39,16 @@ app.factory('dataFactory', function () {
             myshows = data;
         },
         setLoader: function (data) {
-            console.log('=====================')
-            console.log(data);
             loader = data;
         },
         getLoader: function() {
             return loader;
+        },
+        setView: function(data) {
+            view = data;
+        },
+        getView: function(){
+            return view;
         }
     };
 });
