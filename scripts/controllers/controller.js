@@ -118,7 +118,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     });
 
     $scope.open = function (size) {
-        var modalInstance = $modal.open({
+      $modal.open({
             templateUrl: 'views/forms/show.html',
             controller: 'showFormCtrl',
             size: size
