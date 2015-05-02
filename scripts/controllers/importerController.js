@@ -7,7 +7,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
         traktTcService.traktGetShow(id).then(function (data) {
             var showdata = data.data;
             $scope.show = data.data.Name;
-
+                console.log(showdata)
             var show = {
                 Name: showdata.title,
                 Description: showdata.overview,
@@ -39,7 +39,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                     ShowImdbId: newShow.data.ImdbID,
                                     EpisodeImage: episode.image
                                 };
-
+                                console.log(episode);
                                 if (_.has(episode, 'ShowImdbId') && _.has(episode, 'EpImdbId') && episode.Name != null) {
                                     promiseArray.push(episodeService.addEpisode(episode));
                                 }

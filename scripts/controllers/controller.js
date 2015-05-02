@@ -3,8 +3,6 @@ var user = localStorage.getItem('uid');
 var userName = localStorage.getItem('userName');
 var access_token = localStorage.getItem('access_token');
 
-console.log(access_token);
-
 app.controller('mainController', function($scope, $route) {
     $scope.$on('$routeChangeSuccess', function(newVal, oldVal) {
         if (oldVal !== newVal) {
@@ -82,7 +80,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
 
 });
 
-app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location) {
+app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location,$q, episodeService) {
     if (!user) {
         $location.path('home');
     }
@@ -138,11 +136,23 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 
 //todo check data.status
     $scope.removeShow = function (imdbid) {
-        var deletePromise = showService.removeShow(imdbid);
-        deletePromise.then(function (data) {
-            loadData();
-            notify('success', 'Show Removes');
-        });
+   //     var deletePromise = showService.removeShow(imdbid);
+      //  deletePromise.then(function (data) {
+            var promiseArray = [];
+            episodeService.getShowEpisodes(imdbid).then(function(episodes) {
+                console.log(episodes)
+                $.each(episodes.data, function(key, episode) {
+                    console.log(episode.EpisodeId);
+                   // promiseArray.push(episodeService.removeEpisode(episode.EpisodeId));
+                });
+
+              /*  $q.all(promiseArray, function (promiseData) {
+                   console.log(promiseData);
+                });*/
+            });
+            notify('success', 'Show Removed');
+           // loadData();
+      //  });
     };
 
     $scope.showCheck = function (showId) {
@@ -322,25 +332,13 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         'ShowImdbId': showId
     };
 
-    /*   getEpisodes();
-     function getEpisodes() {
-     var episodePromise = episodeService.getShowEpisodes(showId);
-     episodePromise.then(function (data) {
-     var episodes = data.data;
-     dataFactory.setEpisodes(episodes.sort(sort_by('EpisodeNr', false, parseInt())));
-     });
-     }*/
-
-
     getUserEpisodes();
     function getUserEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
             dataFactory.setEpisodes(data.data);
-            //var episodes = data.data;
         });
     }
-
 
     //eraldi factory ?
     var epdata = [];
@@ -571,14 +569,6 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
             });
         }
     };
-
-    /* $scope.$watch(function () {
-     return dataFactory.getEpisode();
-     }, function (data, oldValue) {
-     if (data) {
-     $scope.episode = data;
-     }
-     });*/
 });
 
 app.controller('userController', function ($scope, traktTcService, episodeService, showService, $location) {

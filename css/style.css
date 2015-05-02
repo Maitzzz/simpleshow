@@ -155,9 +155,29 @@ body .my-shows .tile .checkbox {
   margin-top: 5px;
   margin-bottom: 12px;
 }
+body .register-wrapper {
+  -webkit-filter: blur(0px) brightness(1);
+  background: #FFFFFF;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #000000;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+body .register-wrapper .submit {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+}
 body .season-wrapper .show-wrapper {
   margin: 10px 20px;
   color: #000000;
+}
+body .season-wrapper .show-wrapper .checkbox-name {
+  float: left;
+  margin-right: 15px;
 }
 body .season-wrapper .show-wrapper .name a {
   font-size: 35px;
@@ -287,22 +307,22 @@ body .background .background-wrapper .lower {
   margin: 0 auto;
   width: 100%;
 }
-/*
-
-body{
-  .bg-wrapper {
-    height: 100%;
-    background-repeat: no-repeat;
-  }
-  &.register {
-    .bg-wrapper {
-      background: url("../files/image/background-collage.jpg");
-    }
-  }
-
-  &.log-in {
-    .bg-wrapper {
-      background: url("../files/image/bb.jpg");
-    }
-  }
-}*/
+body .bg-wrapper {
+  height: 100%;
+  background-repeat: no-repeat;
+}
+body.register {
+  overflow: hidden;
+}
+body.register .bg-wrapper {
+  background: url("../files/image/flash1_blur.jpg");
+}
+body.log-in {
+  overflow: hidden;
+}
+body.log-in .bg-wrapper {
+  background: url("../files/image/bb.jpg");
+}
+body.welcome {
+  overflow: hidden;
+}

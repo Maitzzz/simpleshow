@@ -196,8 +196,30 @@ body {
     }
   }
 
+  .register-wrapper {
+    -webkit-filter: blur(0px) brightness(1);
+    background: #FFFFFF;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #000000;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+
+    .submit {
+      margin-left: auto;
+      margin-right: auto;
+      width: 100px;
+    }
+  }
+
   .season-wrapper {
     .show-wrapper {
+      .checkbox-name{
+        float: left;
+        margin-right: 15px;
+      }
       margin: 10px 20px;
       color: #000000;
       .name {
@@ -352,22 +374,29 @@ body {
   margin: 0 auto;
   width: 100%;
 }
-/*
 
 body{
+
   .bg-wrapper {
     height: 100%;
     background-repeat: no-repeat;
   }
   &.register {
+    overflow: hidden;
     .bg-wrapper {
-      background: url("../files/image/background-collage.jpg");
+      background: url("../files/image/flash1_blur.jpg");
+
     }
   }
 
   &.log-in {
+    overflow: hidden;
     .bg-wrapper {
       background: url("../files/image/bb.jpg");
     }
   }
-}*/
+
+  &.welcome {
+    overflow: hidden;
+  }
+}

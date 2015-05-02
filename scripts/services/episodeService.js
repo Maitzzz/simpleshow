@@ -10,6 +10,7 @@ app.service('episodeService', function ($http) {
     };
 
     this.getShowEpisodes = function (id) {
+        console.log(id);
         return $http.get(apiurl + '/api/episode/' + id);
     };
 

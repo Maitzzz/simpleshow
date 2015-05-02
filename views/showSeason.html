@@ -1,9 +1,9 @@
 <div class="season-wrapper container tiles">
     <div class="show-wrapper">
         <p class="name"><a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
-        <p class="season">Season {{show.season}}</p>
+        <p class="season">Season {{season}}</p>
         <div class="checkbox">
-            <p>Season Watched:</p>
+            <p class="checkbox-name">Season Watched:</p>
             <label>
                 <input type="checkbox" ng-checked="isSeasonWatched()"
                        ng-click="seasonWatched()" >
