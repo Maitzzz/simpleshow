@@ -1,4 +1,4 @@
-var NO_IMAGE = 'files/image/noimage.png';
+var NO_IMAGE = 'files/image/noimageepisode.jpg ';
 
 app.controller('import', function ($scope, traktTcService, showService, episodeService, $q, dataFactory, $location) {
 
@@ -7,7 +7,7 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
         traktTcService.traktGetShow(id).then(function (data) {
             var showdata = data.data;
             $scope.show = data.data.Name;
-                console.log(showdata)
+
             var show = {
                 Name: showdata.title,
                 Description: showdata.overview,
@@ -16,6 +16,11 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
             };
             var promiseArray = [];
             showService.addShow(show).then(function (newShow) {
+                if(newShow.statusText == 'Conflict') {
+                    notify('danger', newShow.data);
+                    dataFactory.setLoader(false);
+                    return;
+                }
                 traktTcService.traktGetEpisodes(id).then(function (data) {
                     var seasons = data.data;
                     seasons.forEach(function (season) {
@@ -39,7 +44,13 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                     ShowImdbId: newShow.data.ImdbID,
                                     EpisodeImage: episode.image
                                 };
-                                console.log(episode);
+                                if(episode.EpImdbId == null) {
+                                    episode.EpImdbId == episode.ids.trakt;
+                                }
+
+                                if(episode.Description == null) {
+                                    episode.Description == 'no Description'
+                                }
                                 if (_.has(episode, 'ShowImdbId') && _.has(episode, 'EpImdbId') && episode.Name != null) {
                                     promiseArray.push(episodeService.addEpisode(episode));
                                 }

@@ -136,24 +136,13 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 
 //todo check data.status
     $scope.removeShow = function (imdbid) {
-   //     var deletePromise = showService.removeShow(imdbid);
-      //  deletePromise.then(function (data) {
-            var promiseArray = [];
-            episodeService.getShowEpisodes(imdbid).then(function(episodes) {
-                console.log(episodes)
-                $.each(episodes.data, function(key, episode) {
-                    console.log(episode.EpisodeId);
-                   // promiseArray.push(episodeService.removeEpisode(episode.EpisodeId));
-                });
 
-              /*  $q.all(promiseArray, function (promiseData) {
-                   console.log(promiseData);
-                });*/
-            });
+        var deletePromise = showService.removeShow(imdbid);
+        deletePromise.then(function (data) {
             notify('success', 'Show Removed');
-           // loadData();
-      //  });
-    };
+            loadData();
+        });
+           };
 
     $scope.showCheck = function (showId) {
         var userShow = {
@@ -326,7 +315,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     }
     var showId = $routeParams.id;
 
-
     var ep = {
         'SeasonNr': parseInt($routeParams.season),
         'ShowImdbId': showId
@@ -422,13 +410,11 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                 if (userEp.EpisodeID != null) {
                     promiseArray.push(showService.addUserEpisode(userEp));
                 }
-
             }
         });
         epdata = [];
 
         $q.all(promiseArray).then(function (qdata) {
-            console.log(qdata)
             var error = [];
             $.each(qdata, function (key, promise) {
                 if (promise.status != 201) {
@@ -441,6 +427,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
                 console.error(error);
                 epdata = [];
             } else {
+                notify('danger', 'Updated ' + qdata.length + ' episodes');
                 getUserEpisodes();
             }
         });
@@ -459,7 +446,6 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         $location.path('home');
     }
 
-    var showId = $routeParams.id;
     loadData();
     function loadData() {
         var episode = episodeService.getEpisodeByImdbId($routeParams.episode);
@@ -590,7 +576,7 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     });
 });
 
-app.controller('registerController', function ($scope, showService, $location) {
+app.controller('registerController', function ($scope, showService, $location,$window) {
 
     $scope.register = function (user) {
         var error = false;

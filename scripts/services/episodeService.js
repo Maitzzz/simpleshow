@@ -15,6 +15,8 @@ app.service('episodeService', function ($http) {
     };
 
     this.removeEpisode = function (id) {
+
+        console.log(apiurl + '/api/episode/' + id);
         return $http.delete(apiurl + '/api/episode/' + id)
     };
 
