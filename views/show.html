@@ -9,7 +9,12 @@
             <p> IMDBID : {{show.ImdbID}}</p>
 
             <p class="description">{{show.Description}} </p>
-
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-click="showWatched()"
+                           ng-checked="isShowWatched()">
+                </label>
+            </div>
             <p class="seasons">
             Seasons:
             <span class="season" ng-repeat="(snr, sData) in data">
@@ -62,7 +67,7 @@
         </div>
         <div class="bottom-menu">
             <button class="small btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
-                    ng-click="addShowModal()"><i
+                    ng-click="addEpModal()"><i
                     class="mdi-content-add-circle-outline"></i></button>
             <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i
                     class="mdi-image-edit button-lg-icon"></i></button>

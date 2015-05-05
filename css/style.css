@@ -14,9 +14,6 @@ body .header-panel {
   height: 120px;
   background-color: #212121;
 }
-body .header-panel h2 {
-  float: left;
-}
 body .header-panel .button-wrapper {
   margin: 12px;
 }
@@ -136,22 +133,27 @@ body .my-shows img {
 }
 @media (min-width: 940px) {
   body .my-shows img {
-    height: 335px;
+    height: 311px;
   }
 }
 body .my-shows .tile {
-  margin-right: 20px;
+  background: none;
 }
-body .my-shows .tile .image-wrapper {
+body .my-shows .tile .wrapper {
+  background: #424242;
+  margin: 10px;
+  padding-bottom: 1px;
+}
+body .my-shows .tile .wrapper .image-wrapper {
   position: relative;
 }
-body .my-shows .tile .image-wrapper .name {
+body .my-shows .tile .wrapper .image-wrapper .name {
   position: absolute;
   bottom: 0;
   padding: 5px 10px;
   font-size: 15px;
 }
-body .my-shows .tile .checkbox {
+body .my-shows .tile .wrapper .checkbox {
   margin-top: 5px;
   margin-bottom: 12px;
 }

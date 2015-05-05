@@ -43,51 +43,53 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
 
     //todo add controll if data is set
     $scope.addShow = function (show) {
-        if (_.has(show, 'ShowImage')) {
-            var postShow = showService.addShow(show);
-            postShow.then(function (data) {
-                if (data.status == 201) {
-                    loadData();
-                    $modalInstance.dismiss('cancel');
-                    notify('success', 'Show ' + data.data.Name + ' Added')
-                }
+        var error = [];
 
-                if (data.statusText == 'Conflict') {
-                    $modalInstance.dismiss('cancel');
-                    notify('danger', data.data)
-                }
-            }), function (error) {
-                console.error(error);
-            };
-        } else {
-            var ImdbID = traktTcService.traktGetShow(show.ImdbID);
-            ImdbID.then(function (data) {
-                if (data.data.message != false) {
-                    show.ShowImage = data.data.images.poster.medium;
-                } else {
-                    show.ShowImage = NO_IMAGE;
-                }
-
-                var postShow = showService.addShow(show);
-                postShow.then(function (data) {
-                    if (data.status == 201) {
-                        loadData();
-                        $modalInstance.dismiss('cancel');
-                        notify('success', 'Show ' + data.data.Name + ' Added')
-                    }
-                    if (data.statusText == 'Conflict') {
-                        $modalInstance.dismiss('cancel');
-                        notify('danger', data.data)
-                    }
-                }), function (error) {
-                    console.error(error);
-                };
-            })
+        if(!_.has(show, 'Name')) {
+            error.push('Name');
         }
+
+        if(!_.has(show, 'Description')) {
+            error.push('Description')
+        }
+
+        if(!_.has(show, 'ImdbID')) {
+            error.push('ImdbID');
+        }
+
+        if(!_.has(show, 'ShowImage')) {
+            error.push('ShowImage');
+            //todo Add NO_IMAGE or form error? Validate url perhaps ?
+        }
+
+        if(!_.has(show, 'Rating')) {
+            error.push('Rating');
+        }
+
+        if(error.length > 0) {
+            notify('danger', 'Form error, check inputs!');
+            return;
+        }
+
+        var postShow = showService.addShow(show);
+        postShow.then(function (data) {
+            if (data.status == 201) {
+                loadData();
+                $modalInstance.dismiss('cancel');
+                notify('success', 'Show ' + data.data.Name + ' Added')
+            }
+
+            if (data.statusText == 'Conflict') {
+                $modalInstance.dismiss('cancel');
+                notify('danger', data.data)
+            }
+        }), function (error) {
+            console.error(error);
+        };
     };
 });
 
-app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, traktTcService, ep) {
+app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, traktTcService, ep, $moment) {
     $scope.show = ep;
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -101,38 +103,61 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
     }
 
     $scope.addEpisode = function (episode) {
+        var error = [];
         episode.ShowImdbId = ep.ShowImdbId;
-        var episodeImage = traktTcService.getEpisodeImages(ep.ShowImdbId, episode.SeasonNr, episode.EpisodeNr);
-        episodeImage.then(function (imageData) {
-            if (!_.has(episode, 'EpisodeImage')) {
-                if(_.has(imageData.data, 'images')) {
-                    episode.EpisodeImage = imageData.data.images.screenshot.medium;
-                } else {
-                    episode.EpisodeImage = NO_IMAGE;
-                }
+        if (!_.has(episode, 'EpisodeImage')) {
+            episode.EpisodeImage = NO_IMAGE_EP;
+        }
+
+        if(!_.has(episode, 'Name')) {
+            error.push('Name');
+        }
+
+        if(!_.has(episode,'Description')) {
+            error.push('Description');
+        }
+
+        if(!_.has(episode, 'EpImdbID')) {
+            error.push('EpImdbID');
+        }
+
+        if(!_.has(episode,'SeasonNr' )) {
+            error.push('SeasonNr');
+
+        }
+        if(!_.has(episode,'Date' )) {
+            error.push('Date');
+
+        }
+        if(!_.has(episode,'Rating' )) {
+            error.push('Rating');
+        }
+
+        if(error.length > 0) {
+            notify('danger', 'Check input');
+            return;
+        }
+
+        //episode.Date = $moment(episode.Date).format('DD/MM/YYYY');
+        //console.log($.date('dd/mm/yyy', episode.Date));
+        console.log(episode)
+        var addEpisodePromise = episodeService.addEpisode(episode);
+        addEpisodePromise.then(function (data) {
+            if (data.status == 201) {
+                getEpisodes();
+                $modalInstance.dismiss('cancel');
+                $scope.episode = [];
+                notify('success', 'Episode ' + data.data.Name + ' Added')
             }
-            if(imageData.data.message != false && !_.has(episode, 'EpImdbID') ) {
-                episode.EpImdbID = imageData.data.ids.imdb;
+
+            if (data.statusText == 'Conflict') {
+                $modalInstance.dismiss('cancel');
+                notify('danger', data.data)
             }
-
-            console.log(episode);
-            var addEpisodePromise = episodeService.addEpisode(episode);
-
-            addEpisodePromise.then(function (data) {
-                if (data.status == 201) {
-                    getEpisodes();
-                    $modalInstance.dismiss('cancel');
-                    $scope.episode = [];
-                    notify('success', 'Episode ' + data.data.Name + ' Added')
-                }
-
-                if (data.statusText == 'Conflict') {
-                    $modalInstance.dismiss('cancel');
-                    notify('danger', data.data)
-                }
-            });
         });
     };
+    //01/08/2008
+    $scope.formats = ['dd/MM/yyyy'];
 
     $scope.open = function ($event) {
         $event.preventDefault();
@@ -162,6 +187,14 @@ app.controller('editEpisodeFormCtrl', function ($scope, $modalInstance, episodeS
                 $modalInstance.dismiss('cancel');
             }
         });
+    };
+
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+
+    $scope.open = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened = true;
     };
 });
 

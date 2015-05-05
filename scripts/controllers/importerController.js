@@ -1,6 +1,7 @@
-var NO_IMAGE = 'files/image/noimageepisode.jpg ';
+var NO_IMAGE_EP = 'files/image/noimageepisode.jpg ';
 
-app.controller('import', function ($scope, traktTcService, showService, episodeService, $q, dataFactory, $location) {
+//todo check if code is legit
+app.controller('import', function ($scope, traktTcService, showService, episodeService, $q, dataFactory, $location, $moment) {
 
     $scope.import = function (id) {
         dataFactory.setLoader(true);
@@ -25,27 +26,29 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                     var seasons = data.data;
                     seasons.forEach(function (season) {
                         var episodes = season.episodes;
-                        episodes.forEach(function (episode) {
-                            if (episode.season != 0) {
-                                if (episode.images.screenshot.medium == null) {
-                                    episode.image = NO_IMAGE;
+                        episodes.forEach(function (ep) {
+                            if (ep.season != 0) {
+                                if (ep.images.screenshot.medium == null) {
+                                    ep.image = NO_IMAGE_EP;
                                 } else {
-                                    episode.image = episode.images.screenshot.medium;
+                                    ep.image = ep.images.screenshot.medium;
                                 }
 
                                 var episode = {
                                     ShowId: newShow.data.ShowID,
-                                    Name: episode.title,
-                                    Description: episode.overview,
-                                    Rating: episode.rating,
-                                    EpImdbId: episode.ids.imdb,
-                                    SeasonNr: episode.season,
-                                    EpisodeNr: episode.number,
+                                    Name: ep.title,
+                                    Description: ep.overview,
+                                    Rating: ep.rating,
+                                    EpImdbId: ep.ids.imdb,
+                                    SeasonNr: ep.season,
+                                    Date: $moment(ep.first_aired).format('DD/MM/YYYY'),
+                                    EpisodeNr: ep.number,
                                     ShowImdbId: newShow.data.ImdbID,
-                                    EpisodeImage: episode.image
+                                    EpisodeImage: ep.image
                                 };
-                                if(episode.EpImdbId == null) {
-                                    episode.EpImdbId == episode.ids.trakt;
+
+                                if(episode.EpImdbId == null || episode.EpImdbId == '') {
+                                    episode.EpImdbId = ep.ids.trakt;
                                 }
 
                                 if(episode.Description == null) {

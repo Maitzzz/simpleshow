@@ -2,7 +2,6 @@
 
 <head>
     <link rel="stylesheet" href="css/bootstrap/material/roboto.min.css">
-
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap/material/material-fullpalette.min.css">
     <link rel="stylesheet" href="css/bootstrap/material/ripples.min.css">
@@ -16,11 +15,11 @@
 <body ng-controller="mainController" ng-class="routeClassName">
 <div class="header-panel shadow-z-2">
     <div class="container-fluid" ng-controller="headerController">
-        <h2><a href="#home">SimpleShow</a></h2>
-
-        <div class="button-wrapper">
+        <div class="left-wrapper col-md-3">
+            <h2><a href="#home">SimpleShow</a></h2>
             <p class="user-name"> {{user}}</p>
-
+        </div>
+        <div class="button-wrapper">
             <div class="logged-out" ng-show="logged">
                 <a href="#register" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
                 <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
@@ -43,7 +42,6 @@
                     <div></div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -68,11 +66,13 @@
 <script src="scripts/controllers/controller.js"></script>
 <script src="scripts/controllers/importerController.js"></script>
 <script type="text/javascript" src="scripts/controllers/formControllers.js"></script>
+<script src="scripts/moment.js"></script>
+
 <script src="scripts/services/showService.js"></script>
 <script src="scripts/services/episodeService.js"></script>
 <script src="scripts/services/traktTvService.js"></script>
 <script src="scripts/bootstrap-notify.min.js"></script>
-<script src="scripts/moment.js"></script>
+<script src="scripts/angular-momentjs.js"></script>
 <script src="scripts/bootstrap-datepicker/js/datetimepicker.js"></script>
 <script src="scripts/bootstrap/material/ripples.min.js"></script>
 <script src="scripts/bootstrap/material/arrive.min.js"></script>
