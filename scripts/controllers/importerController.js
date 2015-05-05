@@ -41,7 +41,8 @@ app.controller('import', function ($scope, traktTcService, showService, episodeS
                                     Rating: ep.rating,
                                     EpImdbId: ep.ids.imdb,
                                     SeasonNr: ep.season,
-                                    Date: $moment(ep.first_aired).format('DD/MM/YYYY'),
+                                    //Date: $moment(ep.first_aired).format('DD/MM/YYYY'),
+                                    Date: ep.first_aired,
                                     EpisodeNr: ep.number,
                                     ShowImdbId: newShow.data.ImdbID,
                                     EpisodeImage: ep.image
