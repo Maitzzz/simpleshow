@@ -186,8 +186,8 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     getEpisodes();
     function getEpisodes() {
-        var episodePromise = episodeService.getShowEpisodes(showId);
-        episodePromise.then(function (data) {
+        var userEpisodePromise = showService.getUserEpisodes(user, showId);
+        userEpisodePromise.then(function (data) {
             dataFactory.setEpisodes(data.data);
         });
     }
@@ -237,13 +237,13 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     //Episodes stuff
     var episodePromise = showService.getUserEpisodes(user, showId);
-    var epData = [];
+    var epdata = [];
     var episodes = [];
 
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
-        if (data) {
+   /*     if (data) {
             episodePromise.then(function (episodeData) {
                 epData = [];
                 $.each(data, function (key, value) {
@@ -264,9 +264,31 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 });
                 $scope.data = ret;
             });
+        }*/
+
+        if (data) {
+            episodeService.getShowEpisodes(showId).then(function (episodeData) {
+                $.each(episodeData.data, function (key, value) {
+                    $.each(data, function (ekey, epData) {
+                        if (value.EpisodeId == epData.EpisodeId) {
+                            epdata.push(epData.EpisodeId);
+                        }
+                    });
+                });
+
+                $scope.episodes = episodeData.data;
+                var ret = _.groupBy(episodeData.data, function (a) {
+                    return a.SeasonNr;
+                });
+
+                $.each(ret, function (key, seasons) {
+                    seasons.sort(sort_by('EpisodeNr', false, parseInt()));
+                });
+                $scope.data = ret;
+            });
+
         }
     });
-
     $scope.removeEpisode = function (imdbId) {
         var deletePromise = episodeService.removeEpisode(imdbId);
         deletePromise.then(function (data) {
@@ -278,7 +300,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     };
 
     $scope.isThisUserEpisode = function (episode) {
-        var ret = _.indexOf(epData, episode);
+        var ret = _.indexOf(epdata, episode);
 
         if (ret != -1) {
             return true;
@@ -307,8 +329,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     $scope.isShowWatched = function () {
         if (_.has($scope, 'episodes')) {
-
-            if (epData.length == $scope.episodes.length) {
+            if (epdata.length == $scope.episodes.length) {
                 return true;
             }
         }
@@ -318,9 +339,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     $scope.showWatched = function () {
         var promiseArray = [];
+        epdata = [];
         episodeService.getShowEpisodes(showId).then(function (epsData) {
             $.each(epsData.data, function (key, value) {
-                if (_.indexOf(epData, value.EpisodeId) == -1 || epData.length == $scope.episodes.length) {
+                if (_.indexOf(epdata, value.EpisodeId) == -1 || epdata.length == $scope.episodes.length) {
                     var userEp = {
                         "UserID": user,
                         "EpisodeID": value.EpisodeId
@@ -335,8 +357,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                        error.push(promise);
                    }
                 });
-
-                if(error.length > 0) {
+                if(error.length == 0) {
                     epData = [];
                     notify('success', 'Updated ' + data.length + ' episodes.');
                     getEpisodes();
@@ -640,8 +661,6 @@ app.controller('registerController', function ($scope, showService, $location, $
                 }
             }).catch(function (response) {
                 console.error('Error', response.status, response.data);
-
-
                 $.each(response.data.ModelState, function (key, data) {
                     if (!isNumber(data)) {
                         notify('danger', data[0]);
@@ -662,7 +681,11 @@ function notify(type, message) {
     $.notify({
         message: message
     }, {
-        type: type
+        type: type,
+        placement: {
+            from: "bottom",
+            align: "right"
+        }
     });
 }
 function isNumber(n) {
