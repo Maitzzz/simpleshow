@@ -1,5 +1,11 @@
 <div class="all-shows container">
-    <div class="list-element tiles row" ng-repeat="show in shows">
+    <div class="col-md-8 col-md-offset-4">
+        <form class="navbar-form navbar-left">
+            <input ng-model="searchText" type="text" class="form-control col-lg-8" placeholder="Search">
+        </form>
+    </div>
+
+    <div class="list-element tiles row" ng-repeat="show in tshows = (shows | listfilter:searchText)">
         <div class="tile show col-md-3">
             <div class="image-wrapper">
                 <img ng-src="{{ show.ShowImage }}"/>

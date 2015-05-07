@@ -197,11 +197,3 @@ app.controller('editEpisodeFormCtrl', function ($scope, $modalInstance, episodeS
         $scope.opened = true;
     };
 });
-
-function notify(type, message) {
-    $.notify({
-        message: message
-    }, {
-        type: type
-    });
-}

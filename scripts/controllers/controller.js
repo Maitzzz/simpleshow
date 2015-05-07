@@ -134,7 +134,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         return false;
     };
 
-//todo check data.status
+//todo check data.status Kas tagasi tulbe 204?
     $scope.removeShow = function (imdbid) {
 
         var deletePromise = showService.removeShow(imdbid);
@@ -210,7 +210,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     });
 
     $scope.open = function (size) {
-        var editShowModalInstance = $modal.open({
+       $modal.open({
             templateUrl: 'views/forms/editshow.html',
             controller: 'showEditFormCtrl',
             size: size,
@@ -236,39 +236,20 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     };
 
     //Episodes stuff
-    var episodePromise = showService.getUserEpisodes(user, showId);
     var epdata = [];
     var episodes = [];
 
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
-   /*     if (data) {
-            episodePromise.then(function (episodeData) {
-                epData = [];
-                $.each(data, function (key, value) {
-                    $.each(episodeData.data, function (ekey, episodeData) {
-                        if (value.EpisodeId == episodeData.EpisodeId) {
-                            epData.push(episodeData.EpisodeId);
-                        }
-                    });
-                });
-                $scope.episodes = data;
-
-                var ret = _.groupBy(data, function (a) {
-                    return a.SeasonNr;
-                });
-
-                $.each(ret, function (key, seasons) {
-                    seasons.sort(sort_by('EpisodeNr', false, parseInt()));
-                });
-                $scope.data = ret;
-            });
-        }*/
 
         if (data) {
             episodeService.getShowEpisodes(showId).then(function (episodeData) {
                 $.each(episodeData.data, function (key, value) {
+                    if (Date.parse(value.Date) > Date.now()) {
+                        episodeData.data[key].upcoming = 'upcoming';
+                    }
+
                     $.each(data, function (ekey, epData) {
                         if (value.EpisodeId == epData.EpisodeId) {
                             epdata.push(epData.EpisodeId);
@@ -284,6 +265,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 $.each(ret, function (key, seasons) {
                     seasons.sort(sort_by('EpisodeNr', false, parseInt()));
                 });
+                console.log(ret);
                 $scope.data = ret;
             });
 
@@ -352,12 +334,12 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             });
             $q.all(promiseArray).then(function (data) {
                 var error = [];
-                $.each(data, function(key, promise) {
-                   if(promise.status != 201) {
-                       error.push(promise);
-                   }
+                $.each(data, function (key, promise) {
+                    if (promise.status != 201) {
+                        error.push(promise);
+                    }
                 });
-                if(error.length == 0) {
+                if (error.length == 0) {
                     epData = [];
                     notify('success', 'Updated ' + data.length + ' episodes.');
                     getEpisodes();
@@ -524,14 +506,15 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
             dataFactory.setShow(data.data);
         });
     }
-+
-    $scope.$watch(function () {
-        return dataFactory.getShow();
-    }, function (data, oldValue) {
-        if (data) {
-            $scope.show = data;
-        }
-    });
+
+    +
+        $scope.$watch(function () {
+            return dataFactory.getShow();
+        }, function (data, oldValue) {
+            if (data) {
+                $scope.show = data;
+            }
+        });
 
     $scope.$watch(function () {
         return dataFactory.getEpisode();
@@ -650,7 +633,7 @@ app.controller('registerController', function ($scope, showService, $location, $
             showService.userRegister(user).then(function (data) {
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
-                        localStorage.setItem('uid', data.data.Id)
+                        localStorage.setItem('uid', data.data.Id);
                         localStorage.setItem('userName', data.data.userName);
                         localStorage.setItem('access_token', tokenData.data.access_token);
                         $location.path('home');
@@ -665,9 +648,7 @@ app.controller('registerController', function ($scope, showService, $location, $
                     if (!isNumber(data)) {
                         notify('danger', data[0]);
                     }
-
                 });
-
             });
         }
     };
@@ -677,14 +658,159 @@ app.controller('welcomeController', function ($scope) {
     $scope.message = 'data'
 });
 
+app.controller('searchController', function ($scope, showService) {
+    showService.getData().then(function (data) {
+        $scope.shows = data.data;
+    });
+
+    $scope.dataInserted = function (searchText) {
+        if (typeof searchText == "undefined") {
+            return false;
+        }
+        if (searchText.length > 2) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+});
+
+app.controller('traktSearchController', function (traktTcService, $scope, dataFactory,showService, episodeService, $q, $location) {
+    $scope.hide = true;
+    loadShows();
+    var existingShows = [];
+    function loadShows() {
+        showService.getData().then(function (data) {
+            $.each(data.data, function(key, val){
+                existingShows.push(val.ImdbID);
+            });
+        });
+    }
+
+    $scope.search = function (string) {
+        var res = [];
+        traktTcService.traktSearch(string).then(function (data) {
+            $scope.hide = true;
+            console.log(data.data.length);
+            if(data.data.length == 0) {
+                $scope.hide = false;
+                $scope.res = false;
+            }
+            $.each(data.data, function (key, result) {
+                if(result.show.images.poster.thumb != null && result.show.ids.imdb != null) {
+                   res.push(result);
+                }
+            });
+
+            $scope.res = res;
+        });
+    };
+
+    $scope.showExists = function(imdbid) {
+        var ret = _.indexOf(existingShows, imdbid);
+
+        if (ret != -1) {
+            return false;
+        }
+
+        return true;
+    };
+
+    $scope.dataInserted = function (searchText) {
+        if (typeof searchText == "undefined") {
+            return false;
+        }
+        if (searchText.length > 2) {
+                return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+    $scope.import = function (id) {
+    dataFactory.setLoader(true);
+        traktTcService.traktGetShow(id).then(function (data) {
+            var showdata = data.data;
+            $scope.show = data.data.Name;
+
+            var show = {
+                Name: showdata.title,
+                Description: showdata.overview,
+                imdbId: showdata.ids.imdb,
+                ShowImage: showdata.images.poster.medium
+            };
+            var promiseArray = [];
+            showService.addShow(show).then(function (newShow) {
+                if(newShow.statusText == 'Conflict') {
+                    notify('danger', newShow.data);
+                    dataFactory.setLoader(false);
+                    return;
+                }
+                traktTcService.traktGetEpisodes(id).then(function (data) {
+                    var seasons = data.data;
+                    seasons.forEach(function (season) {
+                        var imdbid, description;
+                        var episodes = season.episodes;
+                        episodes.forEach(function (ep) {
+                            if (ep.season != 0) {
+                                if (ep.images.screenshot.medium == null) {
+                                    ep.image = NO_IMAGE_EP;
+                                } else {
+                                    ep.image = ep.images.screenshot.medium;
+                                }
+
+                                if(ep.ids.imdb == null) {
+                                    imdbid = ep.ids.trakt;
+                                } else {
+                                    imdbid = ep.ids.imdb;
+                                }
+
+                                if(ep.overview == null) {
+                                    description = 'no Description';
+                                } else {
+                                    description = ep.overview;
+                                }
+
+                                var episode = {
+                                    ShowId: newShow.data.ShowID,
+                                    Name: ep.title,
+                                    Description: description,
+                                    Rating: ep.rating,
+                                    EpImdbId: imdbid,
+                                    SeasonNr: ep.season,
+                                    Date: ep.first_aired,
+                                    EpisodeNr: ep.number,
+                                    ShowImdbId: newShow.data.ImdbID,
+                                    EpisodeImage: ep.image
+                                };
+                                if (_.has(episode, 'ShowImdbId') && episode.EpImdbId != null && episode.Name != null) {
+                                    promiseArray.push(episodeService.addEpisode(episode));
+                                }
+                            }
+                        });
+                    });
+
+                    $q.all(promiseArray).then(function (data) {
+                        dataFactory.setLoader(false);
+                        $location.path('show/' + newShow.data.ImdbID);
+                    });
+                });
+            });
+        })
+    };
+});
+
 function notify(type, message) {
     $.notify({
         message: message
     }, {
         type: type,
         placement: {
-            from: "bottom",
-            align: "right"
+            from: "top",
+            align: "left"
         }
     });
 }

@@ -1,4 +1,5 @@
 <div class="show-wrapper container">
+
     <div class="show row">
         <div class="img-wrapper col-md-3">
             <img ng-src="{{ show.ShowImage }}"/>
@@ -46,7 +47,7 @@
                     </div>
 
                 </div>
-                <div class="content col-md-8">
+                <div class="content col-md-8 {{ episode.upcoming }}">
                     <p class="name"><a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}} ">{{episode.Name
                         }}</a></p>
 
@@ -55,9 +56,10 @@
                     <p class="season-nr"> Season: <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}">{{
                         episode.SeasonNr }} </a></p>
 
-                    <p class="episode-nr">{{ episode.EpisodeNr }}</p>
+                    <p class="episode-nr"> Episode: {{ episode.EpisodeNr }}</p>
+                    <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
 
-                    <p class="rating"> {{ episode.Rating }}</p>
+
                     <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i
                             class="mdi-navigation-close"></i> Remove
                     </button>

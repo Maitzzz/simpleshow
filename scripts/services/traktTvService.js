@@ -14,4 +14,8 @@ app.service('traktTcService', function ($http) {
         return $http.get(traktApi + '/test/' + imdbid);
     };
 
+    this.traktSearch = function (string) {
+        return $http.get(traktApi + '/search/' + string);
+    };
+
 });
