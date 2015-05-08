@@ -11,6 +11,9 @@ app.controller('mainController', function ($scope, $route) {
     });
 });
 
+/*
+    General controller for testing porpuses.
+*/
 app.controller('simpleShowController', function ($scope, showService, dataFactory) {
     function loadData() {
         var promise = showService.getData();
@@ -23,6 +26,9 @@ app.controller('simpleShowController', function ($scope, showService, dataFactor
     }
 });
 
+/*
+    Controller for my shows, displays user shows.
+ */
 app.controller('myShowController', function ($scope, showService, dataFactory) {
 
     if (!user) {
@@ -30,6 +36,9 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
     }
 
     loadData();
+    /*
+        Collects user and shows data from api and parses it to set it in dataFactory
+     */
     function loadData() {
         var myshows = [];
         var promise = showService.getUserShows(user);
@@ -48,6 +57,9 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
         });
     }
 
+    /*
+        Watcher for show data
+     */
     $scope.$watch(function () {
         return dataFactory.getMyShows();
     }, function (data, oldValue) {
@@ -56,6 +68,9 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
         }
     });
 
+    /*
+        User interraction with show. Adds show record to api
+     */
     $scope.showCheck = function (showId) {
         var userShow = {
             'UserID': user,
@@ -80,12 +95,18 @@ app.controller('myShowController', function ($scope, showService, dataFactory) {
 
 });
 
+/*
+    Controller to show all imported shows.
+ */
 app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location, $q, episodeService) {
     if (!user) {
         $location.path('home');
     }
 
     loadData();
+    /*
+        Loads data from api.
+     */
     function loadData() {
         var promise = showService.getData();
         promise.then(function (data) {
@@ -98,6 +119,10 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     var userShows = showService.getUserShows(user);
     var ushowData = [];
 
+
+    /*
+        Watcher for shows, parses data to display shows and get user shows
+     */
     $scope.$watch(function () {
         return dataFactory.getShows();
     }, function (data, oldValue) {
@@ -117,6 +142,9 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         }
     });
 
+    /*
+        Opens Add show modal
+     */
     $scope.open = function (size) {
         $modal.open({
             templateUrl: 'views/forms/show.html',
@@ -125,6 +153,9 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         });
     };
 
+    /*
+        Check function. Is this show at user shows.
+     */
     $scope.isThisUserShow = function (show) {
         var ret = _.indexOf(ushowData, show);
 
@@ -134,7 +165,10 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         return false;
     };
 
-//todo check data.status Kas tagasi tulbe 204?
+    /*
+        Removes show from user show list
+     */
+    //todo check data.status Kas tagasi tulbe 204?
     $scope.removeShow = function (imdbid) {
 
         var deletePromise = showService.removeShow(imdbid);
@@ -144,6 +178,9 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         });
     };
 
+    /*
+        Adds show to user shows
+     */
     $scope.showCheck = function (showId) {
         var userShow = {
             'UserID': user,
@@ -163,6 +200,9 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     };
 });
 
+/*
+    Test and location controller
+ */
 app.controller('homeController', function ($scope, showService, $location, $moment) {
     if (user) {
         $location.path('user');
@@ -173,6 +213,9 @@ app.controller('homeController', function ($scope, showService, $location, $mome
     $scope.message = 'Angular message!';
 });
 
+/*
+    Controller for show. Displays show and it's episodes.
+ */
 app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService, $q) {
     if (!user) {
         $location.path('home');
@@ -185,6 +228,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     $scope.episode = episode;
 
     getEpisodes();
+    /*
+        Updates/adds data to dataFactory
+     */
     function getEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
@@ -193,6 +239,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     }
 
     getShowData();
+    /*
+        Returns show data from api
+     */
     function getShowData() {
         var showPromise = showService.getShow(showId);
         showPromise.then(function (data) {
@@ -201,6 +250,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         });
     }
 
+    /*
+        Watcher for show data;
+     */
     $scope.$watch(function () {
         return dataFactory.getShow();
     }, function (data, oldValue) {
@@ -209,6 +261,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         }
     });
 
+    /*
+        Opens edit show modal
+     */
     $scope.open = function (size) {
        $modal.open({
             templateUrl: 'views/forms/editshow.html',
@@ -222,6 +277,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         });
     };
 
+    /*
+        Opens Add episode modal
+     */
     $scope.addEpModal = function (size) {
         $modal.open({
             templateUrl: 'views/forms/episode.html',
@@ -239,6 +297,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     var epdata = [];
     var episodes = [];
 
+    /*
+        Episode watcher, parses data and gets user watched shows.
+     */
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
@@ -271,6 +332,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
         }
     });
+
+    /*
+        Removes episode form watched state
+     */
     $scope.removeEpisode = function (imdbId) {
         var deletePromise = episodeService.removeEpisode(imdbId);
         deletePromise.then(function (data) {
@@ -281,6 +346,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         })
     };
 
+    /*
+        Check function for cheking if user has watched current show
+     */
     $scope.isThisUserEpisode = function (episode) {
         var ret = _.indexOf(epdata, episode);
 
@@ -290,6 +358,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         return false;
     };
 
+    /*
+        Adds episode to user episodes
+     */
     $scope.episodeCheck = function (showId) {
         var userEp = {
             "UserID": user,
@@ -309,6 +380,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         });
     };
 
+    /*
+        Checks if every episode in this show is watched.
+     */
     $scope.isShowWatched = function () {
         if (_.has($scope, 'episodes')) {
             if (epdata.length == $scope.episodes.length) {
@@ -319,6 +393,9 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         return false;
     };
 
+    /*
+        Mark all show epsodes as watched.
+     */
     $scope.showWatched = function () {
         var promiseArray = [];
         epdata = [];
@@ -366,6 +443,10 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     $scope.ep = ep;
 
     getUserEpisodes();
+
+    /*
+        Gets user episodes from api and adds/updates data in dataFactory
+     */
     function getUserEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
@@ -375,6 +456,10 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
     //eraldi factory ?
     var epdata = [];
+
+    /*
+        Watcher for Episode data.
+     */
     $scope.$watch(function () {
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
@@ -398,6 +483,9 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         }
     });
 
+    /*
+        Check method for checking id user has watched this episode.
+     */
     $scope.isThisUserEpisode = function (show) {
         var ret = _.indexOf(epdata, show);
 
@@ -407,6 +495,9 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         return false;
     };
 
+    /*
+        Opens Add episode modal
+     */
     $scope.addEpisodeModal = function (size) {
         console.log($scope.ep);
         $modal.open({
@@ -421,6 +512,9 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         });
     };
 
+    /*
+        Adds episode to user Episodes
+     */
     $scope.episodeCheck = function (showId) {
         var userEp = {
             "UserID": user,
@@ -439,10 +533,16 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         });
     };
 
+    /*
+        Get show data.
+     */
     showService.getShow($routeParams.id).then(function (showData) {
         $scope.show = showData.data;
     });
 
+    /*
+        Mark all episodes in this season watched.
+     */
     $scope.seasonWatched = function () {
         var promiseArray = [];
         $.each($scope.episodes, function (epKey, thisEpisode) {
@@ -478,6 +578,9 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         });
     };
 
+    /*
+        Checks if user has watched this season-
+     */
     $scope.isSeasonWatched = function () {
         if ($scope.episodes != null && epdata.length == $scope.episodes.length) {
             return true;
@@ -486,12 +589,19 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     };
 });
 
+/*
+    Controller for displaying episode.
+ */
 app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
     if (!user) {
         $location.path('home');
     }
 
     loadData();
+
+    /*
+        Loads episode data from api
+     */
     function loadData() {
         var episode = episodeService.getEpisodeByImdbId($routeParams.episode);
         episode.then(function (data) {
@@ -500,6 +610,10 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     }
 
     loadShow();
+
+    /*
+     Loads episode data from api
+     */
     function loadShow() {
         var showPromise = showService.getShow($routeParams.id);
         showPromise.then(function (data) {
@@ -516,6 +630,9 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
             }
         });
 
+    /*
+        Watcher for episode data
+     */
     $scope.$watch(function () {
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
@@ -525,6 +642,9 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         }
     });
 
+    /*
+        Opens Edit show modal
+     */
     $scope.editShow = function (size) {
         $modal.open({
             templateUrl: 'views/forms/editEpisode.html',
@@ -539,8 +659,15 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     };
 });
 
+/*
+    Controller for data header
+ */
 app.controller('headerController', function ($scope, $location, $route, dataFactory, showService, $window) {
     $scope.user = userName;
+
+    /*
+        Logout function
+     */
     $scope.logOut = function () {
         localStorage.removeItem('uid');
         localStorage.removeItem('userName');
@@ -561,6 +688,9 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
         $scope.logged = false;
     }
 
+    /*
+        Loader data watcher
+     */
     $scope.$watch(function () {
         return dataFactory.getLoader();
     }, function (data, oldValue) {
@@ -568,6 +698,9 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     });
 });
 
+/*
+    Controller for Login display
+ */
 app.controller('loginController', function ($scope, $location, $route, dataFactory, showService, $window) {
     dataFactory.setView('login');
     if (user != null) {
@@ -575,6 +708,10 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
     }
 
     var errors = false;
+
+    /*
+        Validates and logs user in-
+     */
     $scope.logIn = function (user) {
         if (!_.has(user, 'email')) {
             notify('warning', 'Email ei ole korrektne või puudub');
@@ -600,6 +737,10 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
     };
 });
 
+/*
+    Controller for displaying user data.
+    Adds data to session and keeps user logged in
+ */
 app.controller('userController', function ($scope, traktTcService, episodeService, showService, $location) {
     if (user == null) {
         $location.path('home');
@@ -619,6 +760,10 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
     });
 });
 
+/*
+    Controller for register view.
+    Register user, and logs created user in
+ */
 app.controller('registerController', function ($scope, showService, $location, $window) {
 
     $scope.register = function (user) {
@@ -658,6 +803,9 @@ app.controller('welcomeController', function ($scope) {
     $scope.message = 'data'
 });
 
+/*
+    Controller for searching shows
+ */
 app.controller('searchController', function ($scope, showService) {
     showService.getData().then(function (data) {
         $scope.shows = data.data;
@@ -677,6 +825,10 @@ app.controller('searchController', function ($scope, showService) {
 
 });
 
+/*
+    Controller for trakt.tv search.
+    Allows to import shows from trakt.
+ */
 app.controller('traktSearchController', function (traktTcService, $scope, dataFactory,showService, episodeService, $q, $location) {
     $scope.hide = true;
     loadShows();

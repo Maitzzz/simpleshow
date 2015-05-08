@@ -73,6 +73,9 @@ body .all-shows .tiles .tile.show .content-wrapper {
   padding: 0 10px;
   width: 86%;
 }
+body .show-wrapper .show {
+  margin-top: 20px;
+}
 body .show-wrapper .show .img-wrapper img {
   width: 200px;
 }
@@ -201,6 +204,9 @@ body .season-wrapper .tile .tile-wrapper {
 body .season-wrapper .tile .tile-wrapper .image-wrapper {
   position: relative;
 }
+body .season-wrapper .tile .tile-wrapper .image-wrapper img {
+  height: 180px;
+}
 body .season-wrapper .tile .tile-wrapper .image-wrapper .name {
   position: absolute;
   bottom: 0;
@@ -259,6 +265,9 @@ body .search-trakt-wrapper .results .result .image-wrapper img {
 body .search-wrapper .results .result .image-wrapper img {
   width: 100%;
   height: auto;
+}
+.shows-data {
+  margin-top: 20px;
 }
 .shows-data img {
   width: 100%;

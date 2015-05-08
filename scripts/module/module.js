@@ -13,7 +13,7 @@ app.filter('listfilter',[ function () {
     return function(items, searchText) {
         var filtered = [];
 
-        if(typeof items != 'undefined' && typeof searchText != 'undefined') {
+        if(typeof items != 'undefined' && typeof searchText != 'undefined' && searchText.length > 2) {
             searchText = searchText.toLowerCase();
             angular.forEach(items, function(item) {
                if( item.Name.toLowerCase().indexOf(searchText) >= 0 ) filtered.push(item);

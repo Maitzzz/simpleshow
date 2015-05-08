@@ -25,8 +25,11 @@
             <p class="name"> {{ show.Name }}</p>
             <p class="description"> {{ show.Description }}</p>
             <button class="btn btn-default btn-flat" ng-click="removeShow(show.ImdbID)"><i class="mdi-navigation-close"></i> Remove</button>
-
         </div>
+    </div>
+    <div class="noresults col-md-12">
+        <p ng-hide="tshows.length">This show is not yet imported. Import it using import tool
+            <a href="#traktsearch">here</a></p>
     </div>
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i class="mdi-content-add button-lg-icon"></i></button>

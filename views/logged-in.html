@@ -1,19 +1,11 @@
 <div class="container">
-    <div class="row">
-
-        <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
-        <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
-        <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
-
-    </div>
-
-<div class="shows-data row">
-    <div class="show col-md-4" ng-repeat="show in shows">
-        <div class="img-wrapper">
-            <img ng-src="{{show.Key.ShowImage}}" alt="{{show.Key.Name }}"/>
+    <div class="shows-data row">
+        <div class="show col-md-4" ng-repeat="show in shows">
+            <div class="img-wrapper">
+                <img ng-src="{{show.Key.ShowImage}}" alt="{{show.Key.Name }}"/>
+            </div>
+            <progressbar value="show.Value" type="success"><b>{{show.Value}}%</b></progressbar>
+            <p class="name"><a href="#show/{{show.Key.ImdbID }}">{{ show.Key.Name }}</a></p>
         </div>
-        <progressbar value="show.Value" type="success"><b>{{show.Value}}%</b></progressbar>
-        <p class="name"><a href="#show/{{show.Key.ImdbID }}">{{ show.Key.Name }}</a></p>
     </div>
-</div>
 </div>
