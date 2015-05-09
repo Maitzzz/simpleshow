@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="col-md-4 wrapper tile" ng-repeat="episode in episodes">
-        <div class="tile-wrapper">
+        <div class="tile-wrapper {{episode.upcoming}}">
             <div class="image-wrapper">
                 <p class="name">{{episode.EpisodeNr}}x{{episode.SeasonNr}} <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}}"> {{ episode.Name }}</a></p>
                 <img ng-src="{{episode.EpisodeImage}}"/>
