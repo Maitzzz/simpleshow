@@ -326,7 +326,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 $.each(ret, function (key, seasons) {
                     seasons.sort(sort_by('EpisodeNr', false, parseInt()));
                 });
-                console.log(ret);
                 $scope.data = ret;
             });
 
@@ -926,7 +925,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                                     ep.image = ep.images.screenshot.medium;
                                 }
 
-                                if (ep.ids.imdb == null) {
+                                if (ep.ids.imdb == null || ep.ids.imdb == '') {
                                     imdbid = ep.ids.trakt;
                                 } else {
                                     imdbid = ep.ids.imdb;
@@ -951,6 +950,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                                     EpisodeImage: ep.image
                                 };
                                 if (_.has(episode, 'ShowImdbId') && episode.EpImdbId != null && episode.Name != null) {
+                                    console.log(episode);
                                     promiseArray.push(episodeService.addEpisode(episode));
                                 }
                             }

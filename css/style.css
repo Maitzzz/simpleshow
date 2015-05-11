@@ -258,6 +258,9 @@ body .background .background-wrapper .lower {
   margin: -32px 0px 0px -14px;
   width: 105%;
 }
+body .search-trakt-wrapper .results .result {
+  margin-top: 20px;
+}
 body .search-trakt-wrapper .results .result .image-wrapper img {
   width: 100%;
   height: auto;
