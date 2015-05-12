@@ -13,7 +13,51 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body ng-controller="mainController" ng-class="routeClassName">
-<div class="header-panel shadow-z-2">
+<div class="navbar navbar-default" ng-controller="headerController">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#home">SimpleShow</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav">
+            <li ng-class="{active: isActive('shows')}" ng-if="!logged"><a href="#shows">Shows</a></li>
+            <li ng-class="{active: isActive('myshows')}"ng-show="!logged" ><a href="#myshows">My Shows</a></li>
+        </ul>
+        <form class="navbar-form navbar-left search" ng-submit="submitSearch(searchString)" ng-if="!logged">
+            <input type="text" class="form-control col-lg-8" ng-model="searchString" placeholder="Search">
+            <button type="submit">Search</button>
+
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown" ng-show="!logged">
+                <a class="dropdown-toggle" data-toggle="dropdown"><span>User </span><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"> {{user}} </a></li>
+                    <li><a ng-click="logOut()">Log Out</a></li>
+                </ul>
+            </li>
+                <li ng-if="logged"><a href="#log-in">Log in</a></li>
+                <li ng-if="logged"><a href="#register">Sign Up</a></li>
+        </ul>
+    </div>
+    <div class="overlay" ng-show="loader">
+        <div class="loader-wrapper">
+            <div class="loader-inner pacman">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--<div class="header-panel shadow-z-2">
     <div class="container-fluid" ng-controller="headerController">
         <div class="left-wrapper col-md-3">
             <h2><a href="#home">SimpleShow</a></h2>
@@ -25,12 +69,7 @@
                 <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
 
             </div>
-            <div class="logged-out" ng-show="!logged">
-                <a href="#log-in" class="pull-right navbar-btn log-in" ng-click="logOut()">Log Out</a>
-                <a href="#myshows" class="btn btn-primary navbar-btn pull-right">My Shows</a>
-                <a href="#shows" class="btn btn-primary navbar-btn pull-right">Shows</a>
-                <a href="#home" class="btn btn-primary navbar-btn pull-right">Home</a>
-            </div>
+
         </div>
         <div class="overlay" ng-show="loader">
             <div class="loader-wrapper">
@@ -44,7 +83,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <div ng-controller="simpleShowController" class="wrapper">
     {{message}}
     <div class="bg-wrapper">
@@ -70,7 +109,6 @@
 <script src="scripts/services/showService.js"></script>
 <script src="scripts/services/episodeService.js"></script>
 <script src="scripts/services/traktTvService.js"></script>
-<script src="scripts/services/importService.js"></script>
 <script src="scripts/bootstrap-notify.min.js"></script>
 <script src="scripts/angular-momentjs.js"></script>
 <script src="scripts/bootstrap-datepicker/js/datetimepicker.js"></script>

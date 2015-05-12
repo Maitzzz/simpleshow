@@ -15,8 +15,8 @@
                 <p class="rating"> Rating: {{ show.Rating }}</p>
             </div>
             <div class="checkbox">
-                <label>
-                    <input type="checkbox" ng-click="showCheck(show.ShowId)" ng-checked="isThisUserShow(show.ShowId)">
+                <label ng-class="{red:isThisUserShow(show.ShowId)}">
+                    <i ng-class="isThisUserShow(show.ShowId) ? 'mdi-action-favorite': 'mdi-action-favorite-outline'" ng-click="showCheck(show.ShowId)"></i>
                 </label>
             </div>
         </div>
@@ -29,7 +29,7 @@
     </div>
     <div class="noresults col-md-12">
         <p ng-hide="tshows.length">This show is not yet imported. Import it using import tool
-            <a href="#traktsearch">here</a></p>
+            <a href="#traktsearch/{{searchText}}">here</a></p>
     </div>
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="open()"><i class="mdi-content-add button-lg-icon"></i></button>

@@ -297,11 +297,8 @@ body {
       .lower {
         background: url("../files/image/background-collage.jpg");
         background-size: 97%;
-        -webkit-filter: blur(8px) brightness(0.8);
         height: 100%;
         background-repeat: no-repeat;
-        margin: -32px 0px 0px -14px;
-        width: 105%;
       }
     }
   }
@@ -407,6 +404,12 @@ body {
 }
 
 body {
+  .welcome-bg-wrapper,
+  .log-in-bg
+  {
+    height: 100%;
+    width: 100%;
+  }
 
   .bg-wrapper {
     height: 100%;
@@ -434,4 +437,20 @@ body {
 
 .upcoming {
   background: red;
+}
+
+.navbar {
+  margin: 0;
+  .dropdown-toggle {
+    padding: 20px!important;
+  }
+  .search {
+    button {
+      display: none;
+    }
+  }
+}
+
+.red {
+  color: red;
 }

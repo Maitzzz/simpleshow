@@ -4,11 +4,16 @@ app.run(function ($rootScope) {
         $rootScope._ = window._;
 });
 
+/*
+    Append access token to headers
+ */
 app.run(function($http) {
-    console.log('access token');
     $http.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('access_token') ;
 });
 
+/*
+    Custom made filter
+ */
 app.filter('listfilter',[ function () {
     return function(items, searchText) {
         var filtered = [];

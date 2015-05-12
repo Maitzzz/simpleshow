@@ -252,11 +252,8 @@ body .background .background-wrapper .upper {
 body .background .background-wrapper .lower {
   background: url("../files/image/background-collage.jpg");
   background-size: 97%;
-  -webkit-filter: blur(8px) brightness(0.8);
   height: 100%;
   background-repeat: no-repeat;
-  margin: -32px 0px 0px -14px;
-  width: 105%;
 }
 body .search-trakt-wrapper .results .result {
   margin-top: 20px;
@@ -329,6 +326,11 @@ body .search-wrapper .results .result .image-wrapper img {
   margin: 0 auto;
   width: 100%;
 }
+body .welcome-bg-wrapper,
+body .log-in-bg {
+  height: 100%;
+  width: 100%;
+}
 body .bg-wrapper {
   height: 100%;
   background-repeat: no-repeat;
@@ -350,4 +352,16 @@ body.welcome {
 }
 .upcoming {
   background: red;
+}
+.navbar {
+  margin: 0;
+}
+.navbar .dropdown-toggle {
+  padding: 20px!important;
+}
+.navbar .search button {
+  display: none;
+}
+.red {
+  color: red;
 }

@@ -103,43 +103,39 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         $location.path('home');
     }
 
-    loadData();
     /*
      Loads data from api.
      */
-    function loadData() {
-        var promise = showService.getData();
-        promise.then(function (data) {
-            dataFactory.setShows(data.data);
-        }), function (error) {
-            $log.error('Error', error)
-        };
+
+    loadShows();
+    function loadShows() {
+        var userShows = showService.getUserShows(user);
+        userShows.then(function (userShowdata) {
+            dataFactory.setShows(userShowdata.data);
+        });
     }
 
-    var userShows = showService.getUserShows(user);
     var ushowData = [];
-
 
     /*
      Watcher for shows, parses data to display shows and get user shows
      */
+
     $scope.$watch(function () {
         return dataFactory.getShows();
-    }, function (data, oldValue) {
-
-        //selle porri peaks ära lahendama ?!?!?!??!?!
-        if (data) {
-            userShows.then(function (userShowdata) {
-                $.each(data, function (key, value) {
-                    $.each(userShowdata.data, function (ukey, showData) {
-                        if (value.ShowId == showData.ShowID) {
-                            ushowData.push(showData.ShowID);
-                        }
-                    })
+    }, function (data, oldVal) {
+        ushowData = [];
+        var promise = showService.getData();
+        promise.then(function (showData) {
+            $.each(showData.data, function (key, val) {
+                $.each(data, function (ueKey, ueVal) {
+                    if(ueVal.ShowID == val.ShowId) {
+                        ushowData.push(val.ShowId);
+                    }
                 });
-                $scope.shows = data;
             });
-        }
+            $scope.shows = showData.data;
+        });
     });
 
     /*
@@ -174,7 +170,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         var deletePromise = showService.removeShow(imdbid);
         deletePromise.then(function (data) {
             notify('success', 'Show Removed');
-            loadData();
+            loadShows();
         });
     };
 
@@ -193,8 +189,10 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
 
             if (data.data.Show != null) {
                 notify('success', 'Show ' + show.Name + ' added to My Shows');
+                loadShows();
             } else {
                 notify('danger', 'Show removed from My shows');
+                loadShows();
             }
         })
     };
@@ -664,7 +662,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 /*
  Controller for data header
  */
-app.controller('headerController', function ($scope, $location, $route, dataFactory, showService, $window) {
+app.controller('headerController', function ($scope, $location, $route, dataFactory, showService) {
     $scope.user = userName;
 
     /*
@@ -678,14 +676,16 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
             if (data.status == 200) {
                 $location.path('home');
                 // Todo Find better way to refresh data in headers, try not to use $watch
-                location.reload();
+                $window.location.reload();
             }
         });
 
     };
+    $scope.submitSearch = function (string) {
+        $location.path('traktsearch/' + string);
+    };
 
     $scope.logged = true;
-
     if (user) {
         $scope.logged = false;
     }
@@ -698,6 +698,15 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     }, function (data, oldValue) {
         $scope.loader = data;
     });
+
+
+    $scope.isActive = function(path) {
+        if($location.path().substr(1) == path) {
+            return true;
+        }
+        return false;
+
+    }
 });
 
 /*
@@ -832,7 +841,7 @@ app.controller('searchController', function ($scope, showService) {
  Controller for trakt.tv search.
  Allows to import shows from trakt.
  */
-app.controller('traktSearchController', function (traktTcService, $scope, dataFactory, showService, episodeService, $q, $location) {
+app.controller('traktSearchController', function (traktTcService, $scope, dataFactory, showService, episodeService, $q, $location, $routeParams) {
     $scope.hide = true;
     loadShows();
     var existingShows = [];
@@ -845,7 +854,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
         });
     }
 
-    $scope.search = function (string) {
+    function search(string) {
         var res = [];
         traktTcService.traktSearch(string).then(function (data) {
             $scope.hide = true;
@@ -862,7 +871,17 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
 
             $scope.res = res;
         });
+    }
+
+    if($routeParams.searchstring) {
+        $scope.searchText = $routeParams.searchstring;
+        search($routeParams.searchstring);
+    }
+
+    $scope.search = function (string) {
+       search(string);
     };
+
     /*
      Check function for checking, if user had watched this episode.
      */
@@ -875,6 +894,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
 
         return true;
     };
+
     /*
      Check if data is inserted in search box
      */
@@ -889,6 +909,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
             return false;
         }
     };
+
     /*
      Import show from trakt.
      */
@@ -931,7 +952,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                                     imdbid = ep.ids.imdb;
                                 }
 
-                                if (ep.overview == null) {
+                                if (ep.overview == null || ep.overview == '') {
                                     description = 'no Description';
                                 } else {
                                     description = ep.overview;
@@ -973,8 +994,7 @@ function notify(type, message) {
     }, {
         type: type,
         placement: {
-            from: "top",
-            align: "left"
+            from: "top"
         }
     });
 }

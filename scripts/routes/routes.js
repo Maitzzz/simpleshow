@@ -82,5 +82,11 @@ app.config(function ($routeProvider) {
            className: 'search'
        })
 
+       .when('/traktsearch/:searchstring', {
+           templateUrl: 'views/traktsearch.html',
+           controller: 'traktSearchController',
+           className: 'search'
+       })
+
        .otherwise({redirectTo: '/home'})
 });

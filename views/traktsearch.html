@@ -15,7 +15,8 @@
                         <img ng-src="{{result.show.images.poster.thumb}}"/>
                     </div>
                     <div class="content-wrapper col-md-8">
-                        <p class="name">{{result.show.title}}</p>
+                        <a href="#show/{{result.show.ids.imdb}}"> <p class="name" ng-if="!showExists(result.show.ids.imdb)">{{result.show.title}}</p></a>
+                        <p ng-if="showExists(result.show.ids.imdb)" class="name">{{result.show.title}}</p>
 
                         <p class="description">{{result.show.overview}}</p>
 
