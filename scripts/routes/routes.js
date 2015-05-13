@@ -49,7 +49,6 @@ app.config(function ($routeProvider) {
            templateUrl: 'views/welcome.html',
            controller: 'welcomeController',
            className: 'welcome'
-
        })
 
        .when('/user', {

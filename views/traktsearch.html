@@ -8,13 +8,13 @@
                 <button class="btn btn-primary" ng-click="search(searchText)">Submit</button>
             </form>
         </div>
-        <div class="results col-md-12">
+        <div class="results col-md-12 col-xs-12">
             <div class="result row" ng-repeat="result in results = (res)">
                 <div class="show">
-                    <div class="image-wrapper col-md-3">
+                    <div class="image-wrapper col-md-3 col-xs-4">
                         <img ng-src="{{result.show.images.poster.thumb}}"/>
                     </div>
-                    <div class="content-wrapper col-md-8">
+                    <div class="content-wrapper col-md-8 col-xs-8">
                         <a href="#show/{{result.show.ids.imdb}}"> <p class="name" ng-if="!showExists(result.show.ids.imdb)">{{result.show.title}}</p></a>
                         <p ng-if="showExists(result.show.ids.imdb)" class="name">{{result.show.title}}</p>
 

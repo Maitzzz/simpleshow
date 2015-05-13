@@ -26,6 +26,7 @@
         <ul class="nav navbar-nav">
             <li ng-class="{active: isActive('shows')}" ng-if="!logged"><a href="#shows">Shows</a></li>
             <li ng-class="{active: isActive('myshows')}"ng-show="!logged" ><a href="#myshows">My Shows</a></li>
+            <li ng-class="{active: isActive('user')}"ng-show="!logged" ><a href="#user">Progress</a></li>
         </ul>
         <form class="navbar-form navbar-left search" ng-submit="submitSearch(searchString)" ng-if="!logged">
             <input type="text" class="form-control col-lg-8" ng-model="searchString" placeholder="Search">
@@ -57,33 +58,6 @@
     </div>
 </div>
 </div>
-<!--<div class="header-panel shadow-z-2">
-    <div class="container-fluid" ng-controller="headerController">
-        <div class="left-wrapper col-md-3">
-            <h2><a href="#home">SimpleShow</a></h2>
-            <p class="user-name"> {{user}}</p>
-        </div>
-        <div class="button-wrapper">
-            <div class="logged-out" ng-show="logged">
-                <a href="#register" class="btn btn-primary navbar-btn pull-right">Sign Up</a>
-                <a href="#log-in" class="pull-right navbar-btn log-in">Log In</a>
-
-            </div>
-
-        </div>
-        <div class="overlay" ng-show="loader">
-            <div class="loader-wrapper">
-                <div class="loader-inner pacman">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
 <div ng-controller="simpleShowController" class="wrapper">
     {{message}}
     <div class="bg-wrapper">
@@ -115,6 +89,7 @@
 <script src="scripts/bootstrap/material/ripples.min.js"></script>
 <script src="scripts/bootstrap/material/arrive.min.js"></script>
 <script src="scripts/bootstrap/material/material.min.js"></script>
+<script src="scripts/script.js"></script>
 
 <script>
     $(function () {

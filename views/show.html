@@ -58,6 +58,7 @@
 
                     <p class="episode-nr"> Episode: {{ episode.EpisodeNr }}</p>
                     <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
+                    <p ng-if="episode.timeLeft">Coming in: {{episode.timeLeft}}</p>
 
 
                     <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i

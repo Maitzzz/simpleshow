@@ -1,6 +1,6 @@
 <div class="shows container tiles my-shows">
 
-    <div class="col-md-3 wrapper tile" ng-repeat="show in shows">
+    <div class="col-md-3 wrapper tile col-xs-6" ng-repeat="show in shows">
         <div class="wrapper">
             <div class="image-wrapper">
                 <a href="#show/{{ show.ImdbID }}"><p class="name">{{ show.Name }}</p></a>
@@ -16,6 +16,11 @@
                     </label>
                 </label>
             </div>
+
+
         </div>
+    </div>
+    <div class="noresults col-md-2 col-md-offset-5" ng-hide="shows.length">
+        <p>Nothing here!</p>
     </div>
 </div>

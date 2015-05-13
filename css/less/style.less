@@ -2,7 +2,11 @@ body {
   overflow-x: hidden;
   font-family: 'Roboto', sans-serif;
   .container {
-    width: 940px;
+    @media (min-width: 1200px) {
+      .container {
+        width: 940px;
+      }
+    }
     margin-bottom: 30px;
   }
   .content {
@@ -66,6 +70,9 @@ body {
     .tiles {
       .content {
         color: #000000;
+        @media (max-width: 640px) {
+          padding: 3px 15px;
+        }
         padding: 40px 70px;
         .name {
           font-size: 20px;
@@ -167,10 +174,12 @@ body {
   .my-shows {
     img {
       width: 100%;
-      height: auto;
+      height: 400px;
       @media (min-width: 940px) {
         height: 311px;
       }
+
+
     }
     .tile {
       background: none;
@@ -271,6 +280,9 @@ body {
       color: #FFFFFF;
       margin-right: -50%;
       transform: translate(-50%, -50%);
+      @media (max-width: 700px) {
+        transform: inherit;
+      }
       h1 {
         font-size: 55px;
       }
@@ -313,6 +325,15 @@ body {
             height: auto;
           }
         }
+
+        .content-wrapper {
+          .description {
+            max-height: 220px;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
       }
     }
   }
@@ -336,7 +357,7 @@ body {
   margin-top: 20px;
   img {
     width: 100%;
-    height: auto;
+    height: 340px;
     @media (min-width: 940px) {
       height: 400px;
     }
@@ -405,8 +426,7 @@ body {
 
 body {
   .welcome-bg-wrapper,
-  .log-in-bg
-  {
+  .log-in-bg {
     height: 100%;
     width: 100%;
   }
@@ -435,14 +455,10 @@ body {
   }
 }
 
-.upcoming {
-  background: red;
-}
-
 .navbar {
   margin: 0;
   .dropdown-toggle {
-    padding: 20px!important;
+    padding: 20px !important;
   }
   .search {
     button {
@@ -453,4 +469,9 @@ body {
 
 .red {
   color: red;
+}
+
+.noresults {
+  color: #000000;
+  text-align: center;
 }

@@ -5,12 +5,12 @@
         </form>
     </div>
 
-    <div class="list-element tiles row" ng-repeat="show in tshows = (shows | listfilter:searchText)">
-        <div class="tile show col-md-3">
+    <div class="list-element tiles col-md-12 col-xs-12" ng-repeat="show in tshows = (shows | listfilter:searchText)">
+        <div class="tile show col-md-3 col-xs-4">
             <div class="image-wrapper">
                 <img ng-src="{{ show.ShowImage }}"/>
             </div>
-            <div class="content-wrapper">
+            <div class="content-wrapper col-xs-8">
                 <p class="name"><a href="#show/{{ show.ImdbID }}">{{ show.Name }}</a></p>
                 <p class="rating"> Rating: {{ show.Rating }}</p>
             </div>
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="content col-md-9">
+        <div class="content col-md-9 col-xs-8">
             <p class="name"> {{ show.Name }}</p>
             <p class="description"> {{ show.Description }}</p>
             <button class="btn btn-default btn-flat" ng-click="removeShow(show.ImdbID)"><i class="mdi-navigation-close"></i> Remove</button>

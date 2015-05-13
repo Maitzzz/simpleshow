@@ -129,7 +129,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
         promise.then(function (showData) {
             $.each(showData.data, function (key, val) {
                 $.each(data, function (ueKey, ueVal) {
-                    if(ueVal.ShowID == val.ShowId) {
+                    if (ueVal.ShowID == val.ShowId) {
                         ushowData.push(val.ShowId);
                     }
                 });
@@ -307,6 +307,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 $.each(episodeData.data, function (key, value) {
                     if (Date.parse(value.Date) > Date.now()) {
                         episodeData.data[key].upcoming = 'upcoming';
+                        episodeData.data[key].timeLeft = convertMS(Date.parse(value.Date) - Date.now());
                     }
 
                     $.each(data, function (ekey, epData) {
@@ -598,11 +599,10 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         $location.path('home');
     }
 
-    loadData();
-
     /*
      Loads episode data from api
      */
+    loadData();
     function loadData() {
         var episode = episodeService.getEpisodeByImdbId($routeParams.episode);
         episode.then(function (data) {
@@ -610,11 +610,10 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         });
     }
 
-    loadShow();
-
     /*
      Loads episode data from api
      */
+    loadShow();
     function loadShow() {
         var showPromise = showService.getShow($routeParams.id);
         showPromise.then(function (data) {
@@ -662,7 +661,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
 /*
  Controller for data header
  */
-app.controller('headerController', function ($scope, $location, $route, dataFactory, showService) {
+app.controller('headerController', function ($scope, $location, $route, dataFactory, showService, $window) {
     $scope.user = userName;
 
     /*
@@ -674,7 +673,6 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
         localStorage.removeItem('access_token');
         showService.logOut().then(function (data) {
             if (data.status == 200) {
-                $location.path('home');
                 // Todo Find better way to refresh data in headers, try not to use $watch
                 $window.location.reload();
             }
@@ -700,12 +698,11 @@ app.controller('headerController', function ($scope, $location, $route, dataFact
     });
 
 
-    $scope.isActive = function(path) {
-        if($location.path().substr(1) == path) {
+    $scope.isActive = function (path) {
+        if ($location.path().substr(1) == path) {
             return true;
         }
         return false;
-
     }
 });
 
@@ -740,8 +737,9 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
                     localStorage.setItem('uid', data.data.userId);
                     localStorage.setItem('userName', data.data.userName);
                     localStorage.setItem('access_token', data.data.access_token);
-                    // Todo Find better way to refresh data in headers, try not to use $watch
+
                     $window.location.reload();
+                    // Todo Find better way to refresh data in headers, try not to use $watch
                 }
             });
         }
@@ -811,7 +809,11 @@ app.controller('registerController', function ($scope, showService, $location, $
     };
 });
 
-app.controller('welcomeController', function ($scope) {
+app.controller('welcomeController', function ($scope,$location) {
+    if (user) {
+        $location.path('user');
+    }
+
     $scope.message = 'data'
 });
 
@@ -819,6 +821,10 @@ app.controller('welcomeController', function ($scope) {
  Controller for searching shows
  */
 app.controller('searchController', function ($scope, showService) {
+    if (!user) {
+        $location.path('home');
+    }
+
     showService.getData().then(function (data) {
         $scope.shows = data.data;
     });
@@ -834,7 +840,6 @@ app.controller('searchController', function ($scope, showService) {
             return false;
         }
     };
-
 });
 
 /*
@@ -842,6 +847,10 @@ app.controller('searchController', function ($scope, showService) {
  Allows to import shows from trakt.
  */
 app.controller('traktSearchController', function (traktTcService, $scope, dataFactory, showService, episodeService, $q, $location, $routeParams) {
+    if (!user) {
+        $location.path('home');
+    }
+
     $scope.hide = true;
     loadShows();
     var existingShows = [];
@@ -858,7 +867,6 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
         var res = [];
         traktTcService.traktSearch(string).then(function (data) {
             $scope.hide = true;
-            console.log(data.data.length);
             if (data.data.length == 0) {
                 $scope.hide = false;
                 $scope.res = false;
@@ -873,13 +881,13 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
         });
     }
 
-    if($routeParams.searchstring) {
+    if ($routeParams.searchstring) {
         $scope.searchText = $routeParams.searchstring;
         search($routeParams.searchstring);
     }
 
     $scope.search = function (string) {
-       search(string);
+        search(string);
     };
 
     /*
@@ -937,45 +945,47 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                     var seasons = data.data;
                     seasons.forEach(function (season) {
                         var imdbid, description;
-                        var episodes = season.episodes;
-                        episodes.forEach(function (ep) {
-                            if (ep.season != 0) {
-                                if (ep.images.screenshot.medium == null) {
-                                    ep.image = NO_IMAGE_EP;
-                                } else {
-                                    ep.image = ep.images.screenshot.medium;
-                                }
+                        if (_.has('episodes', season)) {
+                            var episodes = season.episodes;
+                            episodes.forEach(function (ep) {
+                                if (ep.season != 0) {
+                                    if (ep.images.screenshot.medium == null) {
+                                        ep.image = NO_IMAGE_EP;
+                                    } else {
+                                        ep.image = ep.images.screenshot.medium;
+                                    }
 
-                                if (ep.ids.imdb == null || ep.ids.imdb == '') {
-                                    imdbid = ep.ids.trakt;
-                                } else {
-                                    imdbid = ep.ids.imdb;
-                                }
+                                    if (ep.ids.imdb == null || ep.ids.imdb == '') {
+                                        imdbid = ep.ids.trakt;
+                                    } else {
+                                        imdbid = ep.ids.imdb;
+                                    }
 
-                                if (ep.overview == null || ep.overview == '') {
-                                    description = 'no Description';
-                                } else {
-                                    description = ep.overview;
-                                }
+                                    if (ep.overview == null || ep.overview == '') {
+                                        description = 'no Description';
+                                    } else {
+                                        description = ep.overview;
+                                    }
 
-                                var episode = {
-                                    ShowId: newShow.data.ShowID,
-                                    Name: ep.title,
-                                    Description: description,
-                                    Rating: ep.rating,
-                                    EpImdbId: imdbid,
-                                    SeasonNr: ep.season,
-                                    Date: ep.first_aired,
-                                    EpisodeNr: ep.number,
-                                    ShowImdbId: newShow.data.ImdbID,
-                                    EpisodeImage: ep.image
-                                };
-                                if (_.has(episode, 'ShowImdbId') && episode.EpImdbId != null && episode.Name != null) {
-                                    console.log(episode);
-                                    promiseArray.push(episodeService.addEpisode(episode));
+                                    var episode = {
+                                        ShowId: newShow.data.ShowID,
+                                        Name: ep.title,
+                                        Description: description,
+                                        Rating: ep.rating,
+                                        EpImdbId: imdbid,
+                                        SeasonNr: ep.season,
+                                        Date: ep.first_aired,
+                                        EpisodeNr: ep.number,
+                                        ShowImdbId: newShow.data.ImdbID,
+                                        EpisodeImage: ep.image
+                                    };
+                                    if (_.has(episode, 'ShowImdbId') && episode.EpImdbId != null && episode.Name != null) {
+                                        console.log(episode);
+                                        promiseArray.push(episodeService.addEpisode(episode));
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
 
                     $q.all(promiseArray).then(function (data) {
@@ -987,34 +997,3 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
         })
     };
 });
-
-function notify(type, message) {
-    $.notify({
-        message: message
-    }, {
-        type: type,
-        placement: {
-            from: "top"
-        }
-    });
-}
-function isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-var sort_by = function (field, reverse, primer) {
-
-    var key = primer ?
-        function (x) {
-            return primer(x[field])
-        } :
-        function (x) {
-            return x[field]
-        };
-
-    reverse = !reverse ? 1 : -1;
-
-    return function (a, b) {
-        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-    }
-};
