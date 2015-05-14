@@ -1,10 +1,10 @@
 <div class="show-wrapper container">
 
     <div class="show row">
-        <div class="img-wrapper col-md-3">
+        <div class="img-wrapper col-md-3 col-xs-5">
             <img ng-src="{{ show.ShowImage }}"/>
         </div>
-        <div class="show-content col-md-8 well-lg">
+        <div class="show-content col-md-8 col-xs-7">
             <p class="name">{{show.Name}} </p>
 
             <p> IMDBID : {{show.ImdbID}}</p>
@@ -31,11 +31,11 @@
             <a href="#show/{{ show.ImdbID}}/{{ key }}"><h1>Season {{ key }}</h1></a>
 
             <div class="list-element tiles row shows" ng-repeat="episode in season">
-                <div class="tile show col-md-3">
+                <div class="tile show col-md-3 col-xs-6">
                     <div class="image-wrapper">
                         <img ng-src="{{episode.EpisodeImage}}"/>
                     </div>
-                    <div class="content-wrapper">
+                    <div class="content-wrapper col-xs-3">
                         <div class="checkbox-wrapper">
                             <div class="checkbox">
                                 <label>
@@ -47,7 +47,7 @@
                     </div>
 
                 </div>
-                <div class="content col-md-8 {{ episode.upcoming }}">
+                <div class="content col-md-8 col-xs-6 {{ episode.upcoming }}">
                     <p class="name"><a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}} ">{{episode.Name
                         }}</a></p>
 

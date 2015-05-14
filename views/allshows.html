@@ -6,25 +6,26 @@
     </div>
 
     <div class="list-element tiles col-md-12 col-xs-12" ng-repeat="show in tshows = (shows | listfilter:searchText)">
+        <label class="remove">
+            <i class="mdi-action-highlight-remove" ng-click="removeShow(show.ImdbID)"></i>
+        </label>
         <div class="tile show col-md-3 col-xs-4">
             <div class="image-wrapper">
                 <img ng-src="{{ show.ShowImage }}"/>
             </div>
             <div class="content-wrapper col-xs-8">
                 <p class="name"><a href="#show/{{ show.ImdbID }}">{{ show.Name }}</a></p>
-                <p class="rating"> Rating: {{ show.Rating }}</p>
+                <p ng-if="show.Rating" class="rating"> Rating: {{ show.Rating }}</p>
             </div>
-            <div class="checkbox">
+            <div class="checkbox heart">
                 <label ng-class="{red:isThisUserShow(show.ShowId)}">
                     <i ng-class="isThisUserShow(show.ShowId) ? 'mdi-action-favorite': 'mdi-action-favorite-outline'" ng-click="showCheck(show.ShowId)"></i>
                 </label>
             </div>
         </div>
-
         <div class="content col-md-9 col-xs-8">
             <p class="name"> {{ show.Name }}</p>
             <p class="description"> {{ show.Description }}</p>
-            <button class="btn btn-default btn-flat" ng-click="removeShow(show.ImdbID)"><i class="mdi-navigation-close"></i> Remove</button>
         </div>
     </div>
     <div class="noresults col-md-12">

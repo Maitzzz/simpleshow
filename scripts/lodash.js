@@ -5904,7 +5904,7 @@
     }
 
     /**
-     * Executes the chained sequence to extract the unwrapped value.
+     * Executes the chained data to extract the unwrapped value.
      *
      * @name value
      * @memberOf _

@@ -90,7 +90,8 @@ app.controller('showFormCtrl', function ($scope, $modalInstance, showService, da
 });
 
 app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeService, dataFactory, traktTcService, ep, $moment) {
-    $scope.show = ep;
+    $scope.episode = ep;
+    console.log(ep)
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -138,9 +139,6 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
             return;
         }
 
-        //episode.Date = $moment(episode.Date).format('DD/MM/YYYY');
-        //console.log($.date('dd/mm/yyy', episode.Date));
-        console.log(episode)
         var addEpisodePromise = episodeService.addEpisode(episode);
         addEpisodePromise.then(function (data) {
             if (data.status == 201) {
@@ -156,7 +154,7 @@ app.controller('episodeAddFormCtrl', function ($scope, $modalInstance, episodeSe
             }
         });
     };
-    //01/08/2008
+
     $scope.formats = ['dd/MM/yyyy'];
 
     $scope.open = function ($event) {
@@ -180,16 +178,19 @@ app.controller('editEpisodeFormCtrl', function ($scope, $modalInstance, episodeS
     $scope.episode = episode;
 
     $scope.updateEpisode = function (data, id) {
-        var updatePromise = episodeService.updateEpisode(data, id);
-        updatePromise.then(function (data) {
-            if (data.status == 204) {
-                loadData();
-                $modalInstance.dismiss('cancel');
-            }
-        });
+        var newData = _.cloneDeep(data);
+        if(isNumber(newData.Date)) {
+            newData.Date = moment(newData.Date);
+        }
+           var updatePromise = episodeService.updateEpisode(newData, id);
+           updatePromise.then(function (data) {
+               if (data.status == 204) {
+                   loadData();
+                   $modalInstance.dismiss('cancel');
+               }
+           });
     };
 
-    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
 
     $scope.open = function ($event) {
         $event.preventDefault();

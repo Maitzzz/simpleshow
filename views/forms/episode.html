@@ -1,6 +1,6 @@
 <form class="show-form container" >
     <div class="col-md-6">
-        <legend>Add/edit Episodes</legend>
+        <legend>Add Episodes</legend>
         <div class="form-group row">
             <label for="episodeName" class="col-md-3 control-label">Episode name</label>
             <div class="col-md-8">
@@ -16,7 +16,14 @@
         <div class="form-group row">
             <label for="episodeImdbId" class="col-md-3 control-label">Episode Imdb id</label>
             <div class="col-md-8">
+
                 <input type="text" class="form-control" data-ng-model="episode.EpImdbID" id="episodeImdbId" placeholder="Episode imdb id">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="EpisodeImage" class="col-md-3 control-label">Episode image</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control" data-ng-model="episode.EpisodeImage" id="EpisodeImage" placeholder="Episode image">
             </div>
         </div>
         <div class="form-group row">
@@ -54,6 +61,6 @@
                 <button class="btn btn-primary" ng-click="addEpisode(episode)">Submit</button>
             </div>
         </div>
-        <input type="hidden" data-ng-model="episode.ShowImdbId" value="{{show.ShowImdbId}}" id="ShowID">
+        <input type="hidden" data-ng-model="episode.ShowImdbId" value="{{episode.ShowImdbId}}" id="ShowID">
     </div>
 </form>

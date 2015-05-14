@@ -20,16 +20,16 @@ app.controller('simpleShowController', function ($scope, showService, dataFactor
 
         promise.then(function (data) {
             $scope.data = data.data;
-        }), function (error) {
-            $log.error('Error', error)
-        };
+        }).catch(function (error) {
+            notify('danger', error)
+        })
     }
 });
 
 /*
  Controller for my shows, displays user shows.
  */
-app.controller('myShowController', function ($scope, showService, dataFactory) {
+app.controller('myShowController', function ($scope, showService, dataFactory, $location) {
 
     if (!user) {
         $location.path('home');
@@ -166,7 +166,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
      */
     //todo check data.status Kas tagasi tulbe 204?
     $scope.removeShow = function (imdbid) {
-
+        console.log('test');
         var deletePromise = showService.removeShow(imdbid);
         deletePromise.then(function (data) {
             notify('success', 'Show Removed');
@@ -424,13 +424,14 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     }
 });
 
-app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q) {
+app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q, $location) {
     dataFactory.setEpisodes({});
 
-    $scope.season = $routeParams.season;
     if (!user) {
         $location.path('home');
     }
+
+    $scope.season = $routeParams.season;
     var showId = $routeParams.id;
 
     var ep = {
@@ -440,11 +441,11 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 
     $scope.ep = ep;
 
-    getUserEpisodes();
 
     /*
      Gets user episodes from api and adds/updates data in dataFactory
      */
+    getUserEpisodes();
     function getUserEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
@@ -452,7 +453,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         });
     }
 
-    //eraldi factory ?
     var epdata = [];
 
     /*
@@ -594,7 +594,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 /*
  Controller for displaying episode.
  */
-app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, traktTcService) {
+app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal,$location) {
     if (!user) {
         $location.path('home');
     }
@@ -636,6 +636,10 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         return dataFactory.getEpisode();
     }, function (data, oldValue) {
         if (data) {
+            if (Date.parse(data.Date) > Date.now()) {
+                data.upcoming = 'upcoming';
+                data.timeLeft = convertMS(Date.parse(data.Date) - Date.now());
+            }
             data.Date = Date.parse(data.Date);
             $scope.episode = data;
         }
@@ -809,7 +813,7 @@ app.controller('registerController', function ($scope, showService, $location, $
     };
 });
 
-app.controller('welcomeController', function ($scope,$location) {
+app.controller('welcomeController', function ($scope, $location) {
     if (user) {
         $location.path('user');
     }
@@ -945,7 +949,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                     var seasons = data.data;
                     seasons.forEach(function (season) {
                         var imdbid, description;
-                        if (_.has('episodes', season)) {
+                        if (_.has(season, 'episodes')) {
                             var episodes = season.episodes;
                             episodes.forEach(function (ep) {
                                 if (ep.season != 0) {
