@@ -98,6 +98,9 @@ body .all-shows .tiles .tile.show .content-wrapper {
 body .all-shows .tiles .heart i:hover {
   color: #ff0400;
 }
+body .all-shows .search {
+  margin-top: 10px;
+}
 body .show-wrapper .show {
   margin-top: 20px;
 }
@@ -108,6 +111,10 @@ body .show-wrapper .show .img-wrapper img {
   body .show-wrapper .show .img-wrapper img {
     width: 100%;
   }
+}
+body .show-wrapper .show .heart {
+  float: left;
+  margin-right: 20px;
 }
 body .show-wrapper .sm-btn-icon i {
   left: -5px;

@@ -15,6 +15,12 @@
                     <input type="checkbox" ng-click="showWatched()"
                            ng-checked="isShowWatched()">
                 </label>
+
+                <div class="heart">
+                    <label class="red">
+                        <i ng-class="isThisUserShow(show.ShowId) ? 'mdi-action-favorite': 'mdi-action-favorite-outline'" ng-click="showCheck(show.ShowId)"></i>
+                    </label>
+                </div>
             </div>
             <p class="seasons">
             Seasons:

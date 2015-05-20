@@ -69,4 +69,7 @@ app.service('showService', function ($http) {
     this.logOut = function() {
         return $http.post(apiurl + '/api/Account/Logout');
     }
+
+
+
 });

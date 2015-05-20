@@ -54,3 +54,8 @@ var sort_by = function (field, reverse, primer) {
         return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
     }
 };
+function logout() {
+    localStorage.removeItem('uid');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('access_token');
+}

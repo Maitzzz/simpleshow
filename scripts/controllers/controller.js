@@ -17,7 +17,6 @@ app.controller('mainController', function ($scope, $route) {
 app.controller('simpleShowController', function ($scope, showService, dataFactory) {
     function loadData() {
         var promise = showService.getData();
-
         promise.then(function (data) {
             $scope.data = data.data;
         }).catch(function (error) {
@@ -29,7 +28,7 @@ app.controller('simpleShowController', function ($scope, showService, dataFactor
 /*
  Controller for my shows, displays user shows.
  */
-app.controller('myShowController', function ($scope, showService, dataFactory, $location) {
+app.controller('myShowController', function ($scope, showService, dataFactory, $location, $window) {
 
     if (!user) {
         $location.path('home');
@@ -45,6 +44,12 @@ app.controller('myShowController', function ($scope, showService, dataFactory, $
         promise.then(function (data) {
             var showPromise = showService.getData();
             showPromise.then(function (allShows) {
+                if(data.status == 401) {
+                    logout();
+                    console.log('logout, 401 error!');
+                    $window.location.reload();
+                }
+
                 $.each(data.data, function (key, value) {
                     $.each(allShows.data, function (sKey, show) {
                         if (value.ShowID == show.ShowId) {
@@ -98,7 +103,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory, $
 /*
  Controller to show all imported shows.
  */
-app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location, $q, episodeService) {
+app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location, $q, episodeService,$window) {
     if (!user) {
         $location.path('home');
     }
@@ -111,6 +116,11 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     function loadShows() {
         var userShows = showService.getUserShows(user);
         userShows.then(function (userShowdata) {
+            if(userShowdata.status == 401) {
+                logout();
+                console.log('logout, 401 error!');
+                $window.location.reload();
+            }
             dataFactory.setShows(userShowdata.data);
         });
     }
@@ -154,7 +164,6 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
      */
     $scope.isThisUserShow = function (show) {
         var ret = _.indexOf(ushowData, show);
-
         if (ret != -1) {
             return true;
         }
@@ -214,7 +223,7 @@ app.controller('homeController', function ($scope, showService, $location, $mome
 /*
  Controller for show. Displays show and it's episodes.
  */
-app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService, $q) {
+app.controller('showController', function ($scope, showService, $routeParams, $modal, dataFactory, episodeService, $q, $location, $window) {
     if (!user) {
         $location.path('home');
     }
@@ -225,6 +234,19 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
 
     $scope.episode = episode;
 
+    var userShows = [];
+    getUserShows();
+    function getUserShows() {
+        userShows = [];
+        if(user) {
+            showService.getUserShows(user).then(function(data) {
+                $.each(data.data, function(key, val) {
+                    userShows.push(val.ShowID);
+                })
+            });
+        }
+    }
+
     getEpisodes();
     /*
      Updates/adds data to dataFactory
@@ -232,6 +254,11 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     function getEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
+            if(data.status == 401) {
+                logout();
+                console.log('logout, 401 error!');
+                $window.location.reload();
+            }
             dataFactory.setEpisodes(data.data);
         });
     }
@@ -287,6 +314,42 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                 ep: function () {
                     return $scope.episode;
                 }
+            }
+        });
+    };
+
+    /*
+        Check if this is use show
+     */
+    $scope.isThisUserShow = function (show) {
+        if(_.indexOf(userShows, show) != -1) {
+            return true;
+        }
+      return false;
+    };
+
+    /*
+     User interraction with show. Adds show record to api
+     */
+    $scope.showCheck = function (showId) {
+        var userShow = {
+            'UserID': user,
+            'ShowID': showId
+        };
+
+        var showCheck = showService.addUserShow(userShow);
+        showCheck.then(function (data) {
+            var show = data.data.Show;
+
+            if (data.data.Show != null) {
+                notify('success', 'Show ' + show.Name + ' added to My Shows');
+                getUserShows();
+                getShowData();
+
+            } else {
+                notify('danger', 'Show removed from My shows');
+                getUserShows();
+                getShowData();
             }
         });
     };
@@ -424,7 +487,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     }
 });
 
-app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q, $location) {
+app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q, $location, $window) {
     dataFactory.setEpisodes({});
 
     if (!user) {
@@ -449,6 +512,11 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     function getUserEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
+            if(data.status == 401) {
+                logout();
+                console.log('logout, 401 error!');
+                $window.location.reload();
+            }
             dataFactory.setEpisodes(data.data);
         });
     }
@@ -594,7 +662,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
 /*
  Controller for displaying episode.
  */
-app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal,$location) {
+app.controller('episodeController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $location, $window) {
     if (!user) {
         $location.path('home');
     }
@@ -617,6 +685,11 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     function loadShow() {
         var showPromise = showService.getShow($routeParams.id);
         showPromise.then(function (data) {
+            if(data.status == 401) {
+                logout();
+                console.log('logout, 401 error!');
+                $window.location.reload();
+            }
             dataFactory.setShow(data.data);
         });
     }
@@ -754,13 +827,18 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
  Controller for displaying user data.
  Adds data to session and keeps user logged in
  */
-app.controller('userController', function ($scope, traktTcService, episodeService, showService, $location) {
+app.controller('userController', function ($scope, traktTcService, episodeService, showService, $location, $window) {
     if (user == null) {
         $location.path('home');
     }
 
     var myshows = showService.getUserData(user);
     myshows.then(function (data) {
+        if(data.status == 401) {
+            logout();
+            console.log('logout, 401 error!');
+            $window.location.reload();
+        }
         $scope.shows = data.data;
         $.each(data.data, function (key, obj) {
 
@@ -953,10 +1031,10 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                             var episodes = season.episodes;
                             episodes.forEach(function (ep) {
                                 if (ep.season != 0) {
-                                    if (ep.images.screenshot.medium == null) {
+                                    if (ep.images.screenshot.thumb == null) {
                                         ep.image = NO_IMAGE_EP;
                                     } else {
-                                        ep.image = ep.images.screenshot.medium;
+                                        ep.image = ep.images.screenshot.thumb;
                                     }
 
                                     if (ep.ids.imdb == null || ep.ids.imdb == '') {
