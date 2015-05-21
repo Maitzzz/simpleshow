@@ -2,6 +2,7 @@
 var user = localStorage.getItem('uid');
 var userName = localStorage.getItem('userName');
 var access_token = localStorage.getItem('access_token');
+console.log(user);
 
 app.controller('mainController', function ($scope, $route) {
     $scope.$on('$routeChangeSuccess', function (newVal, oldVal) {
