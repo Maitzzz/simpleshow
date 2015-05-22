@@ -1,5 +1,5 @@
 <div class="all-shows container">
-    <div class="col-md-8 col-md-offset-4 search">
+    <div class="col-md-2 col-md-offset-5 search">
         <form class="navbar-form navbar-left">
             <input ng-model="searchText" type="text" class="form-control floating-label" placeholder="Search">
 
@@ -29,7 +29,7 @@
             <p class="description"> {{ show.Description }}</p>
         </div>
     </div>
-    <div class="noresults col-md-12">
+    <div class="noresults col-md-12 empty-result">
         <p ng-hide="tshows.length">This show is not yet imported. Import it using import tool
             <a href="#traktsearch/{{searchText}}">here</a></p>
     </div>

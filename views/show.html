@@ -66,11 +66,9 @@
                     <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
                     <p ng-if="episode.timeLeft">Coming in: {{episode.timeLeft}}</p>
 
-
-                    <button class="btn btn-default btn-flat" ng-click="removeEpisode(episode.EpisodeId)"><i
-                            class="mdi-navigation-close"></i> Remove
-                    </button>
-
+                    <label class="remove">
+                        <i class="mdi-action-highlight-remove" ng-click="removeEpisode(episode.EpisodeId)"></i>
+                    </label>
                 </div>
             </div>
         </div>

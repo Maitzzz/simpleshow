@@ -2,6 +2,10 @@ body {
   overflow-x: hidden;
   font-family: 'Roboto', sans-serif;
 }
+body .empty-result {
+  text-align: center;
+  margin-top: 20px;
+}
 body .container {
   margin-bottom: 30px;
 }
@@ -143,7 +147,18 @@ body .show-wrapper .episodes-wrapper .tile .content-wrapper .checkbox-wrapper .c
   margin: 0;
 }
 body .show-wrapper .episodes-wrapper .content {
+  position: relative;
   margin-top: 20px;
+}
+body .show-wrapper .episodes-wrapper .content .remove {
+  position: absolute;
+  right: 110px;
+  top: 10px;
+  z-index: 100;
+  color: rgba(85, 87, 87, 0.46);
+}
+body .show-wrapper .episodes-wrapper .content .remove:hover {
+  color: #f9431b;
 }
 body .bottom-menu {
   position: fixed;
