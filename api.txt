@@ -1,58 +1,74 @@
 FORMAT: 1A
+HOST: http://localhost:56037
 
 # SimpleShow
 SimpleShow API provides service for tracking your TV shows
 # Group Show
-*SimpleShow API*
+Path to retrive, remove and edit Shows
 
-## List Shows [/api/show]
+## List or Add shows [/api/show]
 ### List all Shows [GET]
+List all shows from database
 + Request (application/json)
+
     + Header
                Authorization : Bearer + Bearer token
 
 + Response 200 (application/json)
     + Body
+    
+        [
+            {      
+                "$id": "1",
+                "Name": "The Flash",
+                "Description": "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \"meta-human\" who was created in the wake of the accelerator explosion – and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become... The Flash.",
+                "ShowId": 4,
+                "ImdbID": "tt3107288",
+                "Rating": 0,
+                "ShowImage": "https://walter.trakt.us/images/shows/000/060/300/posters/medium/79bd96a4d3.jpg"
+            }
+        ]
 
-{      "$id": "1",
-        "Name": "The Flash",
-        "Description": "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \"meta-human\" who was created in the wake of the accelerator explosion – and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become... The Flash.",
-        "ShowId": 4,
-        "ImdbID": "tt3107288",
-        "Rating": 0,
-        "ShowImage": "https://walter.trakt.us/images/shows/000/060/300/posters/medium/79bd96a4d3.jpg"
-}
-## Add show [/api/show/{imdbid}]
 ### Add Show [POST]
+Add show to Simpleshow Database
+
 + params 
     + imdbid (string) - imdb id
-+ Request 200 (application/json)
++ Request (application/json)
 
     + Header
        Authorization : Bearer + Bearer token
-+ Response
+       
++ Response 200 (application/json)
     + Body
-    {
-"Name": 'rest',
-"Description":'testDEscription',
-"ImDbID": '151561dsasd',
-"rating": '5.2'
-}
+    
+        [
+            {
+                "Name": 'rest',
+                "Description":'testDEscription',
+                "ImDbID": '151561dsasd',
+                "rating": '5.2'
+            }
+        ]
 
-## Remove Show [/api/show/{imdbid}]
+## Remove and Get Show data [/api/show/{imdbid}]
+
 ### Remove Show [DELETE]
+Remove Show from database
 + Request
     + Header
            Authorization : Bearer + Bearer token
 
 + Params
+
     + imdbid (string) - IMDBID of the show
 + Response 201
+
     + Header
            Authorization : Bearer + Bearer token
 
-## Get Show Data by IMDB id [/api/show/{imdbid}]
 ### Get show by IMDB id [GET]
+Get show by IMDB id
 + Params
     + imdbid (string) - IMDBID of the show
 
@@ -61,36 +77,47 @@ SimpleShow API provides service for tracking your TV shows
     + Header
 
            Authorization : Bearer + Bearer token
-+ Response
++ Response 200 (application/json)
+
     + Body
-    {      "$id": "1",
-        "Name": "The Flash",
-        "Description": "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \"meta-human\" who was created in the wake of the accelerator explosion – and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become... The Flash.",
-        "ShowId": 4,
-        "ImdbID": "tt3107288",
-        "Rating": 0,
-        "ShowImage": "https://walter.trakt.us/images/shows/000/060/300/posters/medium/79bd96a4d3.jpg"
-}
+        [ 
+            {
+                "$id": "1",
+                "Name": "The Flash",
+                "Description": "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \"meta-human\" who was created in the wake of the accelerator explosion – and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become... The Flash.",
+                "ShowId": 4,
+                "ImdbID": "tt3107288",
+                "Rating": 0,
+                "ShowImage": "https://walter.trakt.us/images/shows/000/060/300/posters/medium/79bd96a4d3.jpg"
+            }
+        ]
 
 ## Update Show Data [/api/show/{id}]
+Update Show Data
 ### Update Show Data [PUT]
 + Params
-    id (string) - IMDB id
+    id (string) - show id
 + Request (application/json)
+
     + Header
            Authorization : Bearer + Bearer token
+
     + Body
-        {
-"Name": 'rest',
-"Description":'testDEscription',
-"ImDbID": '151561dsasd',
-"rating": '5.2'
-}
+        [
+            {
+                "Name": 'rest',
+                "Description":'testDEscription',
+                "ImDbID": '151561dsasd',
+                "rating": '5.2'
+            }
+        ]
 
 + Response 204
 
 # Group UserShow
+Retrive, add and remove user shows
 ## Get User Shows [/api/usershow/{uid}]
+Retrive user show by imdb id
 ### Get User shows [GET]
 
 + Params
@@ -101,43 +128,57 @@ SimpleShow API provides service for tracking your TV shows
 
 + Response 200
     + Body
-    {
-        "$id": "1",
-        "UserShowId": 2008,
-        "UserID": "aff69e1c-b18f-4316-9491-a4a0dd881934",
-        "ShowID": 15,
-    }
+        [
+            {
+                "$id": "1",
+                "UserShowId": 2008,
+                "UserID": "aff69e1c-b18f-4316-9491-a4a0dd881934",
+                "ShowID": 15,
+            }
+        ]
 
 ## Add User Show [/api/usershow]
+Adds user Show. If user Show exists it will be deleted.
 ### Add User Show [POST]
-Adds user Show. If user Show exists it will be deleted
 + Request (application/json)
     + Header
        Authorization : Bearer + Bearer token
+    
     + Body
-    {
-        'UserID': user,
-        'ShowID': showId
-    }
+        [  
+            {
+                'UserID': user,
+                'ShowID': showId
+            }
+        ]
 
 + Response 200
 
 # Group UserEpisdes
+Retrive, add and remove user episodes
+
 ## Add User Episode [/api/userep]
 ### Add User Episode [POST]
 Adds user episode. If user Episode exists it will be deleted
+
 + Request (application/json)
     + Header
        Authorization : Bearer + Bearer token
+
     + Body
-    {
-        "UserID": user,
-        "EpisodeID": EpisodeId
-    }
+        [
+            {
+                "UserID": user,
+                "EpisodeID": EpisodeId
+            }
+        ]
+
 + Response 204
 
 ## List all user episodes in show [/api/userep/{uid}/{imdbid}]
 ### List user episodes [GET]
+Retrive user episode by user id.
+
 + Params
     + uid (string) - user guid
     + imdbid (string) imdb id
@@ -147,21 +188,27 @@ Adds user episode. If user Episode exists it will be deleted
             Authorization : Bearer + Bearer token
 
 + Response 200
+
     + Body
-    {
-"$id": "1",
-        "UserEpID": 908,
-        "UserID": "aff69e1c-b18f-4316-9491-a4a0dd881934",
-        "EpisodeId": 391,
-        "Episode": null,
-        "Watched": true,
-        "ShowId": 17
-}
+        [
+            {
+                "$id": "1",
+                "UserEpID": 908,
+                "UserID": "aff69e1c-b18f-4316-9491-a4a0dd881934",
+                "EpisodeId": 391,
+                "Episode": null,
+                "Watched": true,
+                "ShowId": 17
+            }
+        ]
 
 
 # Group Episodes
-## Episode Collection [/api/episode]
+Path to retrive, remove and edit Episodes
+## List or add Episode [/api/episode]
 ### List all episodes [GET]
+List all episodes from all shows
+
 + Request (application/json)
 
     + Header
@@ -170,76 +217,90 @@ Adds user episode. If user Episode exists it will be deleted
 + Response
     + Body
 
-  {"$id": "4",
-        "EpisodeId": 66,
-        "ShowId": 4,
-        "Show": null,
-        "Name": "City of Heroes",
-        "Description": "Nine months after the S.T.A.R. Labs explosion, Barry awakens to find a lot has changed while he was in a coma. With his new friends and powers Barry must try to right the wrongs of his new mentor, the owner of S.T.A.R. Labs.",
-        "EpImdbId": "tt3187092",
-        "SeasonNr": 1,
-        "EpisodeNr": 1,
-        "Date": "2015-03-01T22:00:00",
-        "Rating": 8.29752,
-        "ShowImdbId": "tt3107288",
-        "EpisodeImage": "https://walter.trakt.us/images/episodes/000/962/074/screenshots/medium/b992ef650c.jpg"
-    }
+        [
+            {
+                "$id": "4",
+                "EpisodeId": 66,
+                "ShowId": 4,
+                "Show": null,
+                "Name": "City of Heroes",
+                "Description": "Nine months after the S.T.A.R. Labs explosion, Barry awakens to find a lot has changed while he was in a coma. With his new friends and powers Barry must try to right the wrongs of his new mentor, the owner of S.T.A.R. Labs.",
+                "EpImdbId": "tt3187092",
+                "SeasonNr": 1,
+                "EpisodeNr": 1,
+                "Date": "2015-03-01T22:00:00",
+                "Rating": 8.29752,
+                "ShowImdbId": "tt3107288",
+                "EpisodeImage": "https://walter.trakt.us/images/episodes/000/962/074/screenshots/medium/b992ef650c.jpg"
+            }
+        ]
 
 
 ### Add episode [POST]
+Add Episode to database. Connect episode with show by ShowImdbId property.
 + Request (application/json)
   + Header
             Authorization : Bearer + Bearer token
     + Body
+        [
+            {
+                ShowId: ShowId,
+                Name: Name,
+                Description: description,
+                Rating: rating,
+                EpImdbId: Episode imdbid,
+                SeasonNr: season nr,
+                Date: first aired,
+                EpisodeNr: number,
+                ShowImdbId: Show ImdbID,
+                EpisodeImage: image url
+            }
+        ]
 
 + Response 204
- {
-                                        ShowId: ShowId,
-                                        Name: Name,
-                                        Description: description,
-                                        Rating: rating,
-                                        EpImdbId: Episode imdbid,
-                                        SeasonNr: season nr,
-                                        Date: first aired,
-                                        EpisodeNr: number,
-                                        ShowImdbId: Show ImdbID,
-                                        EpisodeImage: image url
-                                    }
 
-+ Response 204
-
-## Update Episode Data [/api/episode/{id}]
+## Edit or Delete episode [/api/episode/{id}]
 ### Update episode [PUT]
+Update Episode data
+
 + Params
     + id (string) show imdb id
 
-+ Response 204
++ Response 204 (application/json)
 
-+ Request
++ Request (application/json)
     + Body
-        {
-                                                ShowId: ShowId,
-                                                Name: Name,
-                                                Description: description,
-                                                Rating: rating,
-                                                EpImdbId: Episode imdbid,
-                                                SeasonNr: season nr,
-                                                Date: first aired,
-                                                EpisodeNr: number,
-                                                ShowImdbId: Show ImdbID,
-                                                EpisodeImage: image url
-                                            }
+        [
+            {
+                ShowId: ShowId,
+                Name: Name,
+                Description: description,
+                Rating: rating,
+                EpImdbId: Episode imdbid,
+                SeasonNr: season nr,
+                Date: first aired,
+                EpisodeNr: number,
+                ShowImdbId: Show ImdbID,
+                EpisodeImage: image url
+            }
+        ]
 
 ### Delete Episode [DELETE]
+Delete episode from database
+
++ Params
+    + id (string) show imdb id
+
 + Request (application/json)
   + Header
             Authorization : Bearer + Bearer token
 + Params
     + id (string) - show imdb id
 
-+ Response 204
++ Response 204 (application/json)
 
-## Get Show Episodes by id [/api/episode/{id}]
+### Get Show Episodes by id [GET]
+Get Show Episodes by id
  + Params
     + id (number) - episode id
 
@@ -249,77 +310,101 @@ Adds user episode. If user Episode exists it will be deleted
 
 + Response (application/json)
     + Body
-        {
-                                                            ShowId: ShowId,
-                                                            Name: Name,
-                                                            Description: description,
-                                                            Rating: rating,
-                                                            EpImdbId: Episode imdbid,
-                                                            SeasonNr: season nr,
-                                                            Date: first aired,
-                                                            EpisodeNr: number,
-                                                            ShowImdbId: Show ImdbID,
-                                                            EpisodeImage: image url
-                                                        }
+        [
+            {
+                ShowId: ShowId,
+                Name: Name,
+                Description: description,
+                Rating: rating,
+                EpImdbId: Episode imdbid,
+                SeasonNr: season nr,
+                Date: first aired,
+                EpisodeNr: number,
+                ShowImdbId: Show ImdbID,
+                EpisodeImage: image url
+            }
+        ]
+                                                        
 
-## Get show Episodes [/api/episode/{id}]
+## Get show Episodes [/api/episode/imdbid/{imdbid}]
+### Get show Episodes [GET]
+    Retrive show data by imdb id
+
 + Params
-   id (string) - episode imdb id
+   imdbid (string) - episode imdb id
 
 + Request (application/json)
- + Header
-           Authorization : Bearer + Bearer token
+     + Header
+               Authorization : Bearer + Bearer token
 
 + Response
- + Body
-    {
-            ShowId: ShowId,
-            Name: Name,
-            Description: description,
-            Rating: rating,
-            EpImdbId: Episode imdbid,
-            SeasonNr: season nr,
-            Date: first aired,
-            EpisodeNr: number,
-            ShowImdbId: Show ImdbID,
-            EpisodeImage: image url
-        }
+    + Body
+        [
+            {
+                ShowId: ShowId,
+                Name: Name,
+                Description: description,
+                Rating: rating,
+                EpImdbId: Episode imdbid,
+                SeasonNr: season nr,
+                Date: first aired,
+                EpisodeNr: number,
+                ShowImdbId: Show ImdbID,
+                EpisodeImage: image url
+            }
+        ]
 
-
-# User
+# Group User
 ## Register user [/api/account/register]
 ### Register User [POST]
+Register user. All fields are mandatory. Password must contain at least 6 caractres. One capital letter and one number
 + Request (application/json)
     + Body
-    {
-    "Email": "email",
-    "Password":"Password",
-    "ConfirmPassword": "Confirm"}
+        [
+            {
+                "Email": "email",
+                "Password":"Password",
+                "ConfirmPassword": "Confirm"
+            }
+        ]
 
 + Response 200
 
 ## Get token [/token]
 ### Get token [POST]
+Retrive authentication token.
 + Request (application/x-www-form-urlencoded)
     + Body
         grant_type=password&username=EMAIL&password=PASSWORD
+
 + Response
     + Body
- {
-    "access_token": "access token"
-             "token_type": "bearer",
-             "expires_in": 1209599,
-             "userName": "username",
-             "userId": "guid",
-             ".issued": "Thu, 21 May 2015 14:58:43 GMT",
-             ".expires": "Thu, 04 Jun 2015 14:58:43 GMT"}
+        [
+            {
+                "access_token": "access token"
+                 "token_type": "bearer",
+                 "expires_in": 1209599,
+                 "userName": "username",
+                 "userId": "guid",
+                 ".issued": "Thu, 21 May 2015 14:58:43 GMT",
+                 ".expires": "Thu, 04 Jun 2015 14:58:43 GMT"
+            }
+        ]
 
 ## List user shows progress [/api/userdata/{uid}]
 ### List user shows progress [POST]
 + Params
     uid (string) - user guid
+
++ Request (application/json)
+    + Header
+           Authorization : Bearer + Bearer token
+
 + Response
-        {
-            "key": showObject
-            "value": "percentage of watched"
-        }
+    + Body 
+        [
+            {
+                "key": showObject
+                "value": "percentage of watched"
+            }
+        ]

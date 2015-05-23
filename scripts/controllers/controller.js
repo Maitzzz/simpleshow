@@ -2,7 +2,7 @@
 var user = localStorage.getItem('uid');
 var userName = localStorage.getItem('userName');
 var access_token = localStorage.getItem('access_token');
-console.log(user);
+console.log(localStorage.getItem('uid'));
 
 app.controller('mainController', function ($scope, $route) {
     $scope.$on('$routeChangeSuccess', function (newVal, oldVal) {
@@ -45,7 +45,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory, $
         promise.then(function (data) {
             var showPromise = showService.getData();
             showPromise.then(function (allShows) {
-                if(data.status == 401) {
+                if (data.status == 401) {
                     logout();
                     console.log('logout, 401 error!');
                     $window.location.reload();
@@ -104,7 +104,7 @@ app.controller('myShowController', function ($scope, showService, dataFactory, $
 /*
  Controller to show all imported shows.
  */
-app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location, $q, episodeService,$window) {
+app.controller('showsController', function ($scope, showService, $modal, dataFactory, $location, $q, episodeService, $window) {
     if (!user) {
         $location.path('home');
     }
@@ -117,7 +117,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     function loadShows() {
         var userShows = showService.getUserShows(user);
         userShows.then(function (userShowdata) {
-            if(userShowdata.status == 401) {
+            if (userShowdata.status == 401) {
                 logout();
                 console.log('logout, 401 error!');
                 $window.location.reload();
@@ -174,9 +174,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     /*
      Removes show from user show list
      */
-    //todo check data.status Kas tagasi tulbe 204?
     $scope.removeShow = function (imdbid) {
-        console.log('test');
         var deletePromise = showService.removeShow(imdbid);
         deletePromise.then(function (data) {
             notify('success', 'Show Removed');
@@ -188,6 +186,7 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
      Adds show to user shows
      */
     $scope.showCheck = function (showId) {
+        console.log(user)
         var userShow = {
             'UserID': user,
             'ShowID': showId
@@ -239,23 +238,23 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     getUserShows();
     function getUserShows() {
         userShows = [];
-        if(user) {
-            showService.getUserShows(user).then(function(data) {
-                $.each(data.data, function(key, val) {
+        if (user) {
+            showService.getUserShows(user).then(function (data) {
+                $.each(data.data, function (key, val) {
                     userShows.push(val.ShowID);
                 })
             });
         }
     }
 
-    getEpisodes();
     /*
      Updates/adds data to dataFactory
      */
+    getEpisodes();
     function getEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
-            if(data.status == 401) {
+            if (data.status == 401) {
                 logout();
                 console.log('logout, 401 error!');
                 $window.location.reload();
@@ -264,10 +263,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         });
     }
 
-    getShowData();
     /*
      Returns show data from api
      */
+    getShowData();
     function getShowData() {
         var showPromise = showService.getShow(showId);
         showPromise.then(function (data) {
@@ -320,13 +319,13 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
     };
 
     /*
-        Check if this is use show
+     Check if this is use show
      */
     $scope.isThisUserShow = function (show) {
-        if(_.indexOf(userShows, show) != -1) {
+        if (_.indexOf(userShows, show) != -1) {
             return true;
         }
-      return false;
+        return false;
     };
 
     /*
@@ -486,6 +485,17 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             });
         })
     }
+
+    /*
+     Removes show from user show list
+     */
+    $scope.removeShow = function (imdbid) {
+        var deletePromise = showService.removeShow(imdbid);
+        deletePromise.then(function (data) {
+            notify('success', 'Show Removed');
+            $location.path('shows');
+        });
+    };
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q, $location, $window) {
@@ -513,7 +523,7 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
     function getUserEpisodes() {
         var userEpisodePromise = showService.getUserEpisodes(user, showId);
         userEpisodePromise.then(function (data) {
-            if(data.status == 401) {
+            if (data.status == 401) {
                 logout();
                 console.log('logout, 401 error!');
                 $window.location.reload();
@@ -686,7 +696,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
     function loadShow() {
         var showPromise = showService.getShow($routeParams.id);
         showPromise.then(function (data) {
-            if(data.status == 401) {
+            if (data.status == 401) {
                 logout();
                 console.log('logout, 401 error!');
                 $window.location.reload();
@@ -799,6 +809,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
      Validates and logs user in-
      */
     $scope.logIn = function (user) {
+        console.log(user)
         if (!_.has(user, 'email')) {
             notify('warning', 'Email ei ole korrektne või puudub');
             errors = true;
@@ -819,6 +830,8 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
                     $window.location.reload();
                     // Todo Find better way to refresh data in headers, try not to use $watch
                 }
+            }).catch(function(error) {
+               notify('danger', error.data.error_description)
             });
         }
     };
@@ -835,20 +848,20 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
 
     var myshows = showService.getUserData(user);
     myshows.then(function (data) {
-        if(data.status == 401) {
+        if (data.status == 401) {
             logout();
             console.log('logout, 401 error!');
             $window.location.reload();
         }
-        $scope.shows = data.data;
+        var shows = [];
         $.each(data.data, function (key, obj) {
-
-            if (obj.Value == 'NaN') {
-                obj.Value = 0;
-            } else {
-                obj.Value = Math.floor(obj.Value)
+            if (obj.Value != 'NaN' && obj.Value != 0) {
+                obj.Value = Math.floor(obj.Value);
+                shows.push(obj);
             }
         });
+
+        $scope.shows = shows;
     });
 });
 
@@ -860,22 +873,32 @@ app.controller('registerController', function ($scope, showService, $location, $
 
     //register user, get token and set it in localstorage.
     $scope.register = function (user) {
+        console.log(user)
         var error = false;
 
-        if (!_.has('Email', user) && !_.has('Password', user) && !_.has('ConfirmPassword', user) && user.Password != user.ConfirmPassword) {
+        if (!_.has(user, 'Email') || !_.has(user,'Password') || !_.has(user, 'ConfirmPassword')) {
+            console.log(_.has(user, 'Email'));
+            console.log(_.has(user, 'Password'));
+            console.log(_.has(user, 'ConfirmPassword'));
             error = true;
             notify('danger', 'Wrong input !');
         }
 
+        if(user.Password != user.ConfirmPassword && !error) {
+            error = true;
+            notify('danger', 'Passwords does not match !');
+        }
+
         if (!error) {
             showService.userRegister(user).then(function (data) {
+                console.log(user);
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
-                        localStorage.setItem('uid', data.data.Id);
-                        localStorage.setItem('userName', data.data.userName);
-                        localStorage.setItem('access_token', tokenData.data.access_token);
-                        $location.path('home');
-                        $window.location.reload();
+                            localStorage.setItem('uid', tokenData.data.userId);
+                            localStorage.setItem('userName', tokenData.data.userName);
+                            localStorage.setItem('access_token', tokenData.data.access_token);
+                            $location.path('home');
+                            $window.location.reload();
                     });
                 } else {
                     notify('danger', 'register Incorrect')
@@ -892,6 +915,9 @@ app.controller('registerController', function ($scope, showService, $location, $
     };
 });
 
+/*
+ * Controller for redirect if user is not logged in.
+ */
 app.controller('welcomeController', function ($scope, $location) {
     if (user) {
         $location.path('user');
@@ -1074,6 +1100,7 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                     $q.all(promiseArray).then(function (data) {
                         dataFactory.setLoader(false);
                         $location.path('show/' + newShow.data.ImdbID);
+                        notify('success', 'Show ' + showdata.title + ' imported with ' + data.length + ' episodes.')
                     });
                 });
             });

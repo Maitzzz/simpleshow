@@ -7,5 +7,9 @@
             <progressbar value="show.Value" type="success"><b>{{show.Value}}%</b></progressbar>
             <p class="name"><a href="#show/{{show.Key.ImdbID }}">{{ show.Key.Name }}</a></p>
         </div>
+
+        <div class="noresults col-md-6 col-md-offset-3" ng-hide="shows.length">
+            <p>You have no tracked shows! Go to <a href="#shows">shows</a> to select your favorite show.</p>
+        </div>
     </div>
 </div>

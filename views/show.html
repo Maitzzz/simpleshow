@@ -5,6 +5,9 @@
             <img ng-src="{{ show.ShowImage }}"/>
         </div>
         <div class="show-content col-md-8 col-xs-7">
+            <label class="remove">
+                <i class="mdi-action-highlight-remove" ng-click="removeShow(show.ImdbID)"></i>
+            </label>
             <p class="name">{{show.Name}} </p>
 
             <p> IMDBID : {{show.ImdbID}}</p>
@@ -64,7 +67,7 @@
 
                     <p class="episode-nr"> Episode: {{ episode.EpisodeNr }}</p>
                     <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
-                    <p ng-if="episode.timeLeft">Coming in: {{episode.timeLeft}}</p>
+                    <p ng-if="episode.timeLeft">Airing in: {{episode.timeLeft}}</p>
 
                     <label class="remove">
                         <i class="mdi-action-highlight-remove" ng-click="removeEpisode(episode.EpisodeId)"></i>

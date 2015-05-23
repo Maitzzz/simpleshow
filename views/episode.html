@@ -12,7 +12,7 @@
         <p>IMDB : {{episode.ShowImdbId}}</p>
         <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
         <p> Description: {{episode.Description}}</p>
-        <p ng-if="episode.timeLeft"> Coming in: {{episode.timeLeft}}</p>
+        <p ng-if="episode.timeLeft"> Airing in: {{episode.timeLeft}}</p>
     </div>
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="editShow()"><i

@@ -108,6 +108,14 @@ body .all-shows .search {
 body .show-wrapper .show {
   margin-top: 20px;
 }
+body .show-wrapper .show .remove {
+  float: right;
+  margin-right: 20px;
+  color: rgba(85, 87, 87, 0.46);
+}
+body .show-wrapper .show .remove:hover {
+  color: #f9431b;
+}
 body .show-wrapper .show .img-wrapper img {
   width: 200px;
 }
@@ -222,10 +230,13 @@ body .register-wrapper {
   margin-right: -50%;
   transform: translate(-50%, -50%);
 }
+body .register-wrapper h1 {
+  text-align: center;
+}
 body .register-wrapper .submit {
   margin-left: auto;
   margin-right: auto;
-  width: 100px;
+  width: 130px;
 }
 body .season-wrapper .show-wrapper {
   margin: 10px 20px;
@@ -342,6 +353,10 @@ body .search-wrapper .results .result .image-wrapper img {
     height: 400px;
   }
 }
+.shows-data .no-results {
+  text-align: center;
+  margin-top: 30px;
+}
 .shows-data .progress {
   height: 20px;
   margin-bottom: 5px;
@@ -368,14 +383,6 @@ body .search-wrapper .results .result .image-wrapper img {
 .episode-wrapper .image-wrapper img {
   width: 100%;
   height: auto;
-}
-@-webkit-keyframes labels {
-  0% {
-    margin-top: 0px;
-  }
-  100% {
-    margin-top: -15px;
-  }
 }
 @-webkit-keyframes fadeinblock {
   0%,
@@ -430,4 +437,58 @@ body.welcome {
 }
 .show .content-body {
   margin-left: 20px;
+}
+.loader {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 50%;
+  top: 20%;
+}
+.circular {
+  animation: rotate 2s linear infinite;
+  height: 100px;
+  position: relative;
+  width: 100px;
+}
+.path {
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -124;
+  }
+}
+@keyframes color {
+  100%,
+  0% {
+    stroke: #d62d20;
+  }
+  40% {
+    stroke: #0057e7;
+  }
+  66% {
+    stroke: #008744;
+  }
+  80%,
+  90% {
+    stroke: #ffa700;
+  }
 }

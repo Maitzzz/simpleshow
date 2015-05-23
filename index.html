@@ -1,8 +1,8 @@
 <html ng-app="simpleshow">
 
 <head>
-    <link rel="stylesheet" href="css/bootstrap/material/roboto.min.css">
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap/material/roboto.min.css">
     <link rel="stylesheet" href="css/bootstrap/material/material-fullpalette.min.css">
     <link rel="stylesheet" href="css/bootstrap/material/ripples.min.css">
     <link rel="stylesheet" href="scripts/bootstrap-datepicker/css/datetimepicker.css">
@@ -38,21 +38,19 @@
                 <a class="dropdown-toggle" data-toggle="dropdown"><span>User </span><b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"> {{user}} </a></li>
-                    <li><a ng-click="logOut()">Log Out</a></li>
+                    <li><a ng-click="logOut()" href="#">Log Out</a></li>
                 </ul>
             </li>
                 <li ng-if="logged"><a href="#log-in">Log in</a></li>
                 <li ng-if="logged"><a href="#register">Sign Up</a></li>
         </ul>
     </div>
-    <div class="overlay" ng-show="loader">
+        <div class="overlay" ng-show="loader">
         <div class="loader-wrapper">
-            <div class="loader-inner pacman">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+            <div class="loader">
+                <svg class="circular">
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                </svg>
             </div>
         </div>
     </div>
@@ -66,13 +64,15 @@
     </div>
 
 </div>
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="scripts/bootstrap/bootstrap.min.js"></script>
+<script src="scripts/bootstrap/material/ripples.min.js"></script>
+<script src="scripts/bootstrap/material/material.min.js"></script>
 <script src="scripts/angular/angular.min.js"></script>
-<script src="scripts/angular/angular-route.min.js"></script>
-<script src="scripts/lodash.js"></script>
 <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
+<script src="scripts/angular/angular-route.min.js"></script>
+<script src="scripts/lodash.js"></script>
 <script src="scripts/module/module.js"></script>
 <script src="scripts/routes/routes.js"></script>
 <script type="text/javascript" src="scripts/factory/factory.js"></script>
@@ -86,14 +86,14 @@
 <script src="scripts/bootstrap-notify.min.js"></script>
 <script src="scripts/angular-momentjs.js"></script>
 <script src="scripts/bootstrap-datepicker/js/datetimepicker.js"></script>
-<script src="scripts/bootstrap/material/ripples.min.js"></script>
 <script src="scripts/bootstrap/material/arrive.min.js"></script>
-<script src="scripts/bootstrap/material/material.min.js"></script>
 <script src="scripts/script.js"></script>
 
 <script>
     $(function () {
         $.material.init();
+        $.material.ripples();
+        $.material.input();
     });
 </script>
 </body>
