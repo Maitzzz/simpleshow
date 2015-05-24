@@ -2,7 +2,6 @@
 var user = localStorage.getItem('uid');
 var userName = localStorage.getItem('userName');
 var access_token = localStorage.getItem('access_token');
-console.log(access_token);
 
 app.controller('mainController', function ($scope, $route) {
     $scope.$on('$routeChangeSuccess', function (newVal, oldVal) {
@@ -98,7 +97,9 @@ app.controller('myShowController', function ($scope, showService, dataFactory, $
         });
     };
 
-
+    $scope.gotoShow = function(show) {
+        $location.path('show/' + show)
+    }
 });
 
 /*
@@ -205,13 +206,19 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
             }
         })
     };
+
+    $scope.gotoShow = function(show) {
+        console.log('test');
+        $location.path('show/' + show)
+    }
 });
 
 /*
  Test and location controller
  */
-app.controller('homeController', function ($scope, showService, $location, $moment) {
+app.controller('homeController', function ($scope, showService, $location, dataFactory) {
     if (user) {
+        dataFactory.setLoader(false);
         $location.path('user');
     } else {
         $location.path('welcome');
@@ -365,7 +372,6 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
         return dataFactory.getEpisodes();
     }, function (data, oldValue) {
         if (data) {
-            console.log(data);
             epdata = [];
 
             episodeService.getShowEpisodes(showId).then(function (episodeData) {
@@ -461,11 +467,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
      Mark all show epsodes as watched.
      */
     $scope.showWatched = function () {
+        dataFactory.setLoader(true);
         var promiseArray = [];
         episodeService.getShowEpisodes(showId).then(function (epsData) {
             $.each(epsData.data, function (key, value) {
-                console.log(_.indexOf(epdata, value.EpisodeId));
-                console.log(epdata);
                 if (_.indexOf(epdata, value.EpisodeId) == -1 || epdata.length == $scope.episodes.length) {
                     var userEp = {
                         "UserID": user,
@@ -482,6 +487,7 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
                     }
                 });
                 if (error.length == 0) {
+                    dataFactory.setLoader(false);
                     epdata = [];
                     notify('success', 'Updated ' + data.length + ' episodes.');
                     getEpisodes();
@@ -500,6 +506,10 @@ app.controller('showController', function ($scope, showService, $routeParams, $m
             $location.path('shows');
         });
     };
+
+    $scope.gotoEpisode = function(show, season, id) {
+        $location.path('show/' + show + '/' + season + '/' + id)
+    }
 });
 
 app.controller('seasonController', function ($scope, showService, $routeParams, episodeService, dataFactory, $modal, $q, $location, $window) {
@@ -672,6 +682,10 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
         }
         return false;
     };
+
+    $scope.gotoEpisode = function(show, season, id) {
+        $location.path('show/' + show + '/' + season + '/' + id)
+    }
 });
 
 /*
@@ -706,6 +720,21 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
                 $window.location.reload();
             }
             dataFactory.setShow(data.data);
+        });
+    }
+
+    /*
+        Load show episodes
+     */
+    loadEpisodes();
+    function loadEpisodes() {
+        episodeService.getShowEpisodes($routeParams.id).then(function(data){
+            var episodes = _.filter(data.data, function (array) {
+                return array.SeasonNr == $routeParams.season;
+            });
+            $scope.showEpisodes = _.sample(episodes, 4);
+            console.log($scope.showEpisodes);
+
         });
     }
 
@@ -795,6 +824,7 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
             loadShow();
         });
     };
+
 });
 
 /*
@@ -860,6 +890,7 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
      Validates and logs user in-
      */
     $scope.logIn = function (user) {
+        dataFactory.setLoader(true);
         console.log(user)
         if (!_.has(user, 'email')) {
             notify('warning', 'Email ei ole korrektne või puudub');
@@ -914,17 +945,21 @@ app.controller('userController', function ($scope, traktTcService, episodeServic
 
         $scope.shows = shows;
     });
+
+    $scope.gotoShow = function(show) {
+        $location.path('show/' + show)
+    }
 });
 
 /*
  Controller for register view.
  Register user, and logs created user in
  */
-app.controller('registerController', function ($scope, showService, $location, $window) {
+app.controller('registerController', function ($scope, showService, $location, $window, dataFactory) {
 
     //register user, get token and set it in localstorage.
     $scope.register = function (user) {
-        console.log(user)
+        dataFactory.setLoader(true);
         var error = false;
 
         if (!_.has(user, 'Email') || !_.has(user,'Password') || !_.has(user, 'ConfirmPassword')) {
@@ -948,6 +983,7 @@ app.controller('registerController', function ($scope, showService, $location, $
                             localStorage.setItem('uid', tokenData.data.userId);
                             localStorage.setItem('userName', tokenData.data.userName);
                             localStorage.setItem('access_token', tokenData.data.access_token);
+                            dataFactory.setLoader(false);
                             $location.path('home');
                             $window.location.reload();
                     });
@@ -959,9 +995,13 @@ app.controller('registerController', function ($scope, showService, $location, $
                 $.each(response.data.ModelState, function (key, data) {
                     if (!isNumber(data)) {
                         notify('danger', data[0]);
+                        dataFactory.setLoader(false);
+
                     }
                 });
             });
+        } else {
+            dataFactory.setLoader(false);
         }
     };
 });

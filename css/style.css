@@ -41,6 +41,7 @@ body .tiles p {
   margin: 0;
 }
 body .tile {
+  cursor: pointer;
   padding: 0;
   background: #424242;
 }
@@ -127,6 +128,9 @@ body .show-wrapper .show .img-wrapper img {
 body .show-wrapper .show .heart {
   float: left;
   margin-right: 20px;
+}
+body .show-wrapper .show .heart:hover {
+  color: #ff0000;
 }
 body .show-wrapper .sm-btn-icon i {
   left: -5px;
@@ -361,6 +365,9 @@ body .search-wrapper .results .result .image-wrapper img {
   height: 20px;
   margin-bottom: 5px;
 }
+.shows-data .show {
+  cursor: pointer;
+}
 .loader-wrapper {
   position: fixed;
   top: 50%;
@@ -383,6 +390,26 @@ body .search-wrapper .results .result .image-wrapper img {
 .episode-wrapper .image-wrapper img {
   width: 100%;
   height: auto;
+}
+.episode-wrapper .episodes-wrapper {
+  margin-top: 25px;
+  position: relative;
+}
+.episode-wrapper .episodes-wrapper h1 {
+  font-size: 20px;
+}
+.episode-wrapper .episodes-wrapper .episode {
+  padding-left: 0;
+}
+.episode-wrapper .episodes-wrapper .episode .name {
+  position: absolute;
+  bottom: 0;
+  left: 25px;
+  font-size: 15px;
+  color: #FFFFFF;
+}
+.episode-wrapper .episodes-wrapper img {
+  width: 100%;
 }
 @-webkit-keyframes fadeinblock {
   0%,
@@ -412,9 +439,6 @@ body.register {
 }
 body.log-in {
   overflow: hidden;
-}
-body.log-in .bg-wrapper {
-  background: url("../files/image/bb.jpg");
 }
 body.welcome {
   overflow: hidden;
@@ -491,4 +515,10 @@ body.welcome {
   90% {
     stroke: #ffa700;
   }
+}
+.form-control {
+  background-position: center bottom, center calc(100%) !important;
+}
+.text-middle {
+  text-align: center;
 }

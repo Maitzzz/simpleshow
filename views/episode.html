@@ -1,19 +1,29 @@
 <div class="container episode-wrapper">
-   <h1>{{ episode.Name }}</h1>
+    <h1>{{ episode.Name }}</h1>
+
     <div class="col-md-6 image-wrapper">
         <img ng-src="{{ episode.EpisodeImage }}"/>
     </div>
     <div class="col-md-6">
         <p>Show: <a href="#show/{{show.ImdbID}}">{{show.Name}}</a></p>
         <a href="#show/{{ episode.ShowImdbId }}"></a>
+
         <p> Season: {{episode.SeasonNr}}</p>
+
         <p> Episode: {{episode.EpisodeNr }}</p>
+
         <p>Rating: {{episode.Rating}}</p>
+
         <p>IMDB : {{episode.ShowImdbId}}</p>
+
         <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
+
         <p> Description: {{episode.Description}}</p>
+
         <p ng-if="episode.timeLeft"> Airing in: {{episode.timeLeft}}</p>
+
         <p ng-if="isThisUserEpisode(episode.EpisodeId)"></p>
+
         <div class="checkbox-wrapper">
             <div class="checkbox">
                 <label>
@@ -21,6 +31,13 @@
                            ng-checked="isThisUserEpisode(episode.EpisodeId)">
                 </label>
             </div>
+        </div>
+    </div>
+    <div class="episodes-wrapper col-md-12">
+        <h1>More episodes in this season</h1>
+        <div class="episode col-md-3" ng-repeat="epispde in showEpisodes">
+            <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ epispde.EpImdbId}}"><p class="name">{{epispde.Name}} {{epispde.EpisodeNr}}x{{epispde.SeasonNr}} </p></a>
+            <img ng-src="{{epispde.EpisodeImage}}" alt=""/>
         </div>
     </div>
     <div class="bottom-menu">

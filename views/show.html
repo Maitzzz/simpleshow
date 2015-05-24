@@ -6,7 +6,7 @@
         </div>
         <div class="show-content col-md-8 col-xs-7">
             <label class="remove">
-                <i class="mdi-action-highlight-remove" ng-click="removeShow(show.ImdbID)"></i>
+                <i class="mdi-action-highlight-remove" ng-click="removeShow(show.ImdbID)" tooltip="Delete Show"></i>
             </label>
             <p class="name">{{show.Name}} </p>
 
@@ -14,14 +14,14 @@
 
             <p class="description">{{show.Description}} </p>
             <div class="checkbox">
-                <label>
+                <label tooltip="All episodes watched">
                     <input type="checkbox" ng-click="showWatched()"
                            ng-checked="isShowWatched()">
                 </label>
 
                 <div class="heart">
-                    <label class="red">
-                        <i ng-class="isThisUserShow(show.ShowId) ? 'mdi-action-favorite': 'mdi-action-favorite-outline'" ng-click="showCheck(show.ShowId)"></i>
+                    <label>
+                        <i ng-class="isThisUserShow(show.ShowId) ? 'mdi-action-favorite red': 'mdi-action-favorite-outline'" ng-click="showCheck(show.ShowId)" tooltip="{{isThisUserShow(show.ShowId) ? 'Remove show from my shows': 'Add show to my shows'}}"></i>
                     </label>
                 </div>
             </div>
@@ -41,8 +41,8 @@
 
             <div class="list-element tiles row shows" ng-repeat="episode in season">
                 <div class="tile show col-md-3 col-xs-6">
-                    <div class="image-wrapper">
-                        <img ng-src="{{episode.EpisodeImage}}"/>
+                    <div class="image-wrapper" ng-click="gotoEpisode(show.ImdbID,key,episode.EpImdbId)">
+                        <img ng-src="{{episode.EpisodeImage}}" onerror="imgError(this);"/>
                     </div>
                     <div class="content-wrapper col-xs-3">
                         <div class="checkbox-wrapper">
@@ -70,7 +70,7 @@
                     <p ng-if="episode.timeLeft">Airing in: {{episode.timeLeft}}</p>
 
                     <label class="remove">
-                        <i class="mdi-action-highlight-remove" ng-click="removeEpisode(episode.EpisodeId)"></i>
+                        <i class="mdi-action-highlight-remove" ng-click="removeEpisode(episode.EpisodeId)" tooltip="Delete Episode"></i>
                     </label>
                 </div>
             </div>

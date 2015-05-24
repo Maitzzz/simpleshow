@@ -1,7 +1,8 @@
 <div class="container">
     <div class="shows-data">
+        <h1 class="text-center">Your progress</h1>
         <div class="show col-md-3 col-xs-6" ng-repeat="show in shows">
-            <div class="img-wrapper">
+            <div class="img-wrapper" ng-click="gotoShow(show.Key.ImdbID)">
                 <img ng-src="{{show.Key.ShowImage}}" alt="{{show.Key.Name }}"/>
             </div>
             <progressbar value="show.Value" type="success"><b>{{show.Value}}%</b></progressbar>

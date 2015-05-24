@@ -6,15 +6,15 @@
             <p class="checkbox-name">Season Watched:</p>
             <label>
                 <input type="checkbox" ng-checked="isSeasonWatched()"
-                       ng-click="seasonWatched()" >
+                       ng-click="seasonWatched()" tooltip="Mark all season episodes as watched/unwatched">
             </label>
         </div>
     </div>
     <div class="col-md-4 col-xs-6 wrapper tile" ng-repeat="episode in episodes">
         <div class="tile-wrapper {{episode.upcoming}}">
-            <div class="image-wrapper">
+            <div class="image-wrapper" ng-click="gotoEpisode(show.ImdbID,episode.SeasonNr, episode.EpImdbId)">
                 <p class="name">{{episode.EpisodeNr}}x{{episode.SeasonNr}} <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ episode.EpImdbId}}"> {{ episode.Name }}</a></p>
-                <img ng-src="{{episode.EpisodeImage}}"/>
+                <img ng-src="{{episode.EpisodeImage}}" onerror="imgError(this);"/>
             </div>
             <div class="checkbox">
                 <label>
@@ -24,12 +24,10 @@
             </div>
             <div class="content-wrapper clearfix">
                 <p class="rating"> Rating: {{episode.Rating }}</p>
-
             </div>
 
         </div>
     </div>
-
     <div class="bottom-menu">
         <button class="btn btn-fab btn-fab-mini btn-raised btn-sm btn-success sm-btn-icon"
                 ng-click="addEpisodeModal()"><i

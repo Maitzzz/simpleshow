@@ -59,3 +59,9 @@ function logout() {
     localStorage.removeItem('userName');
     localStorage.removeItem('access_token');
 }
+
+function imgError(image){
+    image.onerror = "";
+    image.src = NO_IMAGE_EP;
+    return true;
+}

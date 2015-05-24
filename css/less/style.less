@@ -42,6 +42,7 @@ body {
   }
 
   .tile {
+    cursor: pointer;
     padding: 0;
     background: #424242;
     .content-wrapper {
@@ -143,6 +144,9 @@ body {
       .heart {
         float: left;
         margin-right: 20px;
+        &:hover {
+          color: #ff0000;
+        }
       }
     }
     .sm-btn-icon {
@@ -436,6 +440,10 @@ body {
     height: 20px;
     margin-bottom: 5px;
   }
+
+  .show {
+    cursor: pointer;
+  }
 }
 
 .loader-wrapper {
@@ -465,6 +473,27 @@ body {
     img {
       width: 100%;
       height: auto;
+    }
+  }
+  .episodes-wrapper {
+    h1 {
+      font-size: 20px;
+    }
+
+    margin-top: 25px;
+    position: relative;
+    .episode {
+      padding-left: 0;
+      .name {
+        position: absolute;
+        bottom:0;
+        left: 25px;
+        font-size: 15px;
+        color: #FFFFFF;
+      }
+    }
+    img {
+      width: 100%;
     }
   }
 }
@@ -506,7 +535,6 @@ body {
   &.log-in {
     overflow: hidden;
     .bg-wrapper {
-      background: url("../files/image/bb.jpg");
     }
   }
 
@@ -615,4 +643,12 @@ body {
   80%, 90%{
     stroke: @yellow;
   }
+}
+
+.form-control {
+  background-position:center bottom,center calc(100%)!important;
+}
+
+.text-middle {
+  text-align: center;
 }

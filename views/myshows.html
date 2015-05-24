@@ -2,7 +2,7 @@
 
     <div class="col-md-3 wrapper tile col-xs-6" ng-repeat="show in shows">
         <div class="wrapper">
-            <div class="image-wrapper">
+            <div class="image-wrapper" ng-click="gotoShow(show.ImdbID)">
                 <a href="#show/{{ show.ImdbID }}"><p class="name">{{ show.Name }}</p></a>
                 <img ng-src="{{show.ShowImage}}"/>
             </div>
