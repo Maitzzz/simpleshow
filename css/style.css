@@ -399,6 +399,7 @@ body .search-wrapper .results .result .image-wrapper img {
   font-size: 20px;
 }
 .episode-wrapper .episodes-wrapper .episode {
+  cursor: pointer;
   padding-left: 0;
 }
 .episode-wrapper .episodes-wrapper .episode .name {

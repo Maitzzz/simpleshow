@@ -35,8 +35,8 @@
     </div>
     <div class="episodes-wrapper col-md-12">
         <h1>More episodes in this season</h1>
-        <div class="episode col-md-3" ng-repeat="epispde in showEpisodes">
-            <a href="#show/{{ show.ImdbID}}/{{ episode.SeasonNr }}/{{ epispde.EpImdbId}}"><p class="name">{{epispde.Name}} {{epispde.EpisodeNr}}x{{epispde.SeasonNr}} </p></a>
+        <div class="episode col-md-3" ng-repeat="epispde in showEpisodes" ng-click="gotoEpisode(show.ImdbID, epispde.SeasonNr, epispde.EpImdbId)">
+            <a href="#show/{{ show.ImdbID }}/{{ episode.SeasonNr }}/{{ epispde.EpImdbId}}"><p class="name">{{epispde.Name}} {{epispde.EpisodeNr}}x{{epispde.SeasonNr}} </p></a>
             <img ng-src="{{epispde.EpisodeImage}}" alt=""/>
         </div>
     </div>

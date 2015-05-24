@@ -187,7 +187,6 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
      Adds show to user shows
      */
     $scope.showCheck = function (showId) {
-        console.log(user)
         var userShow = {
             'UserID': user,
             'ShowID': showId
@@ -208,7 +207,6 @@ app.controller('showsController', function ($scope, showService, $modal, dataFac
     };
 
     $scope.gotoShow = function(show) {
-        console.log('test');
         $location.path('show/' + show)
     }
 });
@@ -594,7 +592,6 @@ app.controller('seasonController', function ($scope, showService, $routeParams, 
      Opens Add episode modal
      */
     $scope.addEpisodeModal = function (size) {
-        console.log($scope.ep);
         $modal.open({
             templateUrl: 'views/forms/episode.html',
             controller: 'episodeAddFormCtrl',
@@ -733,7 +730,6 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
                 return array.SeasonNr == $routeParams.season;
             });
             $scope.showEpisodes = _.sample(episodes, 4);
-            console.log($scope.showEpisodes);
 
         });
     }
@@ -825,6 +821,9 @@ app.controller('episodeController', function ($scope, showService, $routeParams,
         });
     };
 
+    $scope.gotoEpisode = function(show, season, id) {
+        $location.path('show/' + show + '/' + season + '/' + id)
+    }
 });
 
 /*
@@ -891,7 +890,6 @@ app.controller('loginController', function ($scope, $location, $route, dataFacto
      */
     $scope.logIn = function (user) {
         dataFactory.setLoader(true);
-        console.log(user)
         if (!_.has(user, 'email')) {
             notify('warning', 'Email ei ole korrektne või puudub');
             errors = true;
@@ -963,9 +961,6 @@ app.controller('registerController', function ($scope, showService, $location, $
         var error = false;
 
         if (!_.has(user, 'Email') || !_.has(user,'Password') || !_.has(user, 'ConfirmPassword')) {
-            console.log(_.has(user, 'Email'));
-            console.log(_.has(user, 'Password'));
-            console.log(_.has(user, 'ConfirmPassword'));
             error = true;
             notify('danger', 'Wrong input !');
         }
@@ -977,7 +972,6 @@ app.controller('registerController', function ($scope, showService, $location, $
 
         if (!error) {
             showService.userRegister(user).then(function (data) {
-                console.log(user);
                 if (data.status == 200) {
                     showService.getToken(user.Password, user.Email).then(function (tokenData) {
                             localStorage.setItem('uid', tokenData.data.userId);
@@ -1180,7 +1174,6 @@ app.controller('traktSearchController', function (traktTcService, $scope, dataFa
                                         EpisodeImage: ep.image
                                     };
                                     if (_.has(episode, 'ShowImdbId') && episode.EpImdbId != null && episode.Name != null) {
-                                        console.log(episode);
                                         promiseArray.push(episodeService.addEpisode(episode));
                                     }
                                 }
