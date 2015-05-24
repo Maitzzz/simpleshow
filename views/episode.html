@@ -13,6 +13,15 @@
         <p>Date : {{episode.Date | date:'dd/MM/yyyy'}}</p>
         <p> Description: {{episode.Description}}</p>
         <p ng-if="episode.timeLeft"> Airing in: {{episode.timeLeft}}</p>
+        <p ng-if="isThisUserEpisode(episode.EpisodeId)"></p>
+        <div class="checkbox-wrapper">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-click="episodeCheck(episode.EpisodeId)"
+                           ng-checked="isThisUserEpisode(episode.EpisodeId)">
+                </label>
+            </div>
+        </div>
     </div>
     <div class="bottom-menu">
         <button class="btn btn-fab btn-raised btn-material-red" ng-click="editShow()"><i

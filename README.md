@@ -1,7 +1,7 @@
 # simpleshow
     SimpleShow is client for SimpleShow API. It provides simple way to track your watched shows. We use Trakt.tv service
      to import shows and images. SimpleShow uses Trakt.tv API to import shows and images. Users can also add their own shows.
-
+    Client uses https://github.com/Maitzzz/simpleshow_trakttv API Wrapper to use it on localhost.
 # Installation
     Application API is written using .NET. It can be opened and launched with Microsoft visual studio.
     Download package: https://www.dropbox.com/s/nt2np5ojadrxsv9/SimpleShow.zip?dl=0
